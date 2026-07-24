@@ -27,3 +27,5 @@ Installation via ISO image
 Compatible with virtual machines (VirtualBox, VMware, QEMU)
 Direct installation on supported hardware
 USB support: to be confirmed
+
+🖥️💻 This OS will be available soon

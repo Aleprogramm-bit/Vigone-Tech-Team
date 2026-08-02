@@ -1,0 +1,12 @@
+Ciao, e benvenuti nel mio nuovo OS.
+Preparatevi a vedere che fluidità avrà sui vecchi PC.
+L'installazione avviene via ISO per VirtalMachine, ma per i PC veri bisogna usare un 2° PC.
+1) Prendete la memoria e formattatela in modo che sia vuota e rinominatela Questo PC;
+2) Mettete la cartella principale in modo che sia visibile direttamente all'apertura del SSD o HDD;
+3) Montatela sul Pc che dovete usare e sarà già pronta all'uso.
+Velocità: l'accensione dura poco, perché carica solo i Drivers, le app si aprono fluide perché
+non ha processi in background, se il vostro Pc è molto poco potente, evitate antivirus in background.
+Stabilità: adesso il mio Os è in fase di sviluppo, quindi non sarà molto stabile
+compatibilità: questo OS fa funzionare anche .exe, solo se create un manifest .osos.
+VI AUGURO UN BUON UTILIZZO!
+                                                                                         Aleprogramm

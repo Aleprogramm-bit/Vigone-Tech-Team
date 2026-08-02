@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistemi Operativi – Progetto Scuola</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --primary: #1a73e8;
+            --text: #202124;
+            --muted: #5f6368;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid #dadce0;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #dadce0;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 16px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            filter: brightness(0.95);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Logo Open Smart OS">
+    </div>
+    <h1>Progetto Sistemi Operativi</h1>
+</header>
+
+<div class="container">
+    <h2>Sistemi Operativi del Progetto</h2>
+
+    <div class="cards">
+
+        <!-- CARD TUO OS -->
+        <div class="card">
+            <img src="logo.png" alt="Open Smart OS">
+            <h3>Open Smart OS</h3>
+            <p>Il sistema operativo open‑source creato da Aleprogramm.</p>
+            <a class="btn" href="index.html">Vai al sito</a>
+        </div>
+
+        <!-- CARD OS COMPAGNO -->
+        <div class="card">
+            <img src="lorenzoos.png" alt="LorenzoOS">
+            <h3>LorenzoOS</h3>
+            <p>Il sistema operativo sviluppato da LoreTNani.</p>
+            <a class="btn" href="https://sites.google.com/view/lorenzo-os/home">Vai al sito</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

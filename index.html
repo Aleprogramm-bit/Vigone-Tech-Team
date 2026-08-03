@@ -16,17 +16,19 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: var(--bg);
+            background: url("back.png") no-repeat center center fixed;
+            background-size: cover;
             color: var(--text);
         }
 
         header {
-            background: #ffffff;
+            background: #ffffffcc;
             border-bottom: 1px solid #dadce0;
             padding: 12px 24px;
             display: flex;
             align-items: center;
             gap: 12px;
+            backdrop-filter: blur(6px);
         }
 
         header .logo img {

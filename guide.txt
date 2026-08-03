@@ -1,6 +1,7 @@
 🖥️ Descrizione di Open Smart OS
 
-Open Smart OS è un sistema operativo leggero e veloce, progettato per offrire un ambiente professionale senza dipendere da altri sistemi. Punta a essere semplice da usare, stabile e adatto sia ai computer moderni che a quelli meno potenti. L'obiettivo è fornire un'esperienza pulita, intuitiva e completamente autonoma.
+Open Smart OS è un sistema operativo leggero e veloce, progettato per offrire un ambiente professionale senza dipendere da altri sistemi e API. Deve essere semplice da usare, stabile ma adatto sia ai computer moderni che a quelli meno potenti. L'obiettivo è fornire un'esperienza fluida, semplice e bella.
+
 
 👤 Autore
 
@@ -23,6 +24,7 @@ Open Smart OS verrà rilasciato come immagine ISO non appena la build sarà pron
 Installazione tramite immagine ISO Compatibile con macchine virtuali (VirtualBox, VMware, QEMU) Installazione diretta su hardware supportato Supporto USB: da confermare
 
 🖥️💻 Questo sistema operativo sarà disponibile a breve
+
 
 Ciao, e benvenuti nel mio nuovo OS.
 Preparatevi a vedere che fluidità avrà sui vecchi PC.

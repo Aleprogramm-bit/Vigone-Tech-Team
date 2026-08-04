@@ -1,5 +1,36 @@
-LorenzoOS è facile da usare e non necessita un'installazione su Hard Disk per ora.
-All'avvio del sistema (sia su PC sia Macchina Virtuale) verrete accolti da una selezione utente.
-Dopo aver scelto utente con le freccette della tastiera e confermato con il tasto INVIO, sarete sul desktop di LorenzoOS!
-Per vedere le app, premete M e per aprirne una scegliete il numero/lettera corrispondente!
-Per uscire da un'app, premere Esc.
+Benvenuto in LorenzoOS, il sistema operativo leggero, veloce e divertente da usare, pensato per far partire tutto in pochi secondi e senza complicazioni.
+La cosa bella? Non serve installarlo su Hard Disk: puoi provarlo liberamente, sia su un PC reale sia dentro una Macchina Virtuale. Avvii la ISO… e sei già dentro!
+
+👋 La schermata di benvenuto
+Appena LorenzoOS si avvia, ti troverai davanti la selezione utente.
+È una schermata semplice, chiara, in stile retro: scegli l’utente con le freccette della tastiera e premi INVIO per continuare.
+
+In un attimo sarai sul desktop di LorenzoOS, pronto a esplorare tutto ciò che il sistema offre.
+
+🧭 Come aprire il menu delle applicazioni
+Vuoi vedere le app disponibili?
+È facilissimo: premi il tasto M sulla tastiera.
+
+Si aprirà il menu applicazioni, dove ogni programma è associato a un numero o una lettera.
+Per avviare un’app, ti basta premere il tasto corrispondente.
+Niente complicazioni, niente mouse obbligatorio: LorenzoOS è pensato per essere rapido e intuitivo.
+
+🚪 Come chiudere un’app
+Hai finito di usare un’applicazione?
+Premi ESC e tornerai subito al desktop.
+Semplice, immediato, senza finestre da trascinare o pulsanti minuscoli da cliccare.
+
+✨ Un’esperienza pensata per tutti
+LorenzoOS vuole essere un sistema operativo che chiunque può provare:
+
+- leggero
+
+- veloce
+
+- senza installazione
+
+- con comandi chiari
+
+- perfetto per imparare, sperimentare o divertirsi
+
+Che tu sia un curioso, un appassionato di retro‑computing o semplicemente qualcuno che vuole provare qualcosa di nuovo, LorenzoOS ti accoglie con un sorriso.

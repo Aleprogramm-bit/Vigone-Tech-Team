@@ -5,27 +5,128 @@
     <title>Changelog – Open Smart OS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        :root { --bg:#f5f5f5; --card-bg:#fff; --primary:#1a73e8; --text:#202124; --muted:#5f6368; }
+        :root {
+            --bg:#f5f5f5;
+            --card-bg:#fff;
+            --primary:#1a73e8;
+            --text:#202124;
+            --muted:#5f6368;
+        }
+
+        /* Tema scuro */
+        :root.dark {
+            --bg:#121212;
+            --card-bg:#1e1e1e;
+            --primary:#8ab4f8;
+            --text:#e8eaed;
+            --muted:#9aa0a6;
+        }
+
         *{box-sizing:border-box;}
         body{margin:0;font-family:Arial;background:var(--bg);color:var(--text);}
-        header{background:#fff;border-bottom:1px solid #dadce0;padding:12px 24px;display:flex;align-items:center;gap:12px;}
-        header .logo{width:32px;height:32px;border-radius:8px;background:var(--primary);}
-        .page{max-width:1100px;margin:24px auto;padding:0 16px;display:grid;grid-template-columns:260px 1fr;gap:24px;}
-        nav{background:#fff;border:1px solid #dadce0;border-radius:8px;padding:16px;}
-        nav a{display:block;padding:8px 10px;margin-bottom:4px;text-decoration:none;color:var(--text);}
-        nav a.active{background:#e8f0fe;color:var(--primary);font-weight:bold;}
-        main{background:#fff;border:1px solid #dadce0;border-radius:8px;padding:24px;}
-        footer{text-align:center;font-size:12px;color:var(--muted);padding:16px;margin-top:24px;}
+
+        header{
+            background:var(--card-bg);
+            border-bottom:1px solid #dadce0;
+            padding:12px 24px;
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+
+        header img{
+            width:32px;
+            height:32px;
+            border-radius:8px;
+        }
+
+        header h1{margin:0;font-size:20px;}
+        header p{margin:0;font-size:13px;color:var(--muted);}
+
+        /* Pulsante tema */
+        #themeToggle{
+            margin-left:auto;
+            padding:8px 12px;
+            font-size:18px;
+            cursor:pointer;
+            background:var(--card-bg);
+            border:1px solid #dadce0;
+            border-radius:6px;
+            color:var(--text);
+        }
+
+        #themeToggle:hover{
+            background:#f1f3f4;
+        }
+
+        .page{
+            max-width:1100px;
+            margin:24px auto;
+            padding:0 16px;
+            display:grid;
+            grid-template-columns:260px 1fr;
+            gap:24px;
+        }
+
+        nav{
+            background:var(--card-bg);
+            border:1px solid #dadce0;
+            border-radius:8px;
+            padding:16px;
+        }
+
+        nav h2{
+            font-size:14px;
+            margin:0 0 12px;
+            color:var(--muted);
+        }
+
+        nav a{
+            display:block;
+            padding:8px 10px;
+            margin-bottom:4px;
+            text-decoration:none;
+            color:var(--text);
+            border-radius:4px;
+        }
+
+        nav a.active{
+            background:#e8f0fe;
+            color:var(--primary);
+            font-weight:bold;
+        }
+
+        nav a:hover{
+            background:#f1f3f4;
+        }
+
+        main{
+            background:var(--card-bg);
+            border:1px solid #dadce0;
+            border-radius:8px;
+            padding:24px;
+        }
+
+        footer{
+            text-align:center;
+            font-size:12px;
+            color:var(--muted);
+            padding:16px;
+            margin-top:24px;
+        }
     </style>
 </head>
 <body>
+
 <header>
-    </div>
-	    <img src="logo.png" alt="Logo Open Smart OS">
+    <img src="logo.png" alt="Logo Open Smart OS">
     <div>
         <h1>Open Smart OS</h1>
         <p>Changelog</p>
     </div>
+
+    <!-- Pulsante tema -->
+    <button id="themeToggle">🌙</button>
 </header>
 
 <div class="page">
@@ -37,18 +138,34 @@
     <a href="changelog.html" class="active">Changelog</a>
 </nav>
 
-    <main>
-        <h2>Registro aggiornamenti</h2>
-        <p>Qui verranno pubblicate tutte le modifiche, versioni e novità di Open Smart OS.</p>
+<main>
+    <h2>Registro aggiornamenti</h2>
+    <p>Qui verranno pubblicate tutte le modifiche, versioni e novità di Open Smart OS.</p>
 
-        <h3>Versione 0.1 (in sviluppo)</h3>
-        <ul>
-            <li>Creazione struttura base del sistema</li>
-            <li>Impostazione kernel</li>
-            <li>Primi strumenti diagnostici</li>
-        </ul>
+    <h3>Versione 0.1 (in sviluppo)</h3>
+    <ul>
+        <li>Creazione struttura base del sistema</li>
+        <li>Impostazione kernel</li>
+        <li>Primi strumenti diagnostici</li>
+    </ul>
+</main>
 </div>
 
 <footer>© 2026 · Open Smart OS · Aleprogramm</footer>
+
+<script>
+    const toggle = document.getElementById("themeToggle");
+
+    toggle.addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+
+        if (document.documentElement.classList.contains("dark")) {
+            toggle.textContent = "☀️";
+        } else {
+            toggle.textContent = "🌙";
+        }
+    });
+</script>
+
 </body>
 </html>

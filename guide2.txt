@@ -1,4 +1,5 @@
-LorenzoOS è stato sviluppato da me con il supporto di Google Gemini, Cursor e l'utilizzo dell'ambiente WSL di Windows per la compilazione del codice.
-Attualmente, il sistema non prevede l'utilizzo del mouse e si interfaccia esclusivamente tramite tastiera; l'integrazione del puntatore è tuttavia pianificata per i prossimi aggiornamenti futuri ed è stato sviluppato da me con il supporto di Google Gemini, Cursor e l'utilizzo dell'ambiente WSL di Windows per la compilazione del codice.
-Attualmente, il sistema non prevede l'utilizzo del mouse e si interfaccia esclusivamente tramite tastiera; l'integrazione del puntatore è tuttavia pianificata per i prossimi aggiornamenti futuri.
-Il 29 luglio 2026, LorenzoOS è entrato ufficialmente a far parte dei progetti gestiti dal VigoneTech Team.
+LorenzoOS è facile da usare e non necessita un'installazione su Hard Disk per ora.
+All'avvio del sistema (sia su PC sia Macchina Virtuale) verrete accolti da una selezione utente.
+Dopo aver scelto utente con le freccette della tastiera e confermato con il tasto INVIO, sarete sul desktop di LorenzoOS!
+Per vedere le app, premete M e per aprirne una scegliete il numero/lettera corrispondente!
+Per uscire da un'app, premere Esc.

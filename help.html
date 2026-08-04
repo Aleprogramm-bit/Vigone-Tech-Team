@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Assistenza Informatica - Sempre al tuo servizio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         :root {
             --bg: #f4f7fb;
@@ -11,6 +12,7 @@
             --text: #222;
             --primary: #0b5ed7;
             --muted: #555;
+            --border: #d0d7e2;
         }
 
         /* Tema scuro */
@@ -20,6 +22,7 @@
             --text: #e8eaed;
             --primary: #4a8af0;
             --muted: #9aa0a6;
+            --border: #3c4043;
         }
 
         body {
@@ -34,35 +37,24 @@
             background: var(--primary);
             color: #fff;
             padding: 20px 30px;
-            position: relative;
             display: flex;
             align-items: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-
-        .corner-img {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 70px;
-            height: auto;
+            justify-content: flex-end;
+            position: relative;
+            box-shadow: 0 2px 8px #00000033;
         }
 
         /* Pulsante tema */
         #themeToggle {
-            margin-left: auto;
             padding: 8px 12px;
             font-size: 18px;
             cursor: pointer;
             background: #ffffff33;
             border: 1px solid #ffffff55;
-            border-radius: 6px;
+            border-radius: 8px;
             color: #fff;
             backdrop-filter: blur(4px);
+            transition: 0.25s;
         }
 
         #themeToggle:hover {
@@ -71,34 +63,40 @@
 
         main {
             max-width: 900px;
-            margin: 30px auto;
-            padding: 0 20px 40px;
+            margin: 40px auto;
+            padding: 0 20px 50px;
         }
 
         h2 {
             color: var(--primary);
-            margin-top: 25px;
+            margin-top: 30px;
+            font-size: 1.6rem;
+            font-weight: 600;
         }
 
         p {
             line-height: 1.6;
+            font-size: 1rem;
         }
 
         ul {
             margin-top: 10px;
-            padding-left: 20px;
+            padding-left: 22px;
         }
 
         li {
             margin-bottom: 6px;
+            font-size: 0.95rem;
         }
 
         .box-info {
             background: var(--card-bg);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-radius: 12px;
+            padding: 26px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
             margin-top: 20px;
+            backdrop-filter: blur(6px);
         }
 
         .highlight {
@@ -107,7 +105,7 @@
         }
 
         .footer-note {
-            margin-top: 20px;
+            margin-top: 25px;
             font-size: 0.9rem;
             color: var(--muted);
         }
@@ -115,74 +113,68 @@
 </head>
 <body>
 
-    <header>
-        <button id="themeToggle">🌙</button>
-    </header>
+<header>
+    <button id="themeToggle">🌙</button>
+</header>
 
-    <main>
-        <section class="box-info">
-            <h2>Siamo al tuo servizio</h2>
-            <p>
-                La nostra assistenza informatica è pensata per offrirti supporto rapido, chiaro e professionale.
-                Qualsiasi problema tecnico tu stia affrontando, siamo pronti ad aiutarti.
-            </p>
+<main>
+    <section class="box-info">
+        <h2>Siamo al tuo servizio</h2>
+        <p>
+            La nostra assistenza informatica è pensata per offrirti supporto rapido, chiaro e professionale.
+            Qualsiasi problema tecnico tu stia affrontando, siamo pronti ad aiutarti.
+        </p>
 
-            <h2>Risposta entro 24 ore</h2>
-            <p>
-                Durante le normali ore lavorative garantiamo una risposta entro
-                <span class="highlight">24 ore</span>, così non rimani mai senza supporto
-                quando ne hai bisogno.
-            </p>
+        <h2>Risposta entro 24 ore</h2>
+        <p>
+            Durante le normali ore lavorative garantiamo una risposta entro
+            <span class="highlight">24 ore</span>, così non rimani mai senza supporto quando ne hai bisogno.
+        </p>
 
-            <h2>Cosa offriamo</h2>
-            <ul>
-                <li>Diagnosi e risoluzione problemi</li>
-                <li>Consulenza tecnica</li>
-                <li>Assistenza su PC, reti, software e dispositivi</li>
-            </ul>
+        <h2>Cosa offriamo</h2>
+        <ul>
+            <li>Diagnosi e risoluzione problemi</li>
+            <li>Consulenza tecnica</li>
+            <li>Assistenza su PC, reti, software e dispositivi</li>
+        </ul>
 
-            <h2>Contattaci</h2>
-            <p>
-                Siamo qui per te: affidabili, veloci e pronti a intervenire.
-                Puoi usare questa pagina come punto di riferimento per il tuo sito
-                o per informare i clienti sui tempi di risposta.
-            </p>
+        <h2>Contattaci</h2>
+        <p>
+            Siamo qui per te: affidabili, veloci e pronti a intervenire.
+            Puoi usare questa pagina come punto di riferimento per il tuo sito
+            o per informare i clienti sui tempi di risposta.
+        </p>
 
-            <h2>E-mail</h2>
-            <ul>
-                <li>vigonetechteam@protonmail.com Aleprogramm</li>
-                <li>vigonetechteam@outlook.it LoreTnani</li>
-            </ul>
+        <h2>E-mail</h2>
+        <ul>
+            <li>vigonetechteam@protonmail.com — Aleprogramm</li>
+            <li>vigonetechteam@outlook.it — LoreTnani</li>
+        </ul>
 
-            <h2>YouTube</h2>
-            <ul>
-                <li>https://www.youtube.com/channel/UCBk4mzztjrkbNiOBd1xrUNA</li>
-            </ul>
+        <h2>YouTube</h2>
+        <ul>
+            <li>https://www.youtube.com/channel/UCBk4mzztjrkbNiOBd1xrUNA</li>
+        </ul>
 
-            <h2>Chi siamo</h2>
-            <p>
-                Siamo 2 ragazzini che aiutano gli altri in informatica.
-            </p>
-            
-            <p class="footer-note">
-                Rispondiamo entro 24h durante le normali ore lavorative.
-            </p>
-        </section>
-    </main>
+        <h2>Chi siamo</h2>
+        <p>
+            Siamo 2 ragazzi che aiutano gli altri in informatica.
+        </p>
+        
+        <p class="footer-note">
+            Rispondiamo entro 24h durante le normali ore lavorative.
+        </p>
+    </section>
+</main>
 
-    <script>
-        const toggle = document.getElementById("themeToggle");
+<script>
+    const toggle = document.getElementById("themeToggle");
 
-        toggle.addEventListener("click", () => {
-            document.documentElement.classList.toggle("dark");
-
-            if (document.documentElement.classList.contains("dark")) {
-                toggle.textContent = "☀️";
-            } else {
-                toggle.textContent = "🌙";
-            }
-        });
-    </script>
+    toggle.addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+        toggle.textContent = document.documentElement.classList.contains("dark") ? "☀️" : "🌙";
+    });
+</script>
 
 </body>
 </html>

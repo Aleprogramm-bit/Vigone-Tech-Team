@@ -5,25 +5,45 @@
     <title>Assistenza Informatica - Sempre al tuo servizio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        :root {
+            --bg: #f4f7fb;
+            --card-bg: #ffffff;
+            --text: #222;
+            --primary: #0b5ed7;
+            --muted: #555;
+        }
+
+        /* Tema scuro */
+        :root.dark {
+            --bg: #0d0d0d;
+            --card-bg: #1e1e1e;
+            --text: #e8eaed;
+            --primary: #4a8af0;
+            --muted: #9aa0a6;
+        }
+
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             margin: 0;
             padding: 0;
-            background: #f4f7fb;
-            color: #222;
+            background: var(--bg);
+            color: var(--text);
         }
+
         header {
-            background: #0b5ed7;
+            background: var(--primary);
             color: #fff;
             padding: 20px 30px;
             position: relative;
+            display: flex;
+            align-items: center;
         }
+
         header h1 {
             margin: 0;
             font-size: 1.8rem;
         }
 
-        /* Immagine nell'angolo */
         .corner-img {
             position: absolute;
             top: 10px;
@@ -32,47 +52,75 @@
             height: auto;
         }
 
+        /* Pulsante tema */
+        #themeToggle {
+            margin-left: auto;
+            padding: 8px 12px;
+            font-size: 18px;
+            cursor: pointer;
+            background: #ffffff33;
+            border: 1px solid #ffffff55;
+            border-radius: 6px;
+            color: #fff;
+            backdrop-filter: blur(4px);
+        }
+
+        #themeToggle:hover {
+            background: #ffffff55;
+        }
+
         main {
             max-width: 900px;
             margin: 30px auto;
             padding: 0 20px 40px;
         }
+
         h2 {
-            color: #0b5ed7;
+            color: var(--primary);
             margin-top: 25px;
         }
+
         p {
             line-height: 1.6;
         }
+
         ul {
             margin-top: 10px;
             padding-left: 20px;
         }
+
         li {
             margin-bottom: 6px;
         }
+
         .box-info {
-            background: #ffffff;
+            background: var(--card-bg);
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             margin-top: 20px;
         }
+
         .highlight {
             font-weight: 600;
             color: #d97706;
         }
+
         .footer-note {
             margin-top: 20px;
             font-size: 0.9rem;
-            color: #555;
+            color: var(--muted);
         }
     </style>
 </head>
 <body>
+
     <header>
         <h1>Assistenza Informatica</h1>
         <img src="pc.png" alt="PC Icon" class="corner-img">
+
+        <!-- Pulsante tema -->
+        <button id="themeToggle">🌙</button>
     </header>
 
     <main>
@@ -120,5 +168,20 @@
             </p>
         </section>
     </main>
+
+    <script>
+        const toggle = document.getElementById("themeToggle");
+
+        toggle.addEventListener("click", () => {
+            document.documentElement.classList.toggle("dark");
+
+            if (document.documentElement.classList.contains("dark")) {
+                toggle.textContent = "☀️";
+            } else {
+                toggle.textContent = "🌙";
+            }
+        });
+    </script>
+
 </body>
 </html>

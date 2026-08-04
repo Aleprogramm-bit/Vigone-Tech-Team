@@ -1,1 +1,11 @@
-scrivi qui
+LorenzoOS è stato sviluppato da me con il supporto di Google Gemini, Cursor e l'utilizzo dell'ambiente WSL di Windows per la compilazione del codice.
+
+Attualmente, il sistema non prevede l'utilizzo del mouse e si interfaccia esclusivamente tramite tastiera; l'integrazione del puntatore è tuttavia pianificata per i prossimi aggiornamenti futuri.
+
+LorenzoOS è stato sviluppato da me con il supporto di Google Gemini, Cursor e l'utilizzo dell'ambiente WSL di Windows per la compilazione del codice.
+
+Attualmente, il sistema non prevede l'utilizzo del mouse e si interfaccia esclusivamente tramite tastiera; l'integrazione del puntatore è tuttavia pianificata per i prossimi aggiornamenti futuri.
+
+Il 29 luglio 2026, LorenzoOS è entrato ufficialmente a far parte dei progetti gestiti dal VigoneTech Team.
+
+In fondo alla pagina sono disponibili alcuni screenshot delle varie versioni del sistema per offrirvi un'anteprima dell'interfaccia grafica e delle funzionalità incluse! ⬇️

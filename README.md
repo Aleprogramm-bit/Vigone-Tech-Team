@@ -1,5 +1,4 @@
-Questi sono le pagine del mio OS e 
-quello di un mio amico insieme a un giornale
+Queste sono le pagine del loro OS e giornale
 
 🖥️💻 Vi auguriamo un buon utilizzo! :) 😊
 

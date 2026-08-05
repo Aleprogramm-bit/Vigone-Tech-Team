@@ -7,18 +7,19 @@
 
     <style>
         :root {
-            --bg: #f4f7fb;
-            --card-bg: #ffffff;
-            --text: #222;
+            --bg: #eef1f6;
+            --card-bg: #ffffffcc;
+            --text: #1f1f1f;
             --primary: #0b5ed7;
             --muted: #555;
             --border: #d0d7e2;
+            --radius: 14px;
         }
 
         /* Tema scuro */
         :root.dark {
             --bg: #0d0d0d;
-            --card-bg: #1e1e1e;
+            --card-bg: #1e1e1ecc;
             --text: #e8eaed;
             --primary: #4a8af0;
             --muted: #9aa0a6;
@@ -31,6 +32,7 @@
             padding: 0;
             background: var(--bg);
             color: var(--text);
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         header {
@@ -38,20 +40,19 @@
             color: #fff;
             padding: 20px 30px;
             display: flex;
-            align-items: center;
             justify-content: flex-end;
-            position: relative;
-            box-shadow: 0 2px 8px #00000033;
+            align-items: center;
+            box-shadow: 0 3px 10px #00000033;
         }
 
         /* Pulsante tema */
         #themeToggle {
-            padding: 8px 12px;
+            padding: 8px 14px;
             font-size: 18px;
             cursor: pointer;
             background: #ffffff33;
             border: 1px solid #ffffff55;
-            border-radius: 8px;
+            border-radius: 10px;
             color: #fff;
             backdrop-filter: blur(4px);
             transition: 0.25s;
@@ -59,24 +60,25 @@
 
         #themeToggle:hover {
             background: #ffffff55;
+            transform: scale(1.05);
         }
 
         main {
             max-width: 900px;
             margin: 40px auto;
-            padding: 0 20px 50px;
+            padding: 0 20px 60px;
         }
 
         h2 {
             color: var(--primary);
-            margin-top: 30px;
-            font-size: 1.6rem;
-            font-weight: 600;
+            margin-top: 28px;
+            font-size: 1.7rem;
+            font-weight: 650;
         }
 
         p {
-            line-height: 1.6;
-            font-size: 1rem;
+            line-height: 1.65;
+            font-size: 1.05rem;
         }
 
         ul {
@@ -91,12 +93,16 @@
 
         .box-info {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 26px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.10);
             border: 1px solid var(--border);
-            margin-top: 20px;
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
+            transition: 0.3s ease;
+        }
+
+        .box-info:hover {
+            box-shadow: 0 8px 26px rgba(0,0,0,0.14);
         }
 
         .highlight {
@@ -108,6 +114,19 @@
             margin-top: 25px;
             font-size: 0.9rem;
             color: var(--muted);
+        }
+
+        /* Link YouTube */
+        .yt-link {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .yt-link:hover {
+            text-decoration: underline;
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -153,7 +172,7 @@
 
         <h2>YouTube</h2>
         <ul>
-            <li>https://www.youtube.com/@VigoneTechTeam</li>
+            <li><a class="yt-link" href="https://www.youtube.com/@VigoneTechTeam" target="_blank">youtube.com/@VigoneTechTeam</a></li>
         </ul>
 
         <h2>Chi siamo</h2>

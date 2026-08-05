@@ -7,21 +7,15 @@
 
 <style>
     :root {
-        --bg: #f5f5f5;
-        --card-bg: #ffffffcc;
-        --text: #202124;
-        --border: #dadce0;
-        --shadow: #00000022;
-        --primary: #1a73e8;
-    }
-
-    :root.dark {
         --bg: #0d0d0d;
-        --card-bg: #1e1e1ecc;
+        --card-bg: #1e1e1e;
         --text: #e8eaed;
         --border: #3c4043;
         --shadow: #00000055;
         --primary: #8ab4f8;
+        --snake: #4CAF50;
+        --snake-border: #2e7d32;
+        --food: #ff5252;
     }
 
     body {
@@ -45,7 +39,7 @@
 
     .btn {
         display: block;
-        width: 220px;
+        width: 240px;
         margin: 12px auto;
         padding: 12px;
         background: var(--primary);
@@ -79,7 +73,6 @@
         margin-top: 10px;
     }
 
-    /* BACK BUTTON */
     .back {
         margin-top: 20px;
         font-size: 16px;
@@ -91,11 +84,11 @@
 </head>
 <body>
 
-<h1>Snake – VigoneTech Team</h1>
+<h1>Snake by VigoneTech Team</h1>
 
 <!-- MENU PRINCIPALE -->
 <div id="menu">
-    <button class="btn" onclick="startGame()">Inizia</button>
+    <button class="btn" onclick="startGame()">Inizia!</button>
     <button class="btn" onclick="showOptions()">Opzioni</button>
     <button class="btn" onclick="showCredits()">Crediti</button>
     <a class="btn" href="index.html">Indietro</a>
@@ -105,17 +98,17 @@
 <div id="options" style="display:none;">
     <h2>Opzioni</h2>
     <p>Velocità del gioco:</p>
-    <button class="btn" onclick="setSpeed(120)">Lento</button>
-    <button class="btn" onclick="setSpeed(80)">Normale</button>
-    <button class="btn" onclick="setSpeed(50)">Veloce</button>
+    <button class="btn" onclick="setSpeed(140)">Lento</button>
+    <button class="btn" onclick="setSpeed(90)">Normale</button>
+    <button class="btn" onclick="setSpeed(60)">Veloce</button>
     <div class="back" onclick="backToMenu()">Indietro</div>
 </div>
 
 <!-- CREDITI -->
 <div id="credits" style="display:none;">
     <h2>Crediti</h2>
-    <p>Gioco Snake sviluppato da VigoneTech Team.</p>
-    <p>Programmazione: Lorenzo & Copilot</p>
+    <p>Gioco Snake sviluppato da VigoneTech Team in HTML5, CSS e JS.</p>
+    <p>Programmazione: LoreTnani</p>
     <div class="back" onclick="backToMenu()">Indietro</div>
 </div>
 
@@ -127,7 +120,7 @@
 let canvas = document.getElementById("gameCanvas");
 let ctx = canvas.getContext("2d");
 
-let speed = 80;
+let speed = 90;
 let snake = [{x: 200, y: 200}];
 let direction = "RIGHT";
 let food = spawnFood();
@@ -178,6 +171,12 @@ function update() {
     if (direction === "LEFT") head.x -= 20;
     if (direction === "RIGHT") head.x += 20;
 
+    /* WRAP-AROUND */
+    if (head.x < 0) head.x = 380;
+    if (head.x > 380) head.x = 0;
+    if (head.y < 0) head.y = 380;
+    if (head.y > 380) head.y = 0;
+
     snake.unshift(head);
 
     if (head.x === food.x && head.y === food.y) {
@@ -188,7 +187,7 @@ function update() {
         snake.pop();
     }
 
-    if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400 || collision(head)) {
+    if (collision(head)) {
         gameOver();
         return;
     }
@@ -204,11 +203,22 @@ function draw() {
     ctx.fillStyle = "#111";
     ctx.fillRect(0, 0, 400, 400);
 
-    ctx.fillStyle = "#4CAF50";
-    snake.forEach(part => ctx.fillRect(part.x, part.y, 20, 20));
+    /* SNAKE */
+    snake.forEach(part => {
+        ctx.fillStyle = "var(--snake)";
+        ctx.fillRect(part.x, part.y, 20, 20);
 
-    ctx.fillStyle = "#e53935";
+        ctx.strokeStyle = "var(--snake-border)";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(part.x, part.y, 20, 20);
+    });
+
+    /* FOOD */
+    ctx.shadowColor = "var(--food)";
+    ctx.shadowBlur = 12;
+    ctx.fillStyle = "var(--food)";
     ctx.fillRect(food.x, food.y, 20, 20);
+    ctx.shadowBlur = 0;
 }
 
 function gameOver() {

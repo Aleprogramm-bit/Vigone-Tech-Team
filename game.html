@@ -8,20 +8,16 @@
 <style>
     :root {
         --bg: #0d0d0d;
-        --card-bg: #1e1e1e;
         --text: #e8eaed;
         --border: #3c4043;
         --shadow: #00000055;
         --primary: #8ab4f8;
-        --snake: #4CAF50;
-        --snake-border: #2e7d32;
-        --food: #ff5252;
     }
 
     body {
         margin: 0;
         font-family: Arial, sans-serif;
-        background: var(--bg);
+        background: radial-gradient(circle at top, #222 0, #000 60%);
         color: var(--text);
         text-align: center;
     }
@@ -40,7 +36,7 @@
     .btn {
         display: block;
         width: 240px;
-        margin: 12px auto;
+        margin: 10px auto;
         padding: 12px;
         background: var(--primary);
         color: #fff;
@@ -49,28 +45,29 @@
         font-size: 18px;
         font-weight: bold;
         box-shadow: 0 4px 12px var(--shadow);
-        transition: 0.25s;
+        transition: 0.2s;
         cursor: pointer;
+        border: none;
     }
 
     .btn:hover {
         filter: brightness(0.92);
-        transform: translateY(-3px);
+        transform: translateY(-2px);
     }
 
     /* CANVAS */
     #gameCanvas {
         display: none;
         background: #111;
-        margin: 30px auto;
+        margin: 30px auto 10px auto;
         border: 4px solid var(--border);
-        box-shadow: 0 4px 12px var(--shadow);
+        box-shadow: 0 4px 16px #000;
     }
 
     #score {
         display: none;
         font-size: 22px;
-        margin-top: 10px;
+        margin-top: 8px;
     }
 
     .back {
@@ -84,11 +81,11 @@
 </head>
 <body>
 
-<h1>Snake by VigoneTech Team</h1>
+<h1>Snake – VigoneTech Team</h1>
 
 <!-- MENU PRINCIPALE -->
 <div id="menu">
-    <button class="btn" onclick="startGame()">Inizia!</button>
+    <button class="btn" onclick="startGame()">Inizia</button>
     <button class="btn" onclick="showOptions()">Opzioni</button>
     <button class="btn" onclick="showCredits()">Crediti</button>
     <a class="btn" href="index.html">Indietro</a>
@@ -117,15 +114,15 @@
 <div id="score">Punteggio: 0</div>
 
 <script>
-let canvas = document.getElementById("gameCanvas");
-let ctx = canvas.getContext("2d");
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
 let speed = 90;
-let snake = [{x: 200, y: 200}];
-let direction = "RIGHT";
-let food = spawnFood();
-let score = 0;
-let gameLoop;
+let snake;
+let direction;
+let food;
+let score;
+let gameLoop = null;
 
 document.addEventListener("keydown", keyPress);
 
@@ -138,6 +135,11 @@ function startGame() {
     document.getElementById("score").style.display = "block";
 
     resetGame();
+    startLoop();
+}
+
+function startLoop() {
+    if (gameLoop) clearInterval(gameLoop);
     gameLoop = setInterval(update, speed);
 }
 
@@ -164,14 +166,14 @@ function keyPress(e) {
 }
 
 function update() {
-    let head = {...snake[0]};
+    const head = {x: snake[0].x, y: snake[0].y};
 
     if (direction === "UP") head.y -= 20;
     if (direction === "DOWN") head.y += 20;
     if (direction === "LEFT") head.x -= 20;
     if (direction === "RIGHT") head.x += 20;
 
-    /* WRAP-AROUND */
+    // WRAP-AROUND
     if (head.x < 0) head.x = 380;
     if (head.x > 380) head.x = 0;
     if (head.y < 0) head.y = 380;
@@ -200,24 +202,38 @@ function collision(head) {
 }
 
 function draw() {
+    // sfondo campo
     ctx.fillStyle = "#111";
     ctx.fillRect(0, 0, 400, 400);
 
-    /* SNAKE */
-    snake.forEach(part => {
-        ctx.fillStyle = "var(--snake)";
-        ctx.fillRect(part.x, part.y, 20, 20);
+    // griglia leggera
+    ctx.strokeStyle = "#222";
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 400; i += 20) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, 400);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(400, i);
+        ctx.stroke();
+    }
 
-        ctx.strokeStyle = "var(--snake-border)";
+    // serpente
+    snake.forEach((part, index) => {
+        ctx.fillStyle = index === 0 ? "#4CAF50" : "#43A047";
+        ctx.fillRect(part.x, part.y, 20, 20);
+        ctx.strokeStyle = "#2E7D32";
         ctx.lineWidth = 2;
         ctx.strokeRect(part.x, part.y, 20, 20);
     });
 
-    /* FOOD */
-    ctx.shadowColor = "var(--food)";
-    ctx.shadowBlur = 12;
-    ctx.fillStyle = "var(--food)";
-    ctx.fillRect(food.x, food.y, 20, 20);
+    // cibo
+    ctx.fillStyle = "#FF5252";
+    ctx.shadowColor = "#FF5252";
+    ctx.shadowBlur = 10;
+    ctx.fillRect(food.x + 2, food.y + 2, 16, 16);
     ctx.shadowBlur = 0;
 }
 
@@ -230,14 +246,17 @@ function gameOver() {
 function showOptions() {
     document.getElementById("menu").style.display = "none";
     document.getElementById("options").style.display = "block";
+    document.getElementById("credits").style.display = "none";
 }
 
 function showCredits() {
     document.getElementById("menu").style.display = "none";
+    document.getElementById("options").style.display = "none";
     document.getElementById("credits").style.display = "block";
 }
 
 function backToMenu() {
+    if (gameLoop) clearInterval(gameLoop);
     canvas.style.display = "none";
     document.getElementById("score").style.display = "none";
     document.getElementById("menu").style.display = "block";
@@ -247,7 +266,11 @@ function backToMenu() {
 
 function setSpeed(s) {
     speed = s;
-    alert("Velocità impostata!");
+    alert("Velocità impostata: " + s + " ms");
+    // se il gioco è attivo, riavvia il loop con la nuova velocità
+    if (canvas.style.display === "block") {
+        startLoop();
+    }
 }
 </script>
 

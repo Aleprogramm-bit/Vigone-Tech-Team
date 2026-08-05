@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Snake – VigoneTech Team</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    :root {
+        --bg: #f5f5f5;
+        --card-bg: #ffffffcc;
+        --text: #202124;
+        --border: #dadce0;
+        --shadow: #00000022;
+        --primary: #1a73e8;
+    }
+
+    :root.dark {
+        --bg: #0d0d0d;
+        --card-bg: #1e1e1ecc;
+        --text: #e8eaed;
+        --border: #3c4043;
+        --shadow: #00000055;
+        --primary: #8ab4f8;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        text-align: center;
+    }
+
+    h1 {
+        margin-top: 20px;
+        font-size: 32px;
+        text-shadow: 0 2px 6px var(--shadow);
+    }
+
+    /* MENU */
+    #menu, #options, #credits {
+        margin-top: 40px;
+    }
+
+    .btn {
+        display: block;
+        width: 220px;
+        margin: 12px auto;
+        padding: 12px;
+        background: var(--primary);
+        color: #fff;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: bold;
+        box-shadow: 0 4px 12px var(--shadow);
+        transition: 0.25s;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        filter: brightness(0.92);
+        transform: translateY(-3px);
+    }
+
+    /* CANVAS */
+    #gameCanvas {
+        display: none;
+        background: #111;
+        margin: 30px auto;
+        border: 4px solid var(--border);
+        box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    #score {
+        display: none;
+        font-size: 22px;
+        margin-top: 10px;
+    }
+
+    /* BACK BUTTON */
+    .back {
+        margin-top: 20px;
+        font-size: 16px;
+        color: var(--primary);
+        cursor: pointer;
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+
+<h1>Snake – VigoneTech Team</h1>
+
+<!-- MENU PRINCIPALE -->
+<div id="menu">
+    <button class="btn" onclick="startGame()">Inizia</button>
+    <button class="btn" onclick="showOptions()">Opzioni</button>
+    <button class="btn" onclick="showCredits()">Crediti</button>
+    <a class="btn" href="index.html">Indietro</a>
+</div>
+
+<!-- OPZIONI -->
+<div id="options" style="display:none;">
+    <h2>Opzioni</h2>
+    <p>Velocità del gioco:</p>
+    <button class="btn" onclick="setSpeed(120)">Lento</button>
+    <button class="btn" onclick="setSpeed(80)">Normale</button>
+    <button class="btn" onclick="setSpeed(50)">Veloce</button>
+    <div class="back" onclick="backToMenu()">Indietro</div>
+</div>
+
+<!-- CREDITI -->
+<div id="credits" style="display:none;">
+    <h2>Crediti</h2>
+    <p>Gioco Snake sviluppato da VigoneTech Team.</p>
+    <p>Programmazione: Lorenzo & Copilot</p>
+    <div class="back" onclick="backToMenu()">Indietro</div>
+</div>
+
+<!-- GIOCO -->
+<canvas id="gameCanvas" width="400" height="400"></canvas>
+<div id="score">Punteggio: 0</div>
+
+<script>
+let canvas = document.getElementById("gameCanvas");
+let ctx = canvas.getContext("2d");
+
+let speed = 80;
+let snake = [{x: 200, y: 200}];
+let direction = "RIGHT";
+let food = spawnFood();
+let score = 0;
+let gameLoop;
+
+document.addEventListener("keydown", keyPress);
+
+function startGame() {
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("options").style.display = "none";
+    document.getElementById("credits").style.display = "none";
+
+    canvas.style.display = "block";
+    document.getElementById("score").style.display = "block";
+
+    resetGame();
+    gameLoop = setInterval(update, speed);
+}
+
+function resetGame() {
+    snake = [{x: 200, y: 200}];
+    direction = "RIGHT";
+    food = spawnFood();
+    score = 0;
+    document.getElementById("score").innerText = "Punteggio: 0";
+}
+
+function spawnFood() {
+    return {
+        x: Math.floor(Math.random() * 20) * 20,
+        y: Math.floor(Math.random() * 20) * 20
+    };
+}
+
+function keyPress(e) {
+    if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+    if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+    if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+    if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+}
+
+function update() {
+    let head = {...snake[0]};
+
+    if (direction === "UP") head.y -= 20;
+    if (direction === "DOWN") head.y += 20;
+    if (direction === "LEFT") head.x -= 20;
+    if (direction === "RIGHT") head.x += 20;
+
+    snake.unshift(head);
+
+    if (head.x === food.x && head.y === food.y) {
+        score++;
+        document.getElementById("score").innerText = "Punteggio: " + score;
+        food = spawnFood();
+    } else {
+        snake.pop();
+    }
+
+    if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400 || collision(head)) {
+        gameOver();
+        return;
+    }
+
+    draw();
+}
+
+function collision(head) {
+    return snake.slice(1).some(part => part.x === head.x && part.y === head.y);
+}
+
+function draw() {
+    ctx.fillStyle = "#111";
+    ctx.fillRect(0, 0, 400, 400);
+
+    ctx.fillStyle = "#4CAF50";
+    snake.forEach(part => ctx.fillRect(part.x, part.y, 20, 20));
+
+    ctx.fillStyle = "#e53935";
+    ctx.fillRect(food.x, food.y, 20, 20);
+}
+
+function gameOver() {
+    clearInterval(gameLoop);
+    alert("Game Over! Punteggio: " + score);
+    backToMenu();
+}
+
+function showOptions() {
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("options").style.display = "block";
+}
+
+function showCredits() {
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("credits").style.display = "block";
+}
+
+function backToMenu() {
+    canvas.style.display = "none";
+    document.getElementById("score").style.display = "none";
+    document.getElementById("menu").style.display = "block";
+    document.getElementById("options").style.display = "none";
+    document.getElementById("credits").style.display = "none";
+}
+
+function setSpeed(s) {
+    speed = s;
+    alert("Velocità impostata!");
+}
+</script>
+
+</body>
+</html>

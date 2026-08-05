@@ -13,7 +13,9 @@
             --text: #202124;
             --muted: #5f6368;
             --border: #dadce0;
-            --shadow: #00000022;
+            --shadow-sm: 0 2px 6px #00000022;
+            --shadow-md: 0 4px 12px #00000022;
+            --shadow-lg: 0 10px 26px #00000033;
         }
 
         /* Tema scuro */
@@ -24,7 +26,9 @@
             --text: #e8eaed;
             --muted: #9aa0a6;
             --border: #3c4043;
-            --shadow: #00000055;
+            --shadow-sm: 0 2px 6px #00000055;
+            --shadow-md: 0 4px 12px #00000055;
+            --shadow-lg: 0 10px 26px #00000077;
         }
 
         body {
@@ -39,64 +43,68 @@
         header {
             background: var(--card-bg);
             border-bottom: 1px solid var(--border);
-            padding: 14px 26px;
+            padding: 16px 28px;
             display: flex;
             align-items: center;
-            gap: 14px;
-            backdrop-filter: blur(10px);
+            gap: 16px;
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-md);
         }
 
         header .logo img {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--border);
-            box-shadow: 0 2px 6px var(--shadow);
+            box-shadow: var(--shadow-sm);
         }
 
         header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 600;
+            letter-spacing: 0.3px;
         }
 
         /* Pulsante tema */
         #themeToggle {
             margin-left: auto;
-            padding: 8px 14px;
+            padding: 8px 16px;
             font-size: 18px;
             cursor: pointer;
             background: #ffffff33;
             border: 1px solid #ffffff55;
-            border-radius: 8px;
+            border-radius: 10px;
             color: var(--text);
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(6px);
             transition: 0.25s;
         }
 
         #themeToggle:hover {
             background: #ffffff55;
+            transform: translateY(-2px);
         }
 
         /* CONTAINER */
         .container {
             max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 18px;
+            margin: 50px auto;
+            padding: 0 20px;
         }
 
         h2 {
-            font-size: 28px;
-            margin-bottom: 26px;
+            font-size: 30px;
+            margin-bottom: 30px;
             font-weight: 600;
-            text-shadow: 0 1px 2px var(--shadow);
+            text-align: center;
+            text-shadow: var(--shadow-sm);
         }
 
         /* CARDS */
         .cards {
             display: flex;
-            gap: 22px;
+            gap: 26px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -104,59 +112,59 @@
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 24px;
+            border-radius: 16px;
+            padding: 26px;
             width: 300px;
             text-align: center;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
             transition: transform 0.25s, box-shadow 0.25s;
-            box-shadow: 0 4px 12px var(--shadow);
+            box-shadow: var(--shadow-md);
         }
 
         .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 24px var(--shadow);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
         }
 
         .card img {
-            width: 92px;
-            height: 92px;
+            width: 96px;
+            height: 96px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             border: 2px solid var(--border);
-            box-shadow: 0 2px 6px var(--shadow);
+            box-shadow: var(--shadow-sm);
         }
 
         .card h3 {
-            margin: 12px 0;
-            font-size: 20px;
+            margin: 14px 0;
+            font-size: 21px;
             font-weight: 600;
         }
 
         .card p {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--muted);
-            line-height: 1.45;
+            line-height: 1.5;
         }
 
         /* BUTTON */
         .btn {
             display: inline-block;
-            margin-top: 16px;
-            padding: 10px 18px;
+            margin-top: 18px;
+            padding: 12px 20px;
             background: var(--primary);
             color: #fff;
-            border-radius: 8px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: 600;
             transition: 0.25s;
-            box-shadow: 0 3px 10px var(--shadow);
+            box-shadow: var(--shadow-sm);
         }
 
         .btn:hover {
             filter: brightness(0.92);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
         }
     </style>
 </head>
@@ -187,7 +195,7 @@
             <img src="giornale.png" alt="Giornale">
             <h3>Giornale Tecnologico</h3>
             <p>Il giornale tecnologico scritto da Alessio.</p>
-            <a class="btn" href="https://sites.google.com/view/curiositynews">Vai al giornale</a>
+            <a class="btn" href="https://sites.google.com/view/curiositynews/tecnologie-avanzate">Vai al giornale</a>
         </div>
 
         <div class="card">

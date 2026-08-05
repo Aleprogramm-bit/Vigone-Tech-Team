@@ -161,47 +161,33 @@
             transform: translateY(-3px);
         }
 
-        /* FOOTER */
-        footer {
-            margin-top: 50px;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: var(--muted);
-        }
-
-        /* SORPRESA: VigoneTech Pulse */
-        .pulse-box {
+        /* BANNER BIOS */
+        .bios-box {
             margin: 40px auto 10px;
-            width: 260px;
+            width: 420px;
             padding: 20px;
             border-radius: 16px;
             background: var(--card-bg);
             border: 1px solid var(--border);
             box-shadow: var(--shadow-md);
             backdrop-filter: blur(10px);
+            text-align: left;
+            font-family: "Courier New", monospace;
+        }
+
+        .bios-text {
+            white-space: pre-line;
+            font-size: 15px;
+            color: var(--text);
+            min-height: 60px;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px;
             text-align: center;
-        }
-
-        .pulse-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .pulse-dot {
-            width: 18px;
-            height: 18px;
-            margin: 0 auto;
-            border-radius: 50%;
-            background: var(--primary);
-            animation: pulse 1.4s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.6); opacity: 0.4; }
-            100% { transform: scale(1); opacity: 1; }
+            font-size: 14px;
+            color: var(--muted);
         }
     </style>
 </head>
@@ -251,13 +237,9 @@
 
     </div>
 
-    <!-- SORPRESA: VigoneTech Pulse -->
-    <div class="pulse-box">
-        <div class="pulse-title">VigoneTech Pulse</div>
-        <div class="pulse-dot"></div>
-        <p style="margin-top: 12px; font-size: 13px; color: var(--muted);">
-            Sistema attivo · Team online
-        </p>
+    <!-- BANNER BIOS -->
+    <div class="bios-box">
+        <div class="bios-text" id="biosText"></div>
     </div>
 
 </div>
@@ -273,6 +255,34 @@
         document.documentElement.classList.toggle("dark");
         toggle.textContent = document.documentElement.classList.contains("dark") ? "☀️" : "🌙";
     });
+
+    // BIOS typing effect
+    const biosLines = [
+        "Starting VigonePC-DOS...",
+        "GRAZIE PER AVER VISITATO VIGONETECH TEAM"
+    ];
+
+    let index = 0;
+    let charIndex = 0;
+    const biosText = document.getElementById("biosText");
+
+    function typeLine() {
+        if (index < biosLines.length) {
+            const line = biosLines[index];
+            if (charIndex < line.length) {
+                biosText.textContent += line[charIndex];
+                charIndex++;
+                setTimeout(typeLine, 40);
+            } else {
+                biosText.textContent += "\n";
+                index++;
+                charIndex = 0;
+                setTimeout(typeLine, 300);
+            }
+        }
+    }
+
+    typeLine();
 </script>
 
 </body>

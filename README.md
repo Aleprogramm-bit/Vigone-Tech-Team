@@ -1,7 +1,5 @@
-Queste sono le pagine del loro OS e giornale
+Benvenuti nel mondo del nostro OS e del nostro giornale digitale.  
+🖥️💻 Speriamo che l’esperienza vi piaccia e vi accompagni al meglio.  
+📰🗞️ Buona lettura e buon viaggio tra le nostre pagine.
 
-🖥️💻 Vi auguriamo un buon utilizzo! :) 😊
-
-📰🗞️ E per il giornale buona lettura :) 🙂
-
-Aleprogramm; LoreTnani; Alessio e le AI
+Team: Aleprogramm • LoreTnani • Alessio • AI

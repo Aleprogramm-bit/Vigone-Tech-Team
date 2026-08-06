@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Canali Rai</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root {
+            --bg: #e9eef5;
+            --glass: rgba(255,255,255,0.55);
+            --text: #1f1f1f;
+            --border: #d0d7e2;
+            --radius: 18px;
+            --shadow-md: 0 6px 18px rgba(0,0,0,0.18);
+            --shadow-lg: 0 14px 32px rgba(0,0,0,0.25);
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", system-ui, sans-serif;
+            background: url("back.png") no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text);
+        }
+
+        header {
+            background: var(--glass);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 32px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            backdrop-filter: blur(14px);
+            box-shadow: var(--shadow-md);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .channel {
+            width: 220px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(14px);
+            box-shadow: var(--shadow-md);
+            transition: 0.3s ease;
+        }
+
+        .channel:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .channel img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 12px;
+        }
+
+        .channel h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Canali Rai</h1>
+</header>
+
+<div class="container">
+    <h2>Lista Completa dei Canali Rai</h2>
+
+    <div class="grid">
+
+        <div class="channel">
+            <img src="rai1.svg" alt="Rai 1">
+            <h3>Rai 1</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai2.svg" alt="Rai 2">
+            <h3>Rai 2</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai3.svg" alt="Rai 3">
+            <h3>Rai 3</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai4.svg" alt="Rai 4">
+            <h3>Rai 4</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai5.svg" alt="Rai 5">
+            <h3>Rai 5</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai6_movie.svg" alt="Rai Movie">
+            <h3>Rai Movie</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai7_premium.svg" alt="Rai Premium">
+            <h3>Rai Premium</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai8_gulp.svg" alt="Rai Gulp">
+            <h3>Rai Gulp</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai9_yoyo.svg" alt="Rai Yoyo">
+            <h3>Rai Yoyo</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai10_news.svg" alt="Rai News 24">
+            <h3>Rai News 24</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai11_storia.svg" alt="Rai Storia">
+            <h3>Rai Storia</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai12_sport.svg" alt="Rai Sport">
+            <h3>Rai Sport</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai13_scuola.svg" alt="Rai Scuola">
+            <h3>Rai Scuola</h3>
+        </div>
+
+        <div class="channel">
+            <img src="rai14_radio2.svg" alt="Rai Radio 2">
+            <h3>Rai Radio 2</h3>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    © 2026 · VigoneTech Team, Rai Radiotelevisione Italiana.
+</footer>
+
+</body>
+</html>

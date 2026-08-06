@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+        /* Tema chiaro */
         :root {
             --bg: #f5f5f5;
             --card-bg: #ffffffcc;
@@ -18,16 +19,19 @@
             --shadow-lg: 0 10px 26px #00000033;
         }
 
-        :root.dark {
-            --bg: #0d0d0d;
-            --card-bg: #1e1e1ecc;
-            --primary: #8ab4f8;
-            --text: #e8eaed;
-            --muted: #9aa0a6;
-            --border: #3c4043;
-            --shadow-sm: 0 2px 6px #00000055;
-            --shadow-md: 0 4px 12px #00000055;
-            --shadow-lg: 0 10px 26px #00000077;
+        /* Tema scuro automatico */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0d0d0d;
+                --card-bg: #1e1e1ecc;
+                --primary: #8ab4f8;
+                --text: #e8eaed;
+                --muted: #9aa0a6;
+                --border: #3c4043;
+                --shadow-sm: 0 2px 6px #00000055;
+                --shadow-md: 0 4px 12px #00000055;
+                --shadow-lg: 0 10px 26px #00000077;
+            }
         }
 
         * { box-sizing: border-box; }
@@ -69,24 +73,6 @@
             margin: 0;
             font-size: 13px;
             color: var(--muted);
-        }
-
-        #themeToggle {
-            margin-left: auto;
-            padding: 8px 16px;
-            font-size: 18px;
-            cursor: pointer;
-            background: #ffffff33;
-            border: 1px solid #ffffff55;
-            border-radius: 10px;
-            color: var(--text);
-            backdrop-filter: blur(6px);
-            transition: 0.25s;
-        }
-
-        #themeToggle:hover {
-            background: #ffffff55;
-            transform: translateY(-2px);
         }
 
         .page {
@@ -131,16 +117,8 @@
             font-weight: 600;
         }
 
-        :root.dark nav a.active {
-            background: #1a1f26;
-        }
-
         nav a:hover {
             background: #f1f3f4;
-        }
-
-        :root.dark nav a:hover {
-            background: #2a2a2a;
         }
 
         main {
@@ -207,8 +185,6 @@
         <h1>LorenzoOS</h1>
         <p>Download ISO</p>
     </div>
-
-    <button id="themeToggle">🌙</button>
 </header>
 
 <div class="page">
@@ -251,15 +227,6 @@
 </div>
 
 <footer>© 2026 · LorenzoOS · LoreTnani</footer>
-
-<script>
-    const toggle = document.getElementById("themeToggle");
-
-    toggle.addEventListener("click", () => {
-        document.documentElement.classList.toggle("dark");
-        toggle.textContent = document.documentElement.classList.contains("dark") ? "☀️" : "🌙";
-    });
-</script>
 
 </body>
 </html>

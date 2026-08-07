@@ -10,72 +10,131 @@
         --bg: #0d0d0d;
         --text: #e8eaed;
         --border: #3c4043;
-        --shadow: #00000055;
+        --shadow: rgba(0, 0, 0, 0.35);
         --primary: #8ab4f8;
+        --primary-hover: #669df6;
     }
 
     body {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background: radial-gradient(circle at top, #222 0, #000 60%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at top, #222 0%, #0d0d0d 100%);
         color: var(--text);
         text-align: center;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     h1 {
-        margin-top: 20px;
+        margin: 10px 0;
         font-size: 32px;
         text-shadow: 0 2px 6px var(--shadow);
     }
 
-    /* MENU */
-    #menu, #options, #credits {
-        margin-top: 40px;
+    /* MENU E SEZIONI */
+    .section {
+        display: none;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .active {
+        display: block;
     }
 
     .btn {
         display: block;
-        width: 240px;
-        margin: 10px auto;
+        width: 100%;
+        max-width: 260px;
+        margin: 12px auto;
         padding: 12px;
         background: var(--primary);
-        color: #fff;
-        border-radius: 10px;
+        color: #121212;
+        border-radius: 8px;
         text-decoration: none;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         box-shadow: 0 4px 12px var(--shadow);
-        transition: 0.2s;
+        transition: all 0.2s ease;
         cursor: pointer;
         border: none;
     }
 
     .btn:hover {
-        filter: brightness(0.92);
+        background: var(--primary-hover);
         transform: translateY(-2px);
     }
 
-    /* CANVAS */
-    #gameCanvas {
-        display: none;
-        background: #111;
-        margin: 30px auto 10px auto;
-        border: 4px solid var(--border);
-        box-shadow: 0 4px 16px #000;
+    .btn-speed {
+        margin: 6px auto;
+        background: #333;
+        color: #fff;
     }
 
-    #score {
+    .btn-speed.active-speed {
+        background: var(--primary);
+        color: #121212;
+    }
+
+    /* CANVAS E HUD */
+    #gameContainer {
         display: none;
-        font-size: 22px;
-        margin-top: 8px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #gameCanvas {
+        background: #111;
+        border: 3px solid var(--border);
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    }
+
+    .hud {
+        display: flex;
+        justify-content: space-between;
+        width: 400px;
+        margin-top: 10px;
+        font-size: 18px;
+        font-weight: bold;
     }
 
     .back {
-        margin-top: 20px;
-        font-size: 16px;
+        margin-top: 15px;
+        font-size: 15px;
         color: var(--primary);
         cursor: pointer;
         text-decoration: underline;
+    }
+
+    /* CONTROLLI TOUCH MOBILE */
+    #mobileControls {
+        display: none;
+        grid-template-columns: repeat(3, 60px);
+        grid-template-rows: repeat(2, 60px);
+        gap: 8px;
+        margin-top: 15px;
+    }
+
+    .touch-btn {
+        background: #222;
+        border: 1px solid var(--border);
+        color: #fff;
+        border-radius: 8px;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+    }
+
+    @media (max-width: 600px) {
+        #mobileControls {
+            display: grid;
+        }
     }
 </style>
 </head>
@@ -84,56 +143,80 @@
 <h1>Snake – VigoneTech Team</h1>
 
 <!-- MENU PRINCIPALE -->
-<div id="menu">
-    <button class="btn" onclick="startGame()">Inizia (puoi giocare solo con tastiera)</button>
-    <button class="btn" onclick="showOptions()">Opzioni</button>
-    <button class="btn" onclick="showCredits()">Crediti</button>
-    <a class="btn" href="index.html">Indietro</a>
+<div id="menu" class="section active">
+    <button class="btn" onclick="startGame()">Gioca</button>
+    <button class="btn" onclick="showSection('options')">Opzioni</button>
+    <button class="btn" onclick="showSection('credits')">Crediti</button>
 </div>
 
 <!-- OPZIONI -->
-<div id="options" style="display:none;">
+<div id="options" class="section">
     <h2>Opzioni</h2>
     <p>Velocità del gioco:</p>
-    <button class="btn" onclick="setSpeed(140)">Lento</button>
-    <button class="btn" onclick="setSpeed(90)">Normale</button>
-    <button class="btn" onclick="setSpeed(60)">Veloce</button>
-    <div class="back" onclick="backToMenu()">Indietro</div>
+    <button class="btn btn-speed" id="speed-140" onclick="setSpeed(140)">Lento</button>
+    <button class="btn btn-speed active-speed" id="speed-90" onclick="setSpeed(90)">Normale</button>
+    <button class="btn btn-speed" id="speed-60" onclick="setSpeed(60)">Veloce</button>
+    <div class="back" onclick="showSection('menu')">Indietro</div>
 </div>
 
 <!-- CREDITI -->
-<div id="credits" style="display:none;">
+<div id="credits" class="section">
     <h2>Crediti</h2>
-    <p>Gioco Snake sviluppato da VigoneTech Team in HTML5, CSS e JS.</p>
-    <p>Programmazione: LoreTnani</p>
-    <div class="back" onclick="backToMenu()">Indietro</div>
+    <p>Sviluppato da <strong>VigoneTech Team</strong></p>
+    <p>Programmazione: <em>LoreTnani</em></p>
+    <div class="back" onclick="showSection('menu')">Indietro</div>
 </div>
 
-<!-- GIOCO -->
-<canvas id="gameCanvas" width="400" height="400"></canvas>
-<div id="score">Punteggio: 0</div>
+<!-- AREA GIOCO -->
+<div id="gameContainer">
+    <div class="hud">
+        <span id="score">Punti: 0</span>
+        <span id="highScore">Record: 0</span>
+    </div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    
+    <!-- Controlli Mobile -->
+    <div id="mobileControls">
+        <div></div>
+        <button class="touch-btn" onclick="handleTouch('UP')">▲</button>
+        <div></div>
+        <button class="touch-btn" onclick="handleTouch('LEFT')">◄</button>
+        <button class="touch-btn" onclick="handleTouch('DOWN')">▼</button>
+        <button class="touch-btn" onclick="handleTouch('RIGHT')">►</button>
+    </div>
+
+    <div class="back" onclick="backToMenu()">Esci al Menu</div>
+</div>
 
 <script>
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let speed = 90;
-let snake;
-let direction;
-let food;
-let score;
-let gameLoop = null;
+const GRID_SIZE = 20;
+const TILE_COUNT = canvas.width / GRID_SIZE;
 
+let speed = 90;
+let snake = [];
+let direction = "RIGHT";
+let nextDirection = "RIGHT";
+let food = { x: 0, y: 0 };
+let score = 0;
+let highScore = localStorage.getItem("snake_highscore") || 0;
+let gameLoop = null;
+let isPaused = false;
+
+document.getElementById("highScore").innerText = "Record: " + highScore;
 document.addEventListener("keydown", keyPress);
 
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('gameContainer').style.display = 'none';
+    if (id) document.getElementById(id).classList.add('active');
+}
+
 function startGame() {
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("options").style.display = "none";
-    document.getElementById("credits").style.display = "none";
-
-    canvas.style.display = "block";
-    document.getElementById("score").style.display = "block";
-
+    showSection(null);
+    document.getElementById("gameContainer").style.display = "flex";
     resetGame();
     startLoop();
 }
@@ -144,133 +227,165 @@ function startLoop() {
 }
 
 function resetGame() {
-    snake = [{x: 200, y: 200}];
+    snake = [
+        { x: 10 * GRID_SIZE, y: 10 * GRID_SIZE },
+        { x: 9 * GRID_SIZE, y: 10 * GRID_SIZE },
+        { x: 8 * GRID_SIZE, y: 10 * GRID_SIZE }
+    ];
     direction = "RIGHT";
-    food = spawnFood();
+    nextDirection = "RIGHT";
     score = 0;
-    document.getElementById("score").innerText = "Punteggio: 0";
+    isPaused = false;
+    updateScoreUI();
+    food = spawnFood();
 }
 
 function spawnFood() {
-    return {
-        x: Math.floor(Math.random() * 20) * 20,
-        y: Math.floor(Math.random() * 20) * 20
-    };
+    let newFood;
+    while (true) {
+        newFood = {
+            x: Math.floor(Math.random() * TILE_COUNT) * GRID_SIZE,
+            y: Math.floor(Math.random() * TILE_COUNT) * GRID_SIZE
+        };
+        // Evita che il cibo nasca sopra il serpente
+        const onSnake = snake.some(part => part.x === newFood.x && part.y === newFood.y);
+        if (!onSnake) break;
+    }
+    return newFood;
 }
 
 function keyPress(e) {
-    if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-    if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
-    if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-    if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+    if (e.key === " " || e.key.toLowerCase() === "p") {
+        isPaused = !isPaused;
+        return;
+    }
+
+    if (isPaused) return;
+
+    if ((e.key === "ArrowUp" || e.key === "w") && direction !== "DOWN") nextDirection = "UP";
+    if ((e.key === "ArrowDown" || e.key === "s") && direction !== "UP") nextDirection = "DOWN";
+    if ((e.key === "ArrowLeft" || e.key === "a") && direction !== "RIGHT") nextDirection = "LEFT";
+    if ((e.key === "ArrowRight" || e.key === "d") && direction !== "LEFT") nextDirection = "RIGHT";
+}
+
+function handleTouch(dir) {
+    if (dir === "UP" && direction !== "DOWN") nextDirection = "UP";
+    if (dir === "DOWN" && direction !== "UP") nextDirection = "DOWN";
+    if (dir === "LEFT" && direction !== "RIGHT") nextDirection = "LEFT";
+    if (dir === "RIGHT" && direction !== "LEFT") nextDirection = "RIGHT";
 }
 
 function update() {
-    const head = {x: snake[0].x, y: snake[0].y};
+    if (isPaused) {
+        drawPauseScreen();
+        return;
+    }
 
-    if (direction === "UP") head.y -= 20;
-    if (direction === "DOWN") head.y += 20;
-    if (direction === "LEFT") head.x -= 20;
-    if (direction === "RIGHT") head.x += 20;
+    direction = nextDirection;
+    const head = { x: snake[0].x, y: snake[0].y };
 
-    // WRAP-AROUND
-    if (head.x < 0) head.x = 380;
-    if (head.x > 380) head.x = 0;
-    if (head.y < 0) head.y = 380;
-    if (head.y > 380) head.y = 0;
+    if (direction === "UP") head.y -= GRID_SIZE;
+    if (direction === "DOWN") head.y += GRID_SIZE;
+    if (direction === "LEFT") head.x -= GRID_SIZE;
+    if (direction === "RIGHT") head.x += GRID_SIZE;
+
+    // Wraparound bordi
+    if (head.x < 0) head.x = canvas.width - GRID_SIZE;
+    if (head.x >= canvas.width) head.x = 0;
+    if (head.y < 0) head.y = canvas.height - GRID_SIZE;
+    if (head.y >= canvas.height) head.y = 0;
+
+    // Collisione con se stesso
+    if (snake.some(part => part.x === head.x && part.y === head.y)) {
+        gameOver();
+        return;
+    }
 
     snake.unshift(head);
 
+    // Mangia cibo
     if (head.x === food.x && head.y === food.y) {
         score++;
-        document.getElementById("score").innerText = "Punteggio: " + score;
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem("snake_highscore", highScore);
+        }
+        updateScoreUI();
         food = spawnFood();
     } else {
         snake.pop();
     }
 
-    if (collision(head)) {
-        gameOver();
-        return;
-    }
-
     draw();
 }
 
-function collision(head) {
-    return snake.slice(1).some(part => part.x === head.x && part.y === head.y);
+function updateScoreUI() {
+    document.getElementById("score").innerText = "Punti: " + score;
+    document.getElementById("highScore").innerText = "Record: " + highScore;
 }
 
 function draw() {
-    // sfondo campo
+    // Sfondo
     ctx.fillStyle = "#111";
-    ctx.fillRect(0, 0, 400, 400);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // griglia leggera
-    ctx.strokeStyle = "#222";
+    // Griglia
+    ctx.strokeStyle = "#1a1a1a";
     ctx.lineWidth = 1;
-    for (let i = 0; i <= 400; i += 20) {
+    for (let i = 0; i <= canvas.width; i += GRID_SIZE) {
         ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, 400);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.lineTo(400, i);
+        ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height);
+        ctx.moveTo(0, i); ctx.lineTo(canvas.width, i);
         ctx.stroke();
     }
 
-    // serpente
+    // Serpente
     snake.forEach((part, index) => {
-        ctx.fillStyle = index === 0 ? "#4CAF50" : "#43A047";
-        ctx.fillRect(part.x, part.y, 20, 20);
-        ctx.strokeStyle = "#2E7D32";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(part.x, part.y, 20, 20);
+        ctx.fillStyle = index === 0 ? "#8ab4f8" : "#4c8bf5";
+        ctx.fillRect(part.x + 1, part.y + 1, GRID_SIZE - 2, GRID_SIZE - 2);
     });
 
-    // cibo
-    ctx.fillStyle = "#FF5252";
-    ctx.shadowColor = "#FF5252";
-    ctx.shadowBlur = 10;
-    ctx.fillRect(food.x + 2, food.y + 2, 16, 16);
-    ctx.shadowBlur = 0;
+    // Cibo
+    ctx.fillStyle = "#ff5252";
+    ctx.beginPath();
+    ctx.arc(food.x + GRID_SIZE / 2, food.y + GRID_SIZE / 2, GRID_SIZE / 2 - 2, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function drawPauseScreen() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#fff";
+    ctx.font = "24px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("PAUSA", canvas.width / 2, canvas.height / 2);
 }
 
 function gameOver() {
     clearInterval(gameLoop);
-    alert("Game Over! Punteggio: " + score);
-    backToMenu();
-}
+    ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-function showOptions() {
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("options").style.display = "block";
-    document.getElementById("credits").style.display = "none";
-}
+    ctx.fillStyle = "#ff5252";
+    ctx.font = "bold 30px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 20);
 
-function showCredits() {
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("options").style.display = "none";
-    document.getElementById("credits").style.display = "block";
+    ctx.fillStyle = "#fff";
+    ctx.font = "18px Arial";
+    ctx.fillText("Punteggio: " + score, canvas.width / 2, canvas.height / 2 + 20);
 }
 
 function backToMenu() {
     if (gameLoop) clearInterval(gameLoop);
-    canvas.style.display = "none";
-    document.getElementById("score").style.display = "none";
-    document.getElementById("menu").style.display = "block";
-    document.getElementById("options").style.display = "none";
-    document.getElementById("credits").style.display = "none";
+    showSection('menu');
 }
 
 function setSpeed(s) {
     speed = s;
-    alert("Velocità impostata: " + s + " ms");
-    // se il gioco è attivo, riavvia il loop con la nuova velocità
-    if (canvas.style.display === "block") {
-        startLoop();
-    }
+    document.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active-speed'));
+    document.getElementById('speed-' + s).classList.add('active-speed');
+    if (gameLoop) startLoop();
 }
 </script>
 

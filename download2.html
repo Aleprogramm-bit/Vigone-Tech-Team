@@ -4,174 +4,289 @@
     <meta charset="UTF-8">
     <title>Scarica la ISO di LorenzoOS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       
+
     <style>
-        /* Tema chiaro */
         :root {
-            --bg: #f5f5f5;
-            --card-bg: #ffffffcc;
-            --primary: #1a73e8;
-            --text: #202124;
-            --muted: #5f6368;
-            --border: #dadce0;
-            --shadow-sm: 0 2px 6px #00000022;
-            --shadow-md: 0 4px 12px #00000022;
-            --shadow-lg: 0 10px 26px #00000033;
+            --bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-hover: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: rgba(226, 232, 240, 0.8);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
         }
 
-        /* Tema scuro automatico */
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg: #0d0d0d;
-                --card-bg: #1e1e1ecc;
-                --primary: #8ab4f8;
-                --text: #e8eaed;
-                --muted: #9aa0a6;
-                --border: #3c4043;
-                --shadow-sm: 0 2px 6px #00000055;
-                --shadow-md: 0 4px 12px #00000055;
-                --shadow-lg: 0 10px 26px #00000077;
+                --bg: #0f172a;
+                --card-bg: rgba(30, 41, 59, 0.7);
+                --card-hover: #1e293b;
+                --primary: #60a5fa;
+                --primary-hover: #93c5fd;
+                --text: #f8fafc;
+                --muted: #94a3b8;
+                --border: rgba(51, 65, 85, 0.6);
+                --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+                --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+                --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
             }
         }
 
-        * { box-sizing: border-box; }
-
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            padding: 0;
         }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* HEADER */
         header {
             background: var(--card-bg);
             border-bottom: 1px solid var(--border);
-            padding: 16px 28px;
+            padding: 16px 32px;
             display: flex;
             align-items: center;
             gap: 16px;
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         header img {
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
             object-fit: cover;
-            border: 2px solid var(--border);
+            border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
         }
 
         header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
         header p {
-            margin: 0;
             font-size: 13px;
             color: var(--muted);
         }
 
+        /* PAGE LAYOUT */
         .page {
             max-width: 1100px;
+            width: 100%;
             margin: 40px auto;
             padding: 0 20px;
             display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 28px;
+            grid-template-columns: 240px 1fr;
+            gap: 32px;
+            flex: 1;
         }
 
+        /* NAVIGATION */
         nav {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: var(--radius-lg);
             padding: 20px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             box-shadow: var(--shadow-md);
-            backdrop-filter: blur(8px);
+            align-self: start;
         }
 
         nav h2 {
-            font-size: 15px;
-            margin: 0 0 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
             color: var(--muted);
-            font-weight: 600;
+            font-weight: 700;
+        }
+
+        nav ul {
+            list-style: none;
         }
 
         nav a {
-            display: block;
+            display: flex;
+            align-items: center;
             padding: 10px 14px;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             text-decoration: none;
-            font-size: 15px;
+            font-size: 14px;
+            font-weight: 500;
             color: var(--text);
-            border-radius: 8px;
-            transition: 0.25s;
-        }
-
-        nav a.active {
-            background: #e8f0fe;
-            color: var(--primary);
-            font-weight: 600;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
         }
 
         nav a:hover {
-            background: #f1f3f4;
+            background: var(--border);
         }
 
+        nav a.active {
+            background: var(--primary);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            nav a.active {
+                color: #0f172a;
+            }
+        }
+
+        /* MAIN CONTENT */
         main {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 30px;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             box-shadow: var(--shadow-md);
-            backdrop-filter: blur(8px);
         }
 
         main h2 {
-            margin-top: 0;
             font-size: 26px;
-            font-weight: 600;
-            margin-bottom: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
         }
 
         main p {
             font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            color: var(--text);
+            opacity: 0.9;
+        }
+
+        /* SECTION */
+        .section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* BUTTONS */
+        .button-row {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .btn {
-            display: inline-block;
-            padding: 12px 20px;
-            border-radius: 10px;
-            background: var(--primary);
-            color: #fff;
-            text-decoration: none;
-            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
             font-weight: 600;
-            transition: 0.25s;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            color: var(--text);
+            background: var(--card-hover);
+            transition: all 0.2s ease;
             box-shadow: var(--shadow-sm);
         }
 
         .btn:hover {
-            filter: brightness(0.92);
-            transform: translateY(-3px);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
+        .btn.primary {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: transparent;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .btn.primary {
+                color: #0f172a;
+            }
+        }
+
+        .btn.primary:hover {
+            filter: brightness(1.1);
+        }
+
+        /* FOOTER */
         footer {
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
             color: var(--muted);
-            padding: 20px;
-            margin-top: 40px;
+            padding: 24px 20px;
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
-        @media (max-width: 800px) {
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
             .page {
                 grid-template-columns: 1fr;
+                margin: 20px auto;
+            }
+
+            header {
+                padding: 14px 20px;
+            }
+
+            main {
+                padding: 24px;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
             }
         }
     </style>
@@ -179,54 +294,64 @@
 
 <body>
 
-<header>
-    <img src="logo2.png" alt="Logo LorenzoOS">
-    <div>
-        <h1>LorenzoOS</h1>
-        <p>Download ISO</p>
+    <header>
+        <img src="logo2.png" alt="Logo LorenzoOS" onerror="this.src='https://via.placeholder.com/44'">
+        <div>
+            <h1>LorenzoOS</h1>
+            <p>Download ISO</p>
+        </div>
+    </header>
+
+    <div class="page">
+        <nav>
+            <h2>Navigazione</h2>
+            <ul>
+                <li><a href="main2.html">Home page</a></li>
+                <li><a href="download2.html" class="active">Download ISO</a></li>
+                <li><a href="changelog2.html">Changelog</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <span class="badge">Download Diretto</span>
+            <h2>Scarica LorenzoOS</h2>
+            <p>
+                La ISO è disponibile e pronta all’uso. Scaricala subito per esplorare il sistema in pochi istanti! 😊
+            </p>
+
+            <div class="button-row">
+                <a class="btn primary" href="https://drive.google.com/drive/folders/1y8Hw7K532IorwH5HKxY5TuDf-l3BIRcF" target="_blank" rel="noopener">
+                    Download ISO
+                </a>
+            </div>
+
+            <div class="section">
+                <span class="badge">Hardware</span>
+                <h3>Requisiti minimi</h3>
+                <p>
+                    LorenzoOS è un sistema operativo leggero basato su architettura x86,
+                    eseguibile anche con soli 32MB di RAM.
+                    È un sistema “Live OS”: l’intero software risiede nella ISO e può essere avviato
+                    direttamente senza necessità di installazione sul disco.
+                </p>
+            </div>
+
+            <div class="section">
+                <span class="badge">Supporto</span>
+                <h3>Guida all’installazione</h3>
+                <p>
+                    Serve aiuto per avviare l'immagine ISO su macchina virtuale o supporto fisico? Consulta la nostra guida integrata.
+                </p>
+                <div class="button-row">
+                    <a href="guide2.txt" class="btn">Apri la guida (.txt)</a>
+                </div>
+            </div>
+        </main>
     </div>
-</header>
 
-<div class="page">
-    <nav>
-        <h2>Navigazione</h2>
-        <a href="main2.html">Home page</a>
-        <a href="download2.html" class="active">Download ISO</a>
-        <a href="changelog2.html">Changelog</a>
-    </nav>
-
-<main>
-    <h2>Scarica LorenzoOS</h2>
-
-    <p>
-        La ISO è disponibile e pronta all’uso.  
-        Scaricala e avvia subito il sistema! 😊
-    </p>
-
-    <div style="margin: 26px 0;">
-        <a class="btn" href="https://drive.google.com/drive/folders/1y8Hw7K532IorwH5HKxY5TuDf-l3BIRcF">
-            Download ISO
-        </a>
-    </div>
-
-    <h2>Requisiti minimi</h2>
-    <p>
-        LorenzoOS è un sistema operativo leggero basato su architettura x86,
-        eseguibile anche con soli 32MB di RAM.
-        È un sistema “Live OS”: l’intero software risiede nella ISO e può essere avviato
-        direttamente senza installazione.
-    </p>
-
-    <h3>Guida all’installazione</h3>
-
-    <div style="margin-top: 18px;">
-        <a href="guide2.txt" class="btn">Apri la guida</a>
-    </div>
-</main>
-
-</div>
-
-<footer>© 2026 · LorenzoOS · LoreTnani</footer>
+    <footer>
+        © 2026 · LorenzoOS · LoreTnani
+    </footer>
 
 </body>
 </html>

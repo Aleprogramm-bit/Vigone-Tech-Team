@@ -2,197 +2,342 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Assistenza Informatica di VigoneTech Team - Sempre al tuo servizio</title>
+    <title>Assistenza Informatica | VigoneTech Team</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Assistenza informatica rapida e professionale a cura del VigoneTech Team. Risposta garantita entro 24 ore.">
 
     <style>
         :root {
-            --bg: #eef1f6;
-            --card-bg: #ffffffcc;
-            --text: #1f1f1f;
-            --primary: #0b5ed7;
-            --muted: #555;
-            --border: #d0d7e2;
-            --radius: 14px;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --border: #e2e8f0;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --accent: #f59e0b;
+            --radius: 12px;
         }
 
-        /* Tema scuro */
         :root.dark {
-            --bg: #0d0d0d;
-            --card-bg: #1e1e1ecc;
-            --text: #e8eaed;
-            --primary: #4a8af0;
-            --muted: #9aa0a6;
-            --border: #3c4043;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #60a5fa;
+            --border: #334155;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            --accent: #fbbf24;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            margin: 0;
-            padding: 0;
-            background: var(--bg);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
             color: var(--text);
-            transition: background 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
-            background: var(--primary);
-            color: #fff;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            box-shadow: 0 3px 10px #00000033;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
         }
 
-        /* Pulsante tema */
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
         #themeToggle {
-            padding: 8px 14px;
-            font-size: 18px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
             cursor: pointer;
-            background: #ffffff33;
-            border: 1px solid #ffffff55;
-            border-radius: 10px;
-            color: #fff;
-            backdrop-filter: blur(4px);
-            transition: 0.25s;
+            color: var(--text);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
         }
 
         #themeToggle:hover {
-            background: #ffffff55;
-            transform: scale(1.05);
+            background-color: var(--border);
         }
 
         main {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px 60px;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
         }
 
-        h2 {
-            color: var(--primary);
-            margin-top: 28px;
-            font-size: 1.7rem;
-            font-weight: 650;
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
         }
 
-        p {
-            line-height: 1.65;
-            font-size: 1.05rem;
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
         }
 
-        ul {
-            margin-top: 10px;
-            padding-left: 22px;
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--muted);
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        li {
-            margin-bottom: 6px;
-            font-size: 0.95rem;
-        }
-
-        .box-info {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.10);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(8px);
-            transition: 0.3s ease;
-        }
-
-        .box-info:hover {
-            box-shadow: 0 8px 26px rgba(0,0,0,0.14);
-        }
-
-        .highlight {
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
             font-weight: 600;
-            color: #d97706;
+            margin-bottom: 1rem;
         }
 
-        .footer-note {
-            margin-top: 25px;
-            font-size: 0.9rem;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .services-list {
+            list-style: none;
+        }
+
+        .services-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .services-list li:last-child {
+            border-bottom: none;
+        }
+
+        .services-list li::before {
+            content: "✓";
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .contact-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .contact-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .contact-link:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .contact-role {
+            font-size: 0.8rem;
             color: var(--muted);
         }
 
-        /* Link YouTube */
-        .yt-link {
-            color: var(--primary);
-            font-weight: 600;
-            text-decoration: none;
-            transition: 0.2s;
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.875rem;
+            background-color: var(--surface);
         }
 
-        .yt-link:hover {
-            text-decoration: underline;
-            opacity: 0.8;
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 1.875rem; }
+            main { margin: 1rem auto; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <button id="themeToggle">🌙</button>
+    <div class="nav-container">
+        <a href="#" class="logo">VigoneTech Team</a>
+        <button id="themeToggle" aria-label="Cambia tema">
+            <span id="themeIcon">🌙</span>
+            <span id="themeText">Scuro</span>
+        </button>
+    </div>
 </header>
 
 <main>
-    <section class="box-info">
-        <h2>Siamo al tuo servizio</h2>
-        <p>
-            La nostra assistenza informatica è pensata per offrirti supporto rapido, chiaro e professionale.
-            Qualsiasi problema tecnico tu stia affrontando, siamo pronti ad aiutarti.
-        </p>
+    <section class="hero">
+        <div class="badge">⏱️ Risposta garantita entro 24 ore</div>
+        <h1>Assistenza Informatica al tuo servizio</h1>
+        <p>Supporto tecnico rapido, chiaro e professionale per risolvere ogni tuo problema con PC, reti e software.</p>
+    </section>
 
-        <h2>Risposta entro 24 ore</h2>
-        <p>
-            Durante le normali ore lavorative garantiamo una risposta entro
-            <span class="highlight">24 ore</span>, così non rimani mai senza supporto quando ne hai bisogno.
-        </p>
+    <div class="grid">
+        <!-- SERVIZI -->
+        <article class="card">
+            <h2>🛠️ Cosa Offriamo</h2>
+            <ul class="services-list">
+                <li>Diagnosi e risoluzione problemi</li>
+                <li>Consulenza tecnica personalizzata</li>
+                <li>Assistenza su PC, reti e dispositivi</li>
+                <li>Supporto e installazione software</li>
+            </ul>
+        </article>
 
-        <h2>Cosa offriamo</h2>
-        <ul>
-            <li>Diagnosi e risoluzione problemi</li>
-            <li>Consulenza tecnica</li>
-            <li>Assistenza su PC, reti, software e dispositivi</li>
-        </ul>
+        <!-- CHI SIAMO -->
+        <article class="card">
+            <h2>👥 Chi Siamo</h2>
+            <p>Siamo due ragazzi appassionati di tecnologia che aiutano privati e piccole attività a risolvere qualsiasi problema informatico con efficienza e trasparenza.</p>
+        </article>
+    </div>
 
-        <h2>Contattaci</h2>
-        <p>
-            Siamo qui per te: affidabili, veloci e pronti a intervenire.
-            Puoi usare questa pagina come punto di riferimento per il tuo sito
-            o per informare i clienti sui tempi di risposta.
-        </p>
+    <!-- CONTATTI -->
+    <section class="card" style="margin-bottom: 2rem;">
+        <h2>📬 Canali di Contatto</h2>
+        <p style="color: var(--muted); margin-bottom: 1rem;">Scrivici direttamente via e-mail per ricevere supporto o seguici sul nostro canale YouTube.</p>
 
-        <h2>E-mail</h2>
-        <ul>
-            <li>vigonetechteam@protonmail.com — Aleprogramm</li>
-            <li>vigonetechteam@outlook.it — LoreTnani</li>
-        </ul>
+        <div class="grid" style="margin-bottom: 0;">
+            <div>
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">E-mail di Supporto</h3>
+                <ul class="contact-list">
+                    <li class="contact-item">
+                        <a class="contact-link" href="mailto:vigonetechteam@protonmail.com">
+                            <span>vigonetechteam@protonmail.com</span>
+                            <span class="contact-role">Aleprogramm</span>
+                        </a>
+                    </li>
+                    <li class="contact-item">
+                        <a class="contact-link" href="mailto:vigonetechteam@outlook.it">
+                            <span>vigonetechteam@outlook.it</span>
+                            <span class="contact-role">LoreTnani</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-        <h2>YouTube</h2>
-        <ul>
-            <li><a class="yt-link" href="https://www.youtube.com/@VigoneTechTeam" target="_blank">youtube.com/@VigoneTechTeam</a></li>
-        </ul>
-
-        <h2>Chi siamo</h2>
-        <p>
-            Siamo 2 ragazzi che aiutano gli altri in informatica.
-        </p>
-        
-        <p class="footer-note">
-            Rispondiamo entro 24h durante le normali ore lavorative.
-        </p>
+            <div>
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Social & Media</h3>
+                <ul class="contact-list">
+                    <li class="contact-item">
+                        <a class="contact-link" href="https://www.youtube.com/@VigoneTechTeam" target="_blank" rel="noopener">
+                            <span>Canale YouTube</span>
+                            <span class="contact-role">@VigoneTechTeam ↗</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </section>
 </main>
 
-<script>
-    const toggle = document.getElementById("themeToggle");
+<footer>
+    <p>&copy; VigoneTech Team. Rispondiamo entro 24h durante le normali ore lavorative.</p>
+</footer>
 
-    toggle.addEventListener("click", () => {
-        document.documentElement.classList.toggle("dark");
-        toggle.textContent = document.documentElement.classList.contains("dark") ? "☀️" : "🌙";
+<script>
+    const toggleBtn = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeText = document.getElementById("themeText");
+
+    // Controlla preferenza salvata o del sistema
+    const savedTheme = localStorage.getItem("theme");
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
+        document.documentElement.classList.add("dark");
+        updateUI(true);
+    } else {
+        updateUI(false);
+    }
+
+    toggleBtn.addEventListener("click", () => {
+        const isDark = document.documentElement.classList.toggle("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        updateUI(isDark);
     });
+
+    function updateUI(isDark) {
+        themeIcon.textContent = isDark ? "☀️" : "🌙";
+        themeText.textContent = isDark ? "Chiaro" : "Scuro";
+    }
 </script>
 
 </body>

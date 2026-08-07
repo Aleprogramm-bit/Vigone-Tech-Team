@@ -2,66 +2,79 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>VigoneTech Team</title>
+    <title>VigoneTech Team – Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        /* TEMA CHIARO */
         :root {
             --bg: #e9eef5;
-            --glass: rgba(255,255,255,0.55);
+            --glass: rgba(255, 255, 255, 0.65);
+            --glass-card: rgba(255, 255, 255, 0.55);
             --primary: #1a73e8;
+            --primary-hover: #1557b0;
             --text: #1f1f1f;
             --muted: #5f6368;
-            --border: #d0d7e2;
+            --border: rgba(208, 215, 226, 0.6);
             --radius: 18px;
 
-            --shadow-sm: 0 2px 6px rgba(0,0,0,0.15);
-            --shadow-md: 0 6px 18px rgba(0,0,0,0.18);
-            --shadow-lg: 0 14px 32px rgba(0,0,0,0.25);
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.1);
+            --shadow-md: 0 6px 18px rgba(0,0,0,0.12);
+            --shadow-lg: 0 14px 32px rgba(0,0,0,0.18);
         }
 
-        /* TEMA SCURO AUTOMATICO */
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg: #0d0d0d;
-                --glass: rgba(30,30,30,0.55);
+                --glass: rgba(25, 25, 25, 0.75);
+                --glass-card: rgba(30, 30, 30, 0.60);
                 --primary: #8ab4f8;
+                --primary-hover: #aecbfa;
                 --text: #e8eaed;
                 --muted: #9aa0a6;
-                --border: #3c4043;
+                --border: rgba(255, 255, 255, 0.12);
 
-                --shadow-sm: 0 2px 6px rgba(0,0,0,0.55);
-                --shadow-md: 0 6px 18px rgba(0,0,0,0.55);
-                --shadow-lg: 0 14px 32px rgba(0,0,0,0.75);
+                --shadow-sm: 0 2px 6px rgba(0,0,0,0.4);
+                --shadow-md: 0 6px 18px rgba(0,0,0,0.5);
+                --shadow-lg: 0 14px 32px rgba(0,0,0,0.7);
             }
         }
 
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
-            font-family: "Segoe UI", system-ui, sans-serif;
-            background: url("back.png") no-repeat center center fixed;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+            background: var(--bg) url("back.png") no-repeat center center fixed;
             background-size: cover;
             color: var(--text);
-            transition: background 0.4s ease, color 0.4s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         /* HEADER */
         header {
             background: var(--glass);
             border-bottom: 1px solid var(--border);
-            padding: 18px 32px;
+            padding: 16px 32px;
             display: flex;
             align-items: center;
-            gap: 18px;
-            backdrop-filter: blur(14px);
+            gap: 16px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             box-shadow: var(--shadow-md);
-            animation: fadeIn 0.8s ease;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         header .logo img {
-            width: 58px;
-            height: 58px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--border);
@@ -69,119 +82,134 @@
         }
 
         header h1 {
-            margin: 0;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            letter-spacing: 0.4px;
+            letter-spacing: 0.3px;
         }
 
         /* CONTAINER */
         .container {
-            max-width: 1150px;
-            margin: 60px auto;
+            max-width: 1200px;
+            margin: 40px auto;
             padding: 0 20px;
-            animation: fadeIn 1s ease;
+            flex: 1;
+            animation: fadeIn 0.8s ease-out;
         }
 
         h2 {
-            font-size: 32px;
+            font-size: 28px;
             margin-bottom: 32px;
             font-weight: 700;
             text-align: center;
             text-shadow: var(--shadow-sm);
         }
 
-        /* CARDS */
+        /* GRID CARDS */
         .cards {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
             justify-content: center;
         }
 
         .card {
-            background: var(--glass);
+            background: var(--glass-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 28px;
-            width: 300px;
+            padding: 24px;
             text-align: center;
-            backdrop-filter: blur(14px);
-            transition: 0.35s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
             box-shadow: var(--shadow-md);
-            transform: translateY(0);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .card:hover {
-            transform: translateY(-10px) scale(1.03);
+            transform: translateY(-8px);
             box-shadow: var(--shadow-lg);
         }
 
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .card img {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             border: 2px solid var(--border);
             box-shadow: var(--shadow-sm);
         }
 
         .card h3 {
-            margin: 14px 0;
-            font-size: 22px;
+            margin-bottom: 10px;
+            font-size: 20px;
             font-weight: 650;
         }
 
         .card p {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--muted);
-            line-height: 1.55;
+            line-height: 1.5;
+            margin-bottom: 18px;
         }
 
         .btn {
             display: inline-block;
-            margin-top: 18px;
-            padding: 12px 22px;
+            width: 80%;
+            padding: 10px 16px;
             background: var(--primary);
             color: #fff;
-            border-radius: 12px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: 600;
-            transition: 0.25s;
+            font-size: 14px;
+            transition: all 0.2s ease;
             box-shadow: var(--shadow-sm);
         }
 
         .btn:hover {
-            filter: brightness(0.92);
-            transform: translateY(-3px);
+            filter: brightness(1.1);
+            transform: scale(1.02);
         }
 
-        /* BIOS BOX */
-        .bios-box {
-            margin: 50px auto 10px;
-            width: 460px;
-            padding: 24px;
-            border-radius: var(--radius);
-            background: var(--glass);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-md);
-            backdrop-filter: blur(14px);
-            text-align: left;
-            font-family: "Courier New", monospace;
-        }
-
+        /* FOOTER */
         footer {
-            margin-top: 60px;
-            padding: 20px;
+            padding: 24px 20px;
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--muted);
+            background: var(--glass);
+            border-top: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            margin-top: auto;
         }
 
-        /* ANIMAZIONI */
+        .secret-egg {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 0 4px;
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+
+        .secret-egg:hover {
+            opacity: 1;
+        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -191,7 +219,7 @@
 
 <header>
     <div class="logo">
-        <img src="techteam.jpg" alt="VigoneTech">
+        <img src="techteam.jpg" alt="VigoneTech Logo" onerror="this.src='https://via.placeholder.com/52'">
     </div>
     <h1>VigoneTech Team</h1>
 </header>
@@ -199,79 +227,58 @@
 <div class="container">
     <h2>I Nostri Progetti</h2>
 
-<div class="cards">
+    <div class="cards">
+        <div class="card">
+            <div class="card-content">
+                <img src="logo2.png" alt="LorenzoOS" onerror="this.src='https://via.placeholder.com/90'">
+                <h3>LorenzoOS</h3>
+                <p>Il sistema operativo Web sviluppato da LoreTnani.</p>
+            </div>
+            <a class="btn" href="main2.html">Vai al sito</a>
+        </div>
 
-    <div class="card">
-        <img src="logo2.png" alt="LorenzoOS">
-        <h3>LorenzoOS</h3>
-        <p>Il sistema operativo sviluppato da LoreTnani.</p>
-        <a class="btn" href="main2.html">Vai al sito</a>
+        <div class="card">
+            <div class="card-content">
+                <img src="giornale.png" alt="Giornale" onerror="this.src='https://via.placeholder.com/90'">
+                <h3>Giornale Tecnologico</h3>
+                <p>Notizie e approfondimenti tecnologici a cura di Alessio.</p>
+            </div>
+            <a class="btn" href="https://sites.google.com/view/curiositynews/tecnologie-avanzate" target="_blank" rel="noopener">Leggi Ora</a>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <img src="aiuto.png" alt="Help" onerror="this.src='https://via.placeholder.com/90'">
+                <h3>Assistenza Informatica</h3>
+                <p>Supporto e assistenza rapida per i tuoi dispositivi.</p>
+            </div>
+            <a class="btn" href="help.html">Chiedi Aiuto</a>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <img src="mercato.png" alt="Mercato Smart" onerror="this.src='https://via.placeholder.com/90'">
+                <h3>Mercato Smart</h3>
+                <p>Il mercatino dell'usato digitale curato da Aleprogramm.</p>
+            </div>
+            <a class="btn" href="https://aleprogramm-bit.github.io/Mercatino-dell-usato-online/" target="_blank" rel="noopener">Visita</a>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <img src="game.png" alt="Game" onerror="this.src='https://via.placeholder.com/90'">
+                <h3>Snake Game</h3>
+                <p>Il classico gioco arcade rivisitato dal nostro team.</p>
+            </div>
+            <a class="btn" href="game.html">Gioca Ora</a>
+        </div>
     </div>
-
-    <div class="card">
-        <img src="giornale.png" alt="Giornale">
-        <h3>Giornale Tecnologico</h3>
-        <p>Il giornale tecnologico scritto da Alessio.</p>
-        <a class="btn" href="https://sites.google.com/view/curiositynews/tecnologie-avanzate">Vai al giornale</a>
-    </div>
-
-    <div class="card">
-        <img src="aiuto.png" alt="Help">
-        <h3>Assistenza Informatica sempre al tuo servizio!</h3>
-        <p>Ti assistiamo con i tuoi device!.</p>
-        <a class="btn" href="help.html">Vai all'assistenza</a>
-    </div>
-
-    <div class="card">
-        <img src="mercato.png" alt="Mercato Smart">
-        <h3>Mercato Smart</h3>
-        <p>Mercatino Digitale di Aleprogramm.</p>
-        <a class="btn" href="https://aleprogramm-bit.github.io/Mercatino-dell-usato-online/">Vai al Mercato</a>
-    </div>
-
-    <div class="card">
-        <img src="game.png" alt="Game">
-        <h3>Gioco Snake</h3>
-        <p>Classico gioco Nokia rivisitato da VigoneTech Team.</p>
-        <a class="btn" href="game.html">Gioca ora</a>
-    </div>
-
 </div>
 
 <footer>
     © 2026 · VigoneTech Team · LorenzoOS · Aleprogramm · Alessio · LoreTnani
-    <button class="secret-egg" onclick="window.location.href='https://mega.nz/file/21ZjRKxD#SXBncYNwsb9KSLJvDcIhMh2hHSrXAVnngRs4KGcSFh8';">_</button>
+    <button class="secret-egg" onclick="window.location.href='https://mega.nz/file/21ZjRKxD#SXBncYNwsb9KSLJvDcIhMh2hHSrXAVnngRs4KGcSFh8';" title="Secret">_</button>
 </footer>
-
-<script>
-    /* BIOS DIGITAZIONE */
-    const biosLines = [
-        "Starting VigonePC-DOS...",
-        "GRAZIE PER AVER VISITATO VIGONETECH TEAM"
-    ];
-
-    let index = 0;
-    let charIndex = 0;
-    const biosText = document.getElementById("biosText");
-
-    function typeLine() {
-        if (index < biosLines.length) {
-            const line = biosLines[index];
-            if (charIndex < line.length) {
-                biosText.textContent += line[charIndex];
-                charIndex++;
-                setTimeout(typeLine, 40);
-            } else {
-                biosText.textContent += "\n";
-                index++;
-                charIndex = 0;
-                setTimeout(typeLine, 300);
-            }
-        }
-    }
-
-    typeLine();
-</script>
 
 </body>
 </html>

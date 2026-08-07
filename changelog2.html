@@ -6,154 +6,289 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        /* Tema chiaro */
         :root {
-            --bg: #f5f5f5;
-            --card-bg: #ffffff;
-            --primary: #1a73e8;
-            --text: #202124;
-            --muted: #5f6368;
-            --border: #dadce0;
-            --shadow: #00000022;
+            --bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-hover: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: rgba(226, 232, 240, 0.8);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
         }
 
-        /* Tema scuro automatico */
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg: #121212;
-                --card-bg: #1e1e1e;
-                --primary: #8ab4f8;
-                --text: #e8eaed;
-                --muted: #9aa0a6;
-                --border: #3c4043;
-                --shadow: #00000055;
+                --bg: #0f172a;
+                --card-bg: rgba(30, 41, 59, 0.7);
+                --card-hover: #1e293b;
+                --primary: #60a5fa;
+                --primary-hover: #93c5fd;
+                --text: #f8fafc;
+                --muted: #94a3b8;
+                --border: rgba(51, 65, 85, 0.6);
+                --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+                --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+                --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
             }
         }
 
-        * { box-sizing: border-box; }
-
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            padding: 0;
         }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* HEADER */
         header {
             background: var(--card-bg);
             border-bottom: 1px solid var(--border);
-            padding: 14px 26px;
+            padding: 16px 32px;
             display: flex;
             align-items: center;
-            gap: 14px;
-            box-shadow: 0 2px 6px var(--shadow);
+            gap: 16px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         header img {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
             object-fit: cover;
-            border: 2px solid var(--border);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
         }
 
         header h1 {
-            margin: 0;
-            font-size: 22px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
         header p {
-            margin: 0;
             font-size: 13px;
             color: var(--muted);
         }
 
+        /* PAGE LAYOUT */
         .page {
             max-width: 1100px;
-            margin: 32px auto;
-            padding: 0 18px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 20px;
             display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 26px;
+            grid-template-columns: 240px 1fr;
+            gap: 32px;
+            flex: 1;
         }
 
+        /* NAVIGATION */
         nav {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 18px;
-            box-shadow: 0 3px 10px var(--shadow);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-md);
+            align-self: start;
         }
 
         nav h2 {
-            font-size: 14px;
-            margin: 0 0 14px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
             color: var(--muted);
-            font-weight: 600;
+            font-weight: 700;
+        }
+
+        nav ul {
+            list-style: none;
         }
 
         nav a {
-            display: block;
-            padding: 10px 12px;
-            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            margin-bottom: 4px;
             text-decoration: none;
             font-size: 14px;
+            font-weight: 500;
             color: var(--text);
-            border-radius: 6px;
-            transition: 0.25s;
-        }
-
-        nav a.active {
-            background: #e8f0fe;
-            color: var(--primary);
-            font-weight: bold;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
         }
 
         nav a:hover {
-            background: #f1f3f4;
+            background: var(--border);
         }
 
+        nav a.active {
+            background: var(--primary);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            nav a.active {
+                color: #0f172a;
+            }
+        }
+
+        /* MAIN CONTENT */
         main {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 26px;
-            box-shadow: 0 3px 10px var(--shadow);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-md);
         }
 
         main h2 {
-            margin-top: 0;
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
         }
 
-        main h3 {
-            font-size: 20px;
-            margin-top: 24px;
-            margin-bottom: 10px;
-        }
-
-        main p, main li {
+        main p {
             font-size: 15px;
-            line-height: 1.6;
+            color: var(--text);
+            opacity: 0.9;
         }
 
-        ul {
-            padding-left: 20px;
+        /* SECTION */
+        .section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
         }
 
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        /* CHANGELOG LIST */
+        .changelog-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .changelog-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--card-hover);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .changelog-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .version-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .version-tag {
+                color: #0f172a;
+            }
+        }
+
+        .changelog-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text);
+        }
+
+        /* FOOTER */
         footer {
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
             color: var(--muted);
-            padding: 18px;
-            margin-top: 32px;
+            padding: 24px 20px;
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
-        @media (max-width: 800px) {
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
             .page {
                 grid-template-columns: 1fr;
+                margin: 20px auto;
+            }
+
+            header {
+                padding: 14px 20px;
+            }
+
+            main {
+                padding: 24px;
+            }
+
+            .changelog-item {
+                flex-direction: column;
+                gap: 6px;
             }
         }
     </style>
@@ -161,45 +296,88 @@
 
 <body>
 
-<header>
-    <img src="logo2.png" alt="Logo LorenzoOS">
-    <div>
-        <h1>LorenzoOS</h1>
-        <p>Changelog</p>
+    <header>
+        <img src="logo2.png" alt="Logo LorenzoOS" onerror="this.src='https://via.placeholder.com/44'">
+        <div>
+            <h1>LorenzoOS</h1>
+            <p>Changelog</p>
+        </div>
+    </header>
+
+    <div class="page">
+        <nav>
+            <h2>Navigazione</h2>
+            <ul>
+                <li><a href="main2.html">Home page</a></li>
+                <li><a href="download2.html">Download ISO</a></li>
+                <li><a href="changelog2.html" class="active">Changelog</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <span class="badge">Cronologia Rilasci</span>
+            <h2>Registro aggiornamenti</h2>
+            <p>Qui vengono pubblicate tutte le modifiche, versioni e novità introdotte in LorenzoOS.</p>
+
+            <div class="section">
+                <h3>Storico Versioni</h3>
+                <ul class="changelog-list">
+                    <li class="changelog-item">
+                        <span class="version-tag">v4.0</span>
+                        <span class="changelog-text">Introduzione dell'utility Sticky Notes per appunti rapidi sul desktop.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v3.0</span>
+                        <span class="changelog-text">Aggiunti Colorizer, App Manager e avviso di disconnessione in stile Windows 3.x.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v2.0</span>
+                        <span class="changelog-text">Introduzione del comando Esegui, schermata di errore BSOD e disabilitazione della CLI di default.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v1.9</span>
+                        <span class="changelog-text">Implementazione del supporto multi-utente.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v1.8</span>
+                        <span class="changelog-text">Integrazione del Terminale CLI.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v1.7</span>
+                        <span class="changelog-text">Nuove personalizzazioni cromatiche del sistema.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v1.6.5</span>
+                        <span class="changelog-text">Aggiunto il gioco Tris.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v1.6</span>
+                        <span class="changelog-text">Nuova applicazione Orologio.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v1.5</span>
+                        <span class="changelog-text">Aggiunta dell'utility Winver per le informazioni di sistema.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v1.4</span>
+                        <span class="changelog-text">Introduzione del Task Manager per la gestione dei processi.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v1.3.1</span>
+                        <span class="changelog-text">Integrazione del classico gioco Snake.</span>
+                    </li>
+                    <li class="changelog-item">
+                        <span class="version-tag">v1.0</span>
+                        <span class="changelog-text">Rilascio iniziale con desktop personalizzabile, orologio RTC, blocco note, calcolatrice, impostazioni, screensaver, schermata di login e menu applicazioni.</span>
+                    </li>
+                </ul>
+            </div>
+        </main>
     </div>
-</header>
 
-<div class="page">
-    <nav>
-        <h2>Navigazione</h2>
-        <a href="main2.html">Home page</a>
-        <a href="download2.html">Download ISO</a>
-        <a href="changelog2.html" class="active">Changelog</a>
-    </nav>
-
-    <main>
-        <h2>Registro aggiornamenti</h2>
-        <p>Qui verranno pubblicate tutte le modifiche, versioni e novità di LorenzoOS.</p>
-
-        <h3>Versioni</h3>
-        <ul>
-            <li>LorenzoOS 1.0: Rilascio iniziale con desktop personalizzabile, orologio RTC, blocco note, calcolatrice, impostazioni, screensaver, schermata di login e menu applicazioni.</li>
-            <li>LorenzoOS 1.3.1: Integrazione del classico gioco Snake.</li>
-            <li>LorenzoOS 1.4: Introduzione del Task Manager.</li>
-            <li>LorenzoOS 1.5: Aggiunta dell'utility Winver.</li>
-            <li>LorenzoOS 1.6: Nuova app Orologio.</li>
-            <li>LorenzoOS 1.6.5: Aggiunto il gioco Tris.</li>
-            <li>LorenzoOS 1.7: Nuove personalizzazioni cromatiche.</li>
-            <li>LorenzoOS 1.8: Terminale CLI.</li>
-            <li>LorenzoOS 1.9: Supporto multi‑utente.</li>
-            <li>LorenzoOS 2.0: Comando Esegui, BSOD, CLI disabilitata.</li>
-            <li>LorenzoOS 3.0: Colorizer, App Manager, avviso disconnessione stile Win3.x.</li>
-            <li>LorenzoOS 4.0: Sticky Notes.</li>
-        </ul>
-    </main>
-</div>
-
-<footer>© 2026 · LorenzoOS · LoreTnani</footer>
+    <footer>
+        © 2026 · LorenzoOS · LoreTnani
+    </footer>
 
 </body>
 </html>

@@ -12,6 +12,7 @@
             --card-hover: #ffffff;
             --primary: #2563eb;
             --primary-hover: #1d4ed8;
+            --primary-light: rgba(37, 99, 235, 0.1);
             --text: #0f172a;
             --muted: #64748b;
             --border: rgba(226, 232, 240, 0.8);
@@ -25,10 +26,11 @@
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg: #0f172a;
-                --card-bg: rgba(30, 41, 59, 0.7);
+                --card-bg: rgba(30, 41, 59, 0.75);
                 --card-hover: #1e293b;
                 --primary: #60a5fa;
                 --primary-hover: #93c5fd;
+                --primary-light: rgba(96, 165, 250, 0.15);
                 --text: #f8fafc;
                 --muted: #94a3b8;
                 --border: rgba(51, 65, 85, 0.6);
@@ -62,13 +64,19 @@
             padding: 16px 32px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            justify-content: space-between;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
         header img {
@@ -89,6 +97,22 @@
         header p {
             font-size: 13px;
             color: var(--muted);
+        }
+
+        .back-portal {
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .back-portal:hover {
+            background: var(--border);
+            color: var(--text);
         }
 
         /* PAGE LAYOUT */
@@ -113,6 +137,8 @@
             -webkit-backdrop-filter: blur(12px);
             box-shadow: var(--shadow-md);
             align-self: start;
+            position: sticky;
+            top: 100px;
         }
 
         nav h2 {
@@ -182,18 +208,11 @@
             opacity: 0.9;
         }
 
-        /* SECTION */
-        .section {
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-        }
-
         .badge {
             display: inline-block;
             padding: 4px 12px;
             border-radius: 999px;
-            background: rgba(37, 99, 235, 0.1);
+            background: var(--primary-light);
             color: var(--primary);
             font-size: 12px;
             font-weight: 600;
@@ -202,15 +221,36 @@
             letter-spacing: 0.05em;
         }
 
-        .section h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
+        /* DOWNLOAD BOX */
+        .download-box {
+            background: var(--card-hover);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-top: 16px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .download-info {
+            display: flex;
+            gap: 24px;
+            font-size: 13px;
+            color: var(--muted);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .download-info span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         /* BUTTONS */
         .button-row {
-            margin-top: 20px;
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
@@ -220,7 +260,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 18px;
+            gap: 8px;
+            padding: 12px 22px;
             border-radius: var(--radius-md);
             font-size: 14px;
             font-weight: 600;
@@ -253,6 +294,43 @@
             filter: brightness(1.1);
         }
 
+        /* SECTION & TABLE */
+        .section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .specs-table th, .specs-table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .specs-table th {
+            color: var(--muted);
+            font-weight: 600;
+            width: 35%;
+            background: var(--primary-light);
+        }
+
+        .specs-table tr:last-child td, .specs-table tr:last-child th {
+            border-bottom: none;
+        }
+
         /* FOOTER */
         footer {
             text-align: center;
@@ -273,12 +351,21 @@
                 margin: 20px auto;
             }
 
+            nav {
+                position: static;
+            }
+
             header {
                 padding: 14px 20px;
             }
 
             main {
                 padding: 24px;
+            }
+
+            .download-info {
+                flex-direction: column;
+                gap: 8px;
             }
 
             .button-row {
@@ -295,11 +382,14 @@
 <body>
 
     <header>
-        <img src="logo2.png" alt="Logo LorenzoOS" onerror="this.src='https://via.placeholder.com/44'">
-        <div>
-            <h1>LorenzoOS</h1>
-            <p>Download ISO</p>
+        <div class="header-brand">
+            <img src="logo2.png" alt="Logo LorenzoOS" onerror="this.src='https://via.placeholder.com/44'">
+            <div>
+                <h1>LorenzoOS</h1>
+                <p>Download ISO</p>
+            </div>
         </div>
+        <a href="index.html" class="back-portal">← Portale</a>
     </header>
 
     <div class="page">
@@ -316,34 +406,61 @@
             <span class="badge">Download Diretto</span>
             <h2>Scarica LorenzoOS</h2>
             <p>
-                La ISO è disponibile e pronta all’uso. Scaricala subito per esplorare il sistema in pochi istanti! 😊
+                L'immagine ISO ufficiale è pronta all'uso. Scaricala direttamente dal nostro repository cloud per testarla in ambiente virtuale o su macchina fisica.
             </p>
 
-            <div class="button-row">
-                <a class="btn primary" href="https://drive.google.com/drive/folders/1y8Hw7K532IorwH5HKxY5TuDf-l3BIRcF" target="_blank" rel="noopener">
-                    Download ISO
-                </a>
+            <div class="download-box">
+                <div class="download-info">
+                    <span><strong>Formato:</strong> ISO Bootable</span>
+                    <span><strong>Architettura:</strong> x86 (32-bit)</span>
+                    <span><strong>Modalità:</strong> Live OS</span>
+                </div>
+                <div class="button-row">
+                    <a class="btn primary" href="https://drive.google.com/drive/folders/1y8Hw7K532IorwH5HKxY5TuDf-l3BIRcF" target="_blank" rel="noopener">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download ISO (Google Drive)
+                    </a>
+                </div>
             </div>
 
             <div class="section">
                 <span class="badge">Hardware</span>
-                <h3>Requisiti minimi</h3>
+                <h3>Requisiti minimi di sistema</h3>
                 <p>
-                    LorenzoOS è un sistema operativo leggero basato su architettura x86,
-                    eseguibile anche con soli 32MB di RAM.
-                    È un sistema “Live OS”: l’intero software risiede nella ISO e può essere avviato
-                    direttamente senza necessità di installazione sul disco.
+                    LorenzoOS è strutturato come "Live OS": l'intero ambiente risiede nella memoria volatile della macchina ed è eseguibile senza necessità di installazione permanente su disco.
                 </p>
+
+                <table class="specs-table">
+                    <tr>
+                        <th>Architettura</th>
+                        <td>x86 (32-bit compatible)</td>
+                    </tr>
+                    <tr>
+                        <th>Memoria RAM</th>
+                        <td>32 MB minimi</td>
+                    </tr>
+                    <tr>
+                        <th>Archiviazione</th>
+                        <td>Nessuna richiesta (Live Run)</td>
+                    </tr>
+                    <tr>
+                        <th>Piattaforme Virtuali</th>
+                        <td>QEMU, VirtualBox, VMware, VirtualPC</td>
+                    </tr>
+                </table>
             </div>
 
             <div class="section">
                 <span class="badge">Supporto</span>
-                <h3>Guida all’installazione</h3>
+                <h3>Guida all’installazione ed avvio</h3>
                 <p>
-                    Serve aiuto per avviare l'immagine ISO su macchina virtuale o supporto fisico? Consulta la nostra guida integrata.
+                    Trovi le istruzioni dettagliate passo-passo per configurare l'immagine ISO all'interno dei principali hypervisor nel file di documentazione allegato.
                 </p>
-                <div class="button-row">
-                    <a href="guide2.txt" class="btn">Apri la guida (.txt)</a>
+                <div class="button-row" style="margin-top: 16px;">
+                    <a href="guide2.txt" class="btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        Apri la guida (.txt)
+                    </a>
                 </div>
             </div>
         </main>

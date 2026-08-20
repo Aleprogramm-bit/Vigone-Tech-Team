@@ -6,7 +6,41 @@
     <style>
         body { background: #0a0a0a; color: #c8ffc8; font-family: Arial; margin: 0; }
         header { background: #000; padding: 15px; border-bottom: 2px solid #00ff66; }
-        h1 { text-align: center; color: #00ff66; }
+        
+        /* Allinea il titolo e l'uovo sulla stessa linea al centro */
+        h1 { 
+            text-align: center; 
+            color: #00ff66; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px; 
+            margin: 0;
+        }
+
+        /* Stile del link che avvolge l'uovo */
+        .egg-link {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* Stile grafico dell'uovo piccolo e semitrasparente */
+        .egg-icon {
+            width: 24px;         
+            height: 30px;
+            opacity: 0.4; /* Semitrasparente */
+            vertical-align: middle;
+            transition: all 0.2s ease;
+        }
+
+        /* Effetto quando passi il mouse sopra l'uovo */
+        .egg-link:hover .egg-icon {
+            opacity: 0.9;
+            transform: scale(1.1); /* Si ingrandisce leggermente */
+            filter: drop-shadow(0 0 5px #00ff66); /* Si illumina */
+        }
 
         .card {
             background: #111;
@@ -35,7 +69,15 @@
 <body>
 
 <header>
-    <h1>Aleprogramm – Videos</h1>
+    <h1>
+        Aleprogramm – Videos
+        <!-- L'uovo cliccabile collegato al file autonomo dei razzi -->
+        <a href="razzi.html" target="_blank" class="egg-link" title="Apri il gioco dei razzi!">
+            <svg class="egg-icon" viewBox="0 0 100 120" xmlns="http://w3.org">
+                <path d="M50,10 C25,10 10,55 10,80 C10,102 28,115 50,115 C72,115 90,102 90,80 C90,55 75,10 50,10 Z" fill="#00ff66"/>
+            </svg>
+        </a>
+    </h1>
 </header>
 
 <div class="card" onclick="openVideo('https://mega.nz/embed/XXXXXXXX#YYYYYYYY')">

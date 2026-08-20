@@ -5,8 +5,47 @@
     <title>LoreTNani - OurVideos</title>
     <style>
         body { background: #0a0a0a; color: #c8ffc8; font-family: Arial; margin: 0; }
-        header { background: #000; padding: 15px; border-bottom: 2px solid #00ff66; }
-        h1 { text-align: center; color: #00ff66; }
+        
+        header { 
+            background: #000; 
+            padding: 15px; 
+            border-bottom: 2px solid #00ff66; 
+        }
+        
+        h1 { 
+            text-align: center; 
+            color: #00ff66; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; 
+            margin: 0;
+        }
+
+        /* Stile del link dell'uovo */
+        .egg-link {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        /* Stile dell'uovo piccolo e semitrasparente */
+        .egg-icon {
+            width: 24px;         
+            height: 30px;
+            opacity: 0.4;        
+            vertical-align: middle;
+            transition: all 0.3s ease;
+        }
+
+        /* Effetto visivo quando passi il mouse sopra l'uovo (si apre/illumina) */
+        .egg-link:hover .egg-icon {
+            opacity: 0.9;
+            transform: scale(1.1); /* Si ingrandisce leggermente */
+            filter: drop-shadow(0 0 5px #00ff66); /* Crea un effetto bagliore */
+        }
 
         .card {
             background: #111;
@@ -35,15 +74,23 @@
 <body>
 
 <header>
-    <h1>LoreTNani – Videos</h1>
+    <h1>
+        LoreTNani – Videos
+        <!-- Il link inserito intorno all'uovo che punta al tuo gioco di macchine -->
+        <a href="gioco.html" class="egg-link" title="Apri il gioco!">
+            <svg class="egg-icon" viewBox="0 0 100 120" xmlns="http://w3.org">
+                <path d="M50,10 C25,10 10,55 10,80 C10,102 28,115 50,115 C72,115 90,102 90,80 C90,55 75,10 50,10 Z" fill="#00ff66"/>
+            </svg>
+        </a>
+    </h1>
 </header>
 
-<div class="card" onclick="openVideo('https://mega.nz/embed/CCCCCCCC#DDDDDDDD')">
+<div class="card" onclick="openVideo('https://mega.nz')">
     <img src="1.png">
     <div class="title">Video 1</div>
 </div>
 
-<div class="card" onclick="openVideo('https://mega.nz/embed/EEEEEEEE#FFFFFFFF')">
+<div class="card" onclick="openVideo('https://mega.nz')">
     <img src="2.png">
     <div class="title">Video 2</div>
 </div>

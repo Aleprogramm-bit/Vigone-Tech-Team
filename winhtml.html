@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows C++ Web</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #0078d7;
+        }
+
+        /* Bootscreen */
+        #boot-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #050a23 0%, #143278 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        #boot-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 16px;
+            background-color: #0a1428;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background-color: #00b4ff;
+            transition: width 0.03s linear;
+        }
+
+        /* Desktop */
+        #desktop {
+            position: relative;
+            width: 100vw;
+            height: calc(100vh - 35px);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 10px;
+        }
+
+        /* Canvas Matrix per sfondo */
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none;
+            z-index: 1;
+        }
+
+        /* Icone Desktop */
+        .shortcut {
+            width: 150px;
+            height: 35px;
+            background: #e1e1e1;
+            border: 1px solid #707070;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: black;
+            cursor: pointer;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        .shortcut:active {
+            background: #c0c0c0;
+        }
+
+        /* Taskbar e Start Menu */
+        #taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 35px;
+            background: #c0c0c0;
+            border-top: 1px solid #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+            z-index: 1000;
+        }
+
+        #start-btn {
+            width: 75px;
+            height: 25px;
+            background: #e1e1e1;
+            border: 2px outset #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #start-btn:active {
+            border-style: inset;
+        }
+
+        #clock {
+            width: 85px;
+            text-align: center;
+            font-size: 12px;
+            border: 1px inset #ffffff;
+            padding: 2px;
+            background: #d4d0c8;
+        }
+
+        #start-menu {
+            position: fixed;
+            bottom: 35px;
+            left: 5px;
+            width: 180px;
+            background: #c0c0c0;
+            border: 2px outset #ffffff;
+            display: none;
+            flex-direction: column;
+            z-index: 1001;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .menu-item {
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            color: black;
+        }
+
+        .menu-item:hover {
+            background: #000080;
+            color: white;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: #808080;
+            margin: 2px 0;
+        }
+
+        /* Finestra Principale Applicazioni */
+        #window-frame {
+            position: absolute;
+            top: 15%;
+            left: 25%;
+            width: 640px;
+            height: 440px;
+            background: #c0c0c0;
+            border: 2px outset #ffffff;
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
+        }
+
+        .window-header {
+            height: 25px;
+            background: linear-gradient(90deg, #000080 0%, #1040b4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: move;
+        }
+
+        .close-btn {
+            width: 20px;
+            height: 20px;
+            background: #c0c0c0;
+            border: 1px outset #ffffff;
+            color: black;
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 18px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .close-btn:active {
+            border-style: inset;
+        }
+
+        .window-body {
+            flex: 1;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            background: #c0c0c0;
+            overflow: hidden;
+        }
+
+        .status-bar {
+            height: 20px;
+            border: 1px inset #ffffff;
+            font-size: 12px;
+            padding: 0 5px;
+            line-height: 18px;
+            background: #c0c0c0;
+        }
+
+        /* UI Elementi Interni Finestra */
+        .toolbar {
+            display: flex;
+            gap: 5px;
+        }
+
+        button.ui-btn {
+            padding: 2px 8px;
+            background: #e1e1e1;
+            border: 1px outset #ffffff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        button.ui-btn:active {
+            border-style: inset;
+        }
+
+        input[type="text"].ui-input, textarea.ui-textarea, select.ui-select {
+            border: 2px inset #ffffff;
+            background: white;
+            font-size: 13px;
+            outline: none;
+            user-select: text;
+        }
+
+        textarea.ui-textarea {
+            width: 100%;
+            height: 100%;
+            resize: none;
+            font-family: monospace;
+        }
+
+        /* Stili Paint Canvas */
+        #paint-canvas {
+            background: white;
+            border: 2px inset #ffffff;
+            cursor: crosshair;
+        }
+
+        /* Stili Terminale */
+        .terminal-output {
+            background: black;
+            color: #00ff00;
+            font-family: monospace;
+            padding: 5px;
+            flex: 1;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            border: 2px inset #ffffff;
+        }
+
+        .terminal-input-container {
+            display: flex;
+            gap: 5px;
+        }
+
+        .terminal-input-container input {
+            background: black;
+            color: #00ff00;
+            font-family: monospace;
+            flex: 1;
+        }
+
+        /* Stili Explorer & Settings */
+        .list-box {
+            border: 2px inset #ffffff;
+            background: white;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .list-item {
+            padding: 2px 5px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .list-item:hover, .list-item.selected {
+            background: #000080;
+            color: white;
+        }
+
+        .split-pane {
+            display: flex;
+            gap: 8px;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Bootscreen -->
+    <div id="boot-screen">
+        <h1>Windows C++ Web</h1>
+        <div class="progress-bar">
+            <div class="progress-fill" id="boot-progress"></div>
+        </div>
+    </div>
+
+    <!-- Desktop -->
+    <div id="desktop">
+        <canvas id="matrix-canvas"></canvas>
+
+        <div class="shortcut" onclick="openApp('EXPLORER')">File Explorer</div>
+        <div class="shortcut" onclick="openApp('NOTEPAD')">Blocco Note</div>
+        <div class="shortcut" onclick="openApp('PAINT')">Paint Pro</div>
+        <div class="shortcut" onclick="openApp('TERMINAL')">Terminale</div>
+        <div class="shortcut" onclick="openApp('SETTINGS')">Impostazioni</div>
+    </div>
+
+    <!-- Finestra Unificata -->
+    <div id="window-frame">
+        <div class="window-header" id="window-header">
+            <span id="window-title">Titolo Finestra</span>
+            <div class="close-btn" onclick="closeApp()">X</div>
+        </div>
+        <div class="window-body" id="window-body"></div>
+        <div class="status-bar" id="status-bar">Pronto</div>
+    </div>
+
+    <!-- Start Menu & Taskbar -->
+    <div id="start-menu">
+        <div class="menu-item" onclick="openApp('EXPLORER'); toggleStartMenu();">File Explorer</div>
+        <div class="menu-item" onclick="openApp('NOTEPAD'); toggleStartMenu();">Blocco Note</div>
+        <div class="menu-item" onclick="openApp('PAINT'); toggleStartMenu();">Paint Pro</div>
+        <div class="menu-item" onclick="openApp('TERMINAL'); toggleStartMenu();">Terminale</div>
+        <div class="menu-item" onclick="openApp('SETTINGS'); toggleStartMenu();">Impostazioni</div>
+        <div class="menu-divider"></div>
+        <div class="menu-item" onclick="shutdownSystem()">Arresta il sistema</div>
+    </div>
+
+    <div id="taskbar">
+        <button id="start-btn" onclick="toggleStartMenu()">Start</button>
+        <div id="clock">00:00:00</div>
+    </div>
+
+    <script>
+        // --- BOOT ANIMATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            let progress = 0;
+            const fill = document.getElementById('boot-progress');
+            const bootScreen = document.getElementById('boot-screen');
+
+            const timer = setInterval(() => {
+                progress += 2;
+                fill.style.width = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(timer);
+                    bootScreen.style.opacity = '0';
+                    setTimeout(() => bootScreen.style.display = 'none', 500);
+                }
+            }, 25);
+        });
+
+        // --- OROLOGIO TASKBAR ---
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').innerText = `${h}:${m}:${s}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- DRAG & DROP FINESTRA ---
+        const winFrame = document.getElementById('window-frame');
+        const winHeader = document.getElementById('window-header');
+        let isDragging = false;
+        let dragOffset = { x: 0, y: 0 };
+
+        winHeader.addEventListener('mousedown', (e) => {
+            if (e.target.classList.contains('close-btn')) return;
+            isDragging = true;
+            dragOffset.x = e.clientX - winFrame.offsetLeft;
+            dragOffset.y = e.clientY - winFrame.offsetTop;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                winFrame.style.left = (e.clientX - dragOffset.x) + 'px';
+                winFrame.style.top = (e.clientY - dragOffset.y) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => isDragging = false);
+
+        // --- START MENU & SHUTDOWN ---
+        function toggleStartMenu() {
+            const menu = document.getElementById('start-menu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function shutdownSystem() {
+            document.body.innerHTML = `
+                <div style="background: black; color: #ff0000; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center; font-size: 24px; font-weight: bold;">
+                    Il sistema è stato arrestato. Ricarica la pagina per riavviare.
+                </div>`;
+        }
+
+        // --- GESTIONE APPLICAZIONI ---
+        let currentApp = null;
+
+        function setStatus(text) {
+            document.getElementById('status-bar').innerText = ' ' + text;
+        }
+
+        function closeApp() {
+            winFrame.style.display = 'none';
+            currentApp = null;
+        }
+
+        function openApp(appType) {
+            currentApp = appType;
+            const body = document.getElementById('window-body');
+            const title = document.getElementById('window-title');
+            body.innerHTML = '';
+            winFrame.style.display = 'flex';
+
+            switch (appType) {
+                case 'NOTEPAD':
+                    title.innerText = 'Blocco Note';
+                    renderNotepad(body);
+                    break;
+                case 'PAINT':
+                    title.innerText = 'Paint Pro';
+                    renderPaint(body);
+                    break;
+                case 'TERMINAL':
+                    title.innerText = 'Prompt dei Comandi';
+                    renderTerminal(body);
+                    break;
+                case 'EXPLORER':
+                    title.innerText = 'File Explorer';
+                    renderExplorer(body);
+                    break;
+                case 'SETTINGS':
+                    title.innerText = 'Pannello di Controllo';
+                    renderSettings(body);
+                    break;
+            }
+        }
+
+        // --- APPLICATION: BLOCCO NOTE ---
+        function renderNotepad(container) {
+            container.innerHTML = `
+                <div class="toolbar">
+                    <button class="ui-btn" onclick="document.getElementById('notepad-file-input').click()">Apri</button>
+                    <button class="ui-btn" onclick="saveNotepadFile()">Salva</button>
+                    <input type="file" id="notepad-file-input" style="display:none" accept=".txt" onchange="loadNotepadFile(event)">
+                </div>
+                <textarea id="notepad-text" class="ui-textarea">Digitare il testo qui. Aprire solo file di testo creati con Windows C++ Web.</textarea>
+            `;
+            setStatus('Pronto');
+        }
+
+        function saveNotepadFile() {
+            const text = document.getElementById('notepad-text').value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'Documento.txt';
+            a.click();
+            setStatus('File salvato con successo!');
+        }
+
+        function loadNotepadFile(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    document.getElementById('notepad-text').value = evt.target.result;
+                    setStatus('File caricato con successo!');
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // --- APPLICATION: PAINT PRO ---
+        let paintColor = '#000000';
+        let isDrawing = false;
+
+        function renderPaint(container) {
+            container.innerHTML = `
+                <div class="toolbar">
+                    <button class="ui-btn" style="background: black; color: white;" onclick="paintColor='#000000'">Nero</button>
+                    <button class="ui-btn" style="background: red; color: white;" onclick="paintColor='#ff0000'">Rosso</button>
+                    <button class="ui-btn" style="background: green; color: white;" onclick="paintColor='#00ff00'">Verde</button>
+                    <button class="ui-btn" style="background: blue; color: white;" onclick="paintColor='#0000ff'">Blu</button>
+                    <button class="ui-btn" onclick="paintColor='#ffffff'">Gomma</button>
+                </div>
+                <canvas id="paint-canvas" width="616" height="320"></canvas>
+            `;
+
+            const canvas = document.getElementById('paint-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            let lastX = 0, lastY = 0;
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                lastX = e.clientX - rect.left;
+                lastY = e.clientY - rect.top;
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                ctx.beginPath();
+                ctx.strokeStyle = paintColor;
+                ctx.lineWidth = paintColor === '#ffffff' ? 12 : 3;
+                ctx.lineCap = 'round';
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+
+                lastX = x;
+                lastY = y;
+            });
+
+            window.addEventListener('mouseup', () => isDrawing = false);
+            setStatus('Disegna tenendo premuto il tasto sinistro');
+        }
+
+        // --- APPLICATION: TERMINALE ---
+        function renderTerminal(container) {
+            container.innerHTML = `
+                <div class="terminal-output" id="term-output">Windows C++ Web Shell v2.0\nDigitare 'help' per i comandi.\n></div>
+                <div class="terminal-input-container">
+                    <input type="text" id="term-input" class="ui-input" onkeydown="if(e.key==='Enter') executeTerminalCmd()">
+                    <button class="ui-btn" onclick="executeTerminalCmd()">Invia</button>
+                </div>
+            `;
+            setStatus('Pronto');
+            setTimeout(() => document.getElementById('term-input').focus(), 50);
+        }
+
+        function executeTerminalCmd() {
+            const input = document.getElementById('term-input');
+            const output = document.getElementById('term-output');
+            const cmd = input.value.trim();
+            input.value = '';
+
+            let response = '';
+            const lower = cmd.toLowerCase();
+
+            if (lower === 'help') {
+                response = "\nComandi disponibili:\n help    - Guida comandi\n cls     - Pulisci schermo\n ver     - Versione SO\n time    - Mostra orario\n matrix  - Attiva/Disattiva Matrix\n exit    - Chiudi terminale";
+            } else if (lower === 'cls') {
+                output.innerText = "Windows C++ Web Shell v2.0\nDigitare 'help' per i comandi.\n>";
+                return;
+            } else if (lower === 'ver') {
+                response = "\nWindows C++ Web";
+            } else if (lower === 'time') {
+                response = "\nOra attuale: " + new Date().toLocaleTimeString();
+            } else if (lower === 'matrix') {
+                toggleMatrix();
+                response = "\nModalità Matrix commutata!";
+            } else if (lower === 'exit') {
+                closeApp();
+                return;
+            } else if (cmd.length > 0) {
+                response = `\n'${cmd}' non è riconosciuto come comando.`;
+            }
+
+            output.innerText += `\n> ${cmd}${response}\n>`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // --- APPLICATION: FILE EXPLORER (VIRTUAL VFS) ---
+        const vfs = {
+            "C:": {
+                "Windows": { "System32": {} },
+                "Documenti": { "Nota.txt": "File di testo simulato. Nella versione completa di Windows C++ Edition puoi aprire i file del tuo vero PC!" },
+                "Immagini": {}
+            }
+        };
+        let currentPath = ["C:"];
+
+        function renderExplorer(container) {
+            container.innerHTML = `
+                <div class="toolbar">
+                    <button class="ui-btn" onclick="explorerUp()">Su</button>
+                    <input type="text" id="explorer-address" class="ui-input" style="flex:1" readonly>
+                </div>
+                <div class="list-box" id="explorer-list"></div>
+            `;
+            updateExplorerView();
+        }
+
+        function updateExplorerView() {
+            const address = document.getElementById('explorer-address');
+            const list = document.getElementById('explorer-list');
+            address.value = currentPath.join('\\');
+            list.innerHTML = '';
+
+            let currentFolder = vfs;
+            for (let dir of currentPath) {
+                currentFolder = currentFolder[dir];
+            }
+
+            let count = 0;
+            for (let item in currentFolder) {
+                count++;
+                const isDir = typeof currentFolder[item] === 'object';
+                const div = document.createElement('div');
+                div.className = 'list-item';
+                div.innerText = isDir ? `[DIR] ${item}` : `      ${item}`;
+                div.ondblclick = () => {
+                    if (isDir) {
+                        currentPath.push(item);
+                        updateExplorerView();
+                    } else {
+                        alert(`Contenuto del file "${item}":\n\n` + currentFolder[item]);
+                    }
+                };
+                list.appendChild(div);
+            }
+            setStatus(`Elementi trovati: ${count}`);
+        }
+
+        function explorerUp() {
+            if (currentPath.length > 1) {
+                currentPath.pop();
+                updateExplorerView();
+            }
+        }
+
+        // --- APPLICATION: SETTINGS ---
+function renderSettings(container) {
+    container.innerHTML = `
+        <div class="split-pane">
+            <div class="list-box" style="width: 130px;">
+                <div class="list-item selected" onclick="loadSettingApplet('sys', this)">Sistema</div>
+                <div class="list-item" onclick="loadSettingApplet('disp', this)">Schermo</div>
+            </div>
+            <div id="settings-panel" class="list-box" style="flex:1; padding: 8px; font-family: monospace; white-space: pre-wrap; font-size: 13px;"></div>
+        </div>
+    `;
+    loadSettingApplet('sys');
+}
+
+function loadSettingApplet(type, element) {
+    if (element) {
+        document.querySelectorAll('.split-pane .list-item').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+    }
+
+    const panel = document.getElementById('settings-panel');
+    if (type === 'sys') {
+        panel.innerHTML = `--- INFORMAZIONI HARDWARE ---\n\n` +
+            `Sistema: Windows C++ Edition\n` +
+            `Cores CPU Rilevati: ${navigator.hardwareConcurrency || 'N/A'}\n` +
+            `Lingua Sistema: ${navigator.language}\n\n` +
+            `Prodotto di VigoneTech Team.\n<a href="https://aleprogramm-bit.github.io/VigoneTechTeam" target="_blank" style="color: blue; text-decoration: underline;">https://aleprogramm-bit.github.io/VigoneTechTeam</a>`;
+    } else if (type === 'disp') {
+        panel.innerHTML = `--- DISPLAY ---\n\n` +
+            `Risoluzione Web: ${window.innerWidth} x ${window.innerHeight}\n` +
+            `Risoluzione Schermo: ${screen.width} x ${screen.height}\n` +
+            `Profondità Colore: ${screen.colorDepth}-bit`;
+    }
+}
+
+        // --- EFETTO MATRIX ON DESKTOP ---
+        let matrixInterval = null;
+        function toggleMatrix() {
+            const canvas = document.getElementById('matrix-canvas');
+            if (canvas.style.display === 'block') {
+                canvas.style.display = 'none';
+                clearInterval(matrixInterval);
+            } else {
+                canvas.style.display = 'block';
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                const ctx = canvas.getContext('2d');
+                const cols = Math.floor(canvas.width / 20);
+                const yPos = Array(cols).fill(0);
+
+                matrixInterval = setInterval(() => {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = '#0F0';
+                    ctx.font = '15pt monospace';
+
+                    yPos.forEach((y, index) => {
+                        const text = String.fromCharCode(Math.random() * 128);
+                        const x = index * 20;
+                        ctx.fillText(text, x, y);
+                        if (y > 100 + Math.random() * 10000) yPos[index] = 0;
+                        else yPos[index] = y + 20;
+                    });
+                }, 40);
+            }
+        }
+    </script>
+</body>
+</html>

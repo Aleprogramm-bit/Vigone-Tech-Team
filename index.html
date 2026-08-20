@@ -2,41 +2,23 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>VigoneTech Team – Portal</title>
+    <title>VigoneTech Team – Next-Gen Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         :root {
-            --bg: #e9eef5;
-            --glass: rgba(255, 255, 255, 0.65);
-            --glass-card: rgba(255, 255, 255, 0.55);
-            --primary: #1a73e8;
-            --primary-hover: #1557b0;
-            --text: #1f1f1f;
-            --muted: #5f6368;
-            --border: rgba(208, 215, 226, 0.6);
-            --radius: 18px;
-
-            --shadow-sm: 0 2px 6px rgba(0,0,0,0.1);
-            --shadow-md: 0 6px 18px rgba(0,0,0,0.12);
-            --shadow-lg: 0 14px 32px rgba(0,0,0,0.18);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0d0d0d;
-                --glass: rgba(25, 25, 25, 0.75);
-                --glass-card: rgba(30, 30, 30, 0.60);
-                --primary: #8ab4f8;
-                --primary-hover: #aecbfa;
-                --text: #e8eaed;
-                --muted: #9aa0a6;
-                --border: rgba(255, 255, 255, 0.12);
-
-                --shadow-sm: 0 2px 6px rgba(0,0,0,0.4);
-                --shadow-md: 0 6px 18px rgba(0,0,0,0.5);
-                --shadow-lg: 0 14px 32px rgba(0,0,0,0.7);
-            }
+            --bg-base: #0a0c10;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.4);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(18, 24, 38, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-hover: rgba(255, 255, 255, 0.22);
+            --radius-lg: 24px;
+            --radius-md: 14px;
         }
 
         * {
@@ -46,291 +28,560 @@
         }
 
         body {
-            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-image: url("back.png");
             background-position: center center;
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: cover;
-            background-color: var(--bg);
-            color: var(--text);
+            background-color: var(--bg-base);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* HEADER */
+        /* SFONDO ANIMATO CANVAS */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* HEADER GLASS */
         header {
-            background: var(--glass);
-            border-bottom: 1px solid var(--border);
-            padding: 16px 32px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: var(--shadow-md);
             position: sticky;
             top: 0;
-            z-index: 10;
-        }
-
-        header .logo img {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-
-        header h1 {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-
-        /* CONTAINER */
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-            flex: 1;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        h2 {
-            font-size: 28px;
-            margin-bottom: 32px;
-            font-weight: 700;
-            text-align: center;
-            text-shadow: var(--shadow-sm);
-        }
-
-        /* GRID CARDS */
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
-            justify-content: center;
-        }
-
-        .card {
-            background: var(--glass-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            text-align: center;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-            box-shadow: var(--shadow-md);
+            z-index: 100;
+            background: rgba(10, 12, 16, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 40px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: space-between;
         }
 
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-wrapper {
+            position: relative;
+        }
+
+        .logo-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            z-index: -1;
+            filter: blur(6px);
+            opacity: 0.8;
+        }
+
+        .logo-wrapper img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        header h1 {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1280px;
+            margin: 40px auto;
+            padding: 0 24px;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* INTRO BOX WOW */
+        .intro-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            margin-bottom: 48px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .intro-box h2 {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff 30%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .intro-box p {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .intro-box p strong {
+            color: var(--text-main);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 28px 0;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .feature-item strong {
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* GRID CARDS 3D EFFECT */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+            perspective: 1000px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-10px) rotateX(4deg) rotateY(-2deg);
+            border-color: var(--glass-hover);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px var(--primary-glow);
         }
 
         .card-content {
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        .img-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .img-container::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            filter: blur(8px);
+            z-index: 0;
+        }
+
+        .card:hover .img-container::after {
+            opacity: 0.7;
         }
 
         .card img {
-            width: 90px;
-            height: 90px;
+            width: 84px;
+            height: 84px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 16px;
-            border: 2px solid var(--border);
-            box-shadow: var(--shadow-sm);
+            position: relative;
+            z-index: 1;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: #151922;
         }
 
         .card h3 {
-            margin-bottom: 10px;
             font-size: 20px;
-            font-weight: 650;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-main);
         }
 
         .card p {
             font-size: 14px;
-            color: var(--muted);
+            color: var(--text-muted);
             line-height: 1.5;
-            margin-bottom: 18px;
+            margin-bottom: 24px;
         }
 
+        /* BUTTON FUTURISTICO */
         .btn {
-            display: inline-block;
-            width: 80%;
-            padding: 10px 16px;
-            background: var(--primary);
-            color: #fff;
-            border-radius: 10px;
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+            color: #ffffff;
+            border-radius: var(--radius-md);
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-sm);
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px var(--primary-glow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
         }
 
         .btn:hover {
-            filter: brightness(1.1);
+            background: linear-gradient(135deg, #60a5fa 0%, var(--primary) 100%);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
             transform: scale(1.02);
         }
 
         /* FOOTER */
         footer {
-            padding: 24px 20px;
+            position: relative;
+            z-index: 1;
+            padding: 32px 20px;
             text-align: center;
-            font-size: 13px;
-            color: var(--muted);
-            background: var(--glass);
-            border-top: 1px solid var(--border);
-            backdrop-filter: blur(10px);
+            font-size: 14px;
+            color: var(--text-muted);
+            background: rgba(10, 12, 16, 0.8);
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
             margin-top: auto;
         }
 
         .secret-egg {
             background: transparent;
             border: none;
-            color: var(--muted);
+            color: var(--text-muted);
             cursor: pointer;
-            font-size: 12px;
-            padding: 0 4px;
-            opacity: 0.3;
-            transition: opacity 0.2s;
+            font-size: 14px;
+            margin-left: 6px;
+            opacity: 0.2;
+            transition: opacity 0.3s, transform 0.3s;
         }
 
         .secret-egg:hover {
             opacity: 1;
+            transform: scale(1.3);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+        @media (max-width: 768px) {
+            header { padding: 16px 20px; }
+            .intro-box { padding: 24px; }
+            .intro-box h2 { font-size: 24px; }
         }
     </style>
 </head>
 
 <body>
 
+<!-- SFONDO ANIMATO -->
+<canvas id="bgCanvas"></canvas>
+
 <header>
-    <div class="logo">
-        <img src="techteam.jpg" alt="VigoneTech Logo" onerror="this.src='https://via.placeholder.com/52'">
+    <div class="header-brand">
+        <div class="logo-wrapper">
+            <img src="techteam.jpg" alt="VigoneTech Logo" onerror="this.src='https://via.placeholder.com/52'">
+        </div>
+        <h1>VigoneTech Team</h1>
     </div>
-    <h1>VigoneTech Team</h1>
 </header>
 
 <div class="container">
-    <h2>I Nostri Progetti</h2>
+    
+    <!-- HERO INTRODUZIONE -->
+    <div class="intro-box">
+        <h2>Benvenuti nel portale ufficiale</h2>
+        <p>
+            Il nostro hub digitale dove prendono forma passione per la tecnologia, sviluppo software ed esperienze interattive. 
+            Il team — composto da <strong>Aleprogramm</strong>, <strong>LoreTnani</strong>, <strong>Alessio</strong> e supportato dall'<strong>AI</strong> — crea soluzioni all'avanguardia per tutti.
+        </p>
 
-    <!-- BLOCCO INTRODUTTIVO ESTESO -->
-    <div class="intro-box" style="background: var(--glass-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 35px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--shadow-md); line-height: 1.6;">
-        <h3 style="font-size: 22px; margin-bottom: 14px; text-align: center;">Benvenuti nel portale ufficiale del VigoneTech Team!</h3>
-        <p style="margin-bottom: 12px; color: var(--text);">
-            Siamo felici di accogliervi nel nostro hub digitale, il punto di riferimento in cui prende forma la nostra passione per la tecnologia, la programmazione e l'innovazione. Il nostro team — composto da <strong>Aleprogramm</strong>, <strong>LoreTnani</strong>, <strong>Alessio</strong> e con il supporto dell'<strong>AI</strong> — lavora costantemente per creare soluzioni software, strumenti utili ed esperienze di intrattenimento alla portata di tutti.
-        </p>
-        <p style="margin-bottom: 12px; color: var(--text);">
-            All'interno del portale potrete esplorare l'intero nostro ecosistema:
-        </p>
-        <ul style="list-style-type: none; padding-left: 0; margin-bottom: 16px; color: var(--muted); font-size: 15px;">
-            <li style="margin-bottom: 8px;">💻 <strong>Sistemi Operativi e Software:</strong> Scoprite <em>LorenzoOS</em> sviluppato da LoreTnani, oltre al nostro progetto <em>Windows C++ Edition</em> (scaricabile o testabile direttamente via browser su <em>Windows C++ Web</em>).</li>
-            <li style="margin-bottom: 8px;">📰 <strong>Informazione Tech:</strong> Leggete il <em>Giornale Tecnologico</em> curato da Alessio per restare aggiornati sulle ultime novità.</li>
-            <li style="margin-bottom: 8px;">🛒 <strong>Servizi e Usato:</strong> Visitate il <em>Mercato Smart</em> di Aleprogramm o richiedete supporto tramite la sezione <em>Assistenza Informatica</em>.</li>
-            <li style="margin-bottom: 8px;">🎮 <strong>Media e Gaming:</strong> Rilassatevi con lo <em>Snake Game</em> o guardate contenuti su <em>OurVideo</em> senza bisogno di registrare un account.</li>
-        </ul>
-        <p style="text-align: center; font-weight: 600; color: var(--text);">
-            Buona navigazione tra i nostri progetti... e non dimenticate di cercare l'<strong>easter egg nascosto</strong> nel sito! 🥚
+        <div class="features-grid">
+            <div class="feature-item">
+                <strong>💻 Software & OS</strong>
+                LorenzoOS e Windows C++ Edition pronti da testare o scaricare.
+            </div>
+            <div class="feature-item">
+                <strong>📰 Informazione Tech</strong>
+                News e approfondimenti curati dal Giornale Tecnologico.
+            </div>
+            <div class="feature-item">
+                <strong>🛒 Servizi & Usato</strong>
+                Offerte usate e supporto con l'Assistenza Informatica.
+            </div>
+            <div class="feature-item">
+                <strong>🎮 Media & Gaming</strong>
+                Intrattenimento immediato con Snake Game e OurVideo.
+            </div>
+        </div>
+
+        <p style="font-size: 14px; color: var(--primary);">
+            ✨ Esplora i nostri progetti... e prova a scovare l'<strong>easter egg nascosto</strong>! 🥚
         </p>
     </div>
 
-    <!-- GRIGLIA CARDS -->
+    <!-- CARDS GRID -->
     <div class="cards">
+        
         <div class="card">
             <div class="card-content">
-                <img src="logo2.png" alt="LorenzoOS" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="img-container">
+                    <img src="logo2.png" alt="LorenzoOS" onerror="this.src='https://via.placeholder.com/90'">
+                </div>
                 <h3>LorenzoOS</h3>
-                <p>Il sistema operativo sviluppato da LoreTnani.</p>
+                <p>Il sistema operativo personalizzato sviluppato da LoreTnani.</p>
             </div>
             <a class="btn" href="main2.html">Vai al sito</a>
         </div>
 
         <div class="card">
             <div class="card-content">
-                <img src="giornale.png" alt="Giornale" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="img-container">
+                    <img src="giornale.png" alt="Giornale" onerror="this.src='https://via.placeholder.com/90'">
+                </div>
                 <h3>Giornale Tecnologico</h3>
-                <p>Notizie e approfondimenti tecnologici a cura di Alessio.</p>
+                <p>Notizie, guide e approfondimenti tech curati da Alessio.</p>
             </div>
             <a class="btn" href="https://sites.google.com/view/curiositynews/tecnologie-avanzate" target="_blank" rel="noopener">Leggi Ora</a>
         </div>
 
         <div class="card">
             <div class="card-content">
-                <img src="aiuto.png" alt="Help" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="img-container">
+                    <img src="aiuto.png" alt="Help" onerror="this.src='https://via.placeholder.com/90'">
+                </div>
                 <h3>Assistenza Informatica</h3>
-                <p>Supporto e assistenza rapida per i tuoi dispositivi.</p>
+                <p>Supporto tecnico diretto e risoluzione problemi rapida.</p>
             </div>
             <a class="btn" href="help.html">Chiedi Aiuto</a>
         </div>
 
         <div class="card">
             <div class="card-content">
-                <img src="mercato.png" alt="Mercato Smart" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="img-container">
+                    <img src="mercato.png" alt="Mercato Smart" onerror="this.src='https://via.placeholder.com/90'">
+                </div>
                 <h3>Mercato Smart</h3>
-                <p>Il mercatino dell'usato digitale curato da Aleprogramm.</p>
+                <p>Il mercatino dell'usato tech gestito da Aleprogramm.</p>
             </div>
             <a class="btn" href="https://aleprogramm-bit.github.io/Mercatino-dell-usato-online/" target="_blank" rel="noopener">Visita</a>
         </div>
 
         <div class="card">
             <div class="card-content">
-                <img src="game.png" alt="Game" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="img-container">
+                    <img src="game.png" alt="Game" onerror="this.src='https://via.placeholder.com/90'">
+                </div>
                 <h3>Snake Game</h3>
-                <p>Il classico gioco arcade rivisitato dal nostro team.</p>
+                <p>Il grande classico arcade rivisitato in chiave moderna.</p>
             </div>
             <a class="btn" href="game.html">Gioca Ora</a>
         </div>
 
         <div class="card">
             <div class="card-content">
-                <img src="ourvideo.png" alt="OurVideo" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="img-container">
+                    <img src="ourvideo.png" alt="OurVideo" onerror="this.src='https://via.placeholder.com/90'">
+                </div>
                 <h3>OurVideo</h3>
-                <p>Il sito migliore per video senza account.</p>
+                <p>Piattaforma video fluida e senza bisogno di registrazione.</p>
             </div>
             <a class="btn" href="main.html">Guarda Ora</a>
         </div>
 
         <div class="card">
             <div class="card-content">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg?utm_source=it.wikipedia.org&utm_campaign=index&utm_content=original" alt="Windows C++ Edition" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="img-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg" alt="Windows C++ Edition" onerror="this.src='https://via.placeholder.com/90'">
+                </div>
                 <h3>Windows C++ Edition</h3>
-                <p>Windows, ma fatto con il C++ da VigoneTech Team!</p>
+                <p>L'esperienza Windows ricreata in C++ dal VigoneTech Team.</p>
             </div>
             <a class="btn" href="https://drive.google.com/file/d/1CqmQmhOglOgTJRTk6ay0JujOv43JUOAO/view?usp=drive_link" target="_blank" rel="noopener">Scarica Ora</a>
         </div>
 
         <div class="card">
             <div class="card-content">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg?utm_source=it.wikipedia.org&utm_campaign=index&utm_content=original" alt="Windows C++ Edition" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="img-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg" alt="Windows C++ Web" onerror="this.src='https://via.placeholder.com/90'">
+                </div>
                 <h3>Windows C++ Web</h3>
-                <p>Prova Windows C++ Edition sul tuo browser!</p>
+                <p>Testa l'esperienza di Windows C++ direttamente nel browser.</p>
             </div>
             <a class="btn" href="winhtml.html" target="_blank" rel="noopener">Provalo!</a>
         </div>
+
     </div>
 </div>
 
 <footer>
     © 2026 · VigoneTech Team · LorenzoOS · Aleprogramm · Alessio · LoreTnani
-    <button class="secret-egg" onclick="window.location.href='https://mega.nz/file/21ZjRKxD#SXBncYNwsb9KSLJvDcIhMh2hHSrXAVnngRs4KGcSFh8';" title="Secret">_</button>
+    <button class="secret-egg" onclick="triggerSecret()" title="Secret">🥚</button>
 </footer>
+
+<script>
+    // EFFETTO PARTICELE CANVAS DINAMICO
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    const particleCount = 45;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.6;
+            this.vy = (Math.random() - 0.5) * 0.6;
+            this.radius = Math.random() * 2 + 1;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(139, 92, 246, 0.4)';
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < 130) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 * (1 - dist / 130)})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // EASTER EGG REINDIRIZZAMENTO
+    function triggerSecret() {
+        window.location.href = 'https://mega.nz/file/21ZjRKxD#SXBncYNwsb9KSLJvDcIhMh2hHSrXAVnngRs4KGcSFh8';
+    }
+</script>
 
 </body>
 </html>

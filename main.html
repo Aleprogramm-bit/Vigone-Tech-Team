@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>OurVideos</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #c8ffc8;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        header {
+            background: #000;
+            padding: 10px 15px;
+            border-bottom: 2px solid #00ff66;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-left img {
+            height: 40px;
+        }
+
+        .search-box {
+            width: 60%;
+            max-width: 600px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #00ff66;
+            background: #111;
+            color: #c8ffc8;
+            font-size: 16px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .card {
+            background: #111;
+            border: 1px solid #00ff66;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            background: #1a1a1a;
+        }
+
+        .card img {
+            width: 160px;
+            height: 90px; /* 16:9 */
+            border-radius: 10px;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+
+        .card-title {
+            font-size: 22px;
+            color: #00ff66;
+        }
+
+        .banner {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            border: 2px solid #00ff66;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-left">
+        <img src="ourvideos.png" alt="OurVideos">
+    </div>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search channels and videos...">
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- Banner centrale VigonetechTeam -->
+    <div class="banner">
+        <img src="back.png" alt="VigonetechTeam">
+    </div>
+
+    <!-- Canale Aleprogramm -->
+    <div class="card search-item" data-title="Aleprogramm Ale Channel">
+        <img src="ale.png" alt="Aleprogramm">
+        <div class="card-title">Aleprogramm</div>
+    </div>
+
+    <!-- Canale LoreTNani -->
+    <div class="card search-item" data-title="LoreTNani Lore Channel">
+        <img src="lore.png" alt="LoreTNani">
+        <div class="card-title">LoreTNani</div>
+    </div>
+</div>
+
+<script>
+const searchInput = document.getElementById('searchInput');
+const items = document.querySelectorAll('.search-item');
+
+searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+
+    items.forEach(item => {
+        const title = item.getAttribute('data-title').toLowerCase();
+        if (title.includes(query)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+
+// click sui canali / video
+document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        if (title.includes('aleprogramm') && !title.includes('video')) {
+            location.href = 'ale.html';
+        } else if (title.includes('loretnani') && !title.includes('video')) {
+            location.href = 'lore.html';
+        } else {
+            // qui puoi mettere il link Mega del video se vuoi aprirlo direttamente
+            // esempio:
+            // window.open('https://mega.nz/embed/XXXXXXXX#YYYYYYYY', '_blank');
+        }
+    });
+});
+</script>
+
+</body>
+</html>

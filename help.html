@@ -16,7 +16,7 @@
             --primary-hover: #1d4ed8;
             --border: #e2e8f0;
             --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
-            --accent: #f59e0b;
+            --accent: #d97706;
             --radius: 12px;
         }
 
@@ -81,7 +81,7 @@
             padding: 8px 12px;
             cursor: pointer;
             color: var(--text);
-            font-size: 1rem;
+            font-size: 0.95rem;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -297,7 +297,7 @@
                 <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Social & Media</h3>
                 <ul class="contact-list">
                     <li class="contact-item">
-                        <a class="contact-link" href="https://www.youtube.com/@VigoneTechTeam" target="_blank" rel="noopener">
+                        <a class="contact-link" href="https://www.youtube.com/@VigoneTechTeam" target="_blank" rel="noopener noreferrer">
                             <span>Canale YouTube</span>
                             <span class="contact-role">@VigoneTechTeam ↗</span>
                         </a>
@@ -317,27 +317,26 @@
     const themeIcon = document.getElementById("themeIcon");
     const themeText = document.getElementById("themeText");
 
-    // Controlla preferenza salvata o del sistema
-    const savedTheme = localStorage.getItem("theme");
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-    if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
-        document.documentElement.classList.add("dark");
-        updateUI(true);
-    } else {
-        updateUI(false);
-    }
-
-    toggleBtn.addEventListener("click", () => {
-        const isDark = document.documentElement.classList.toggle("dark");
-        localStorage.setItem("theme", isDark ? "dark" : "light");
-        updateUI(isDark);
-    });
-
     function updateUI(isDark) {
         themeIcon.textContent = isDark ? "☀️" : "🌙";
         themeText.textContent = isDark ? "Chiaro" : "Scuro";
     }
+
+    // Inizializzazione Tema
+    const savedTheme = localStorage.getItem("theme");
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    let isDark = savedTheme === "dark" || (!savedTheme && systemPrefersDark);
+
+    if (isDark) {
+        document.documentElement.classList.add("dark");
+    }
+    updateUI(isDark);
+
+    toggleBtn.addEventListener("click", () => {
+        isDark = document.documentElement.classList.toggle("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        updateUI(isDark);
+    });
 </script>
 
 </body>

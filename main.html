@@ -2,89 +2,300 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>OurVideos</title>
+    <title>OurVideos – Hub Spettacoli & Canali</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
-        body {
-            background: #0a0a0a;
-            color: #c8ffc8;
-            font-family: Arial, sans-serif;
-            margin: 0;
+        :root {
+            --bg-base: #07090e;
+            --primary-neon: #00ff66;
+            --primary-glow: rgba(0, 255, 102, 0.4);
+            --accent-green: #10b981;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(13, 20, 28, 0.65);
+            --glass-border: rgba(0, 255, 102, 0.25);
+            --glass-hover: rgba(0, 255, 102, 0.5);
+            --radius-lg: 20px;
+            --radius-md: 12px;
         }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-image: url("back.png");
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* HEADER GLASS WITH SEARCH */
         header {
-            background: #000;
-            padding: 10px 15px;
-            border-bottom: 2px solid #00ff66;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(7, 9, 14, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 14px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .logo-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .logo-left img {
-            height: 40px;
+            height: 44px;
+            width: auto;
+            border-radius: 8px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px var(--primary-glow));
         }
 
         .search-box {
-            width: 60%;
-            max-width: 600px;
+            flex: 1;
+            max-width: 550px;
+            position: relative;
         }
 
         .search-box input {
             width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 2px solid #00ff66;
-            background: #111;
-            color: #c8ffc8;
-            font-size: 16px;
+            padding: 12px 20px;
+            padding-left: 45px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            background: rgba(18, 26, 36, 0.7);
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
 
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 18px var(--primary-glow);
+            background: rgba(22, 32, 45, 0.9);
+        }
+
+        /* Lente d'ingrandimento decorativa nell'input */
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* MAIN CONTAINER */
         .container {
-            padding: 20px;
+            max-width: 1100px;
+            margin: 36px auto;
+            padding: 0 20px;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            width: 100%;
         }
 
-        .card {
-            background: #111;
-            border: 1px solid #00ff66;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .card:hover {
-            background: #1a1a1a;
-        }
-
-        .card img {
-            width: 160px;
-            height: 90px; /* 16:9 */
-            border-radius: 10px;
-            margin-right: 15px;
-            object-fit: cover;
-        }
-
-        .card-title {
-            font-size: 22px;
-            color: #00ff66;
-        }
-
+        /* BANNER PRINCIPALE WOW */
         .banner {
             width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
-            border: 2px solid #00ff66;
-            border-radius: 12px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
             overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 255, 102, 0.15);
+            backdrop-filter: blur(12px);
+            background: var(--glass-bg);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .banner:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary-neon);
         }
 
         .banner img {
             width: 100%;
-            height: auto;
+            height: 220px;
+            object-fit: cover;
             display: block;
+        }
+
+        /* GRIGLIA E CARD CANALI 3D */
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            perspective: 1000px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 18px 24px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        /* Effetto scorrimento luce/riflesso sulla card */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 102, 0.08), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-6px) scale(1.01);
+            border-color: var(--primary-neon);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 25px var(--primary-glow);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            flex-shrink: 0;
+            margin-right: 24px;
+        }
+
+        .card-img-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-neon), var(--accent-green));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            filter: blur(6px);
+            z-index: 0;
+        }
+
+        .card:hover .card-img-wrapper::after {
+            opacity: 0.8;
+        }
+
+        .card img {
+            width: 160px;
+            height: 90px;
+            border-radius: 10px;
+            object-fit: cover;
+            display: block;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #0d1117;
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-neon);
+            letter-spacing: 0.2px;
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* BADGE O ICONA SULLA CARD */
+        .card-badge {
+            margin-left: auto;
+            background: rgba(0, 255, 102, 0.1);
+            border: 1px solid var(--primary-neon);
+            color: var(--primary-neon);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-badge {
+            background: var(--primary-neon);
+            color: #000;
+            box-shadow: 0 0 12px var(--primary-glow);
+        }
+
+        @media (max-width: 640px) {
+            header {
+                padding: 12px 16px;
+            }
+
+            .card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .card-img-wrapper {
+                margin-right: 0;
+                margin-bottom: 14px;
+                width: 100%;
+            }
+
+            .card img {
+                width: 100%;
+                height: 160px;
+            }
+
+            .card-badge {
+                margin-left: 0;
+                margin-top: 12px;
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -92,30 +303,47 @@
 
 <header>
     <div class="logo-left">
-        <img src="ourvideo.png" alt="OurVideo">
+        <img src="ourvideo.png" alt="OurVideo" onerror="this.src='https://via.placeholder.com/120x40?text=OurVideos'">
     </div>
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search channels and videos...">
+        <input type="text" id="searchInput" placeholder="Cerca canali o video...">
     </div>
 </header>
 
 <div class="container">
 
-    <!-- Banner centrale VigonetechTeam -->
+    <!-- Banner centrale VigoneTech Team -->
     <div class="banner">
-        <img src="back.png" alt="VigonetechTeam">
+        <img src="back.png" alt="VigoneTech Team Banner" onerror="this.src='https://via.placeholder.com/1000x220?text=VigoneTech+Team'">
     </div>
 
-    <!-- Canale Aleprogramm -->
-    <div class="card search-item" data-title="Aleprogramm Ale Channel">
-        <img src="ale.png" alt="Aleprogramm">
-        <div class="card-title">Aleprogramm</div>
-    </div>
+    <!-- Lista Canali / Video -->
+    <div class="cards-list">
+        
+        <!-- Canale Aleprogramm -->
+        <div class="card search-item" data-title="Aleprogramm Ale Channel">
+            <div class="card-img-wrapper">
+                <img src="ale.png" alt="Aleprogramm" onerror="this.src='https://via.placeholder.com/160x90?text=Aleprogramm'">
+            </div>
+            <div class="card-info">
+                <div class="card-title">Aleprogramm</div>
+                <div class="card-subtitle">Esplora i contenuti e i progetti video di Ale.</div>
+            </div>
+            <div class="card-badge">Visita Canale ➔</div>
+        </div>
 
-    <!-- Canale LoreTNani -->
-    <div class="card search-item" data-title="LoreTNani Lore Channel">
-        <img src="lore.png" alt="LoreTNani">
-        <div class="card-title">LoreTNani</div>
+        <!-- Canale LoreTNani -->
+        <div class="card search-item" data-title="LoreTNani Lore Channel">
+            <div class="card-img-wrapper">
+                <img src="lore.png" alt="LoreTNani" onerror="this.src='https://via.placeholder.com/160x90?text=LoreTNani'">
+            </div>
+            <div class="card-info">
+                <div class="card-title">LoreTNani</div>
+                <div class="card-subtitle">Guarda i video ufficiali e i contenuti di Lore.</div>
+            </div>
+            <div class="card-badge">Visita Canale ➔</div>
+        </div>
+
     </div>
 </div>
 
@@ -123,8 +351,9 @@
 const searchInput = document.getElementById('searchInput');
 const items = document.querySelectorAll('.search-item');
 
+// Filtraggio ricerca in tempo reale
 searchInput.addEventListener('input', function () {
-    const query = this.value.toLowerCase();
+    const query = this.value.toLowerCase().trim();
 
     items.forEach(item => {
         const title = item.getAttribute('data-title').toLowerCase();
@@ -136,7 +365,7 @@ searchInput.addEventListener('input', function () {
     });
 });
 
-// click sui canali / video
+// Click sui canali / video
 document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('click', () => {
         const title = card.querySelector('.card-title').textContent.toLowerCase();
@@ -145,9 +374,8 @@ document.querySelectorAll('.card').forEach(card => {
         } else if (title.includes('loretnani') && !title.includes('video')) {
             location.href = 'lore.html';
         } else {
-            // qui puoi mettere il link Mega del video se vuoi aprirlo direttamente
-            // esempio:
-            // window.open('https://mega.nz/embed/XXXXXXXX#YYYYYYYY', '_blank');
+            // Esempio per link diretti Mega o player video:
+            // window.open('https://mega.nz/...', '_blank');
         }
     });
 });

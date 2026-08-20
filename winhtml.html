@@ -365,6 +365,7 @@
         <div class="menu-item" onclick="openApp('TERMINAL'); toggleStartMenu();">Terminale</div>
         <div class="menu-item" onclick="openApp('SETTINGS'); toggleStartMenu();">Impostazioni</div>
         <div class="menu-divider"></div>
+        <div class="menu-item" onclick="window.location.href='index.html'">Homepage</div>
         <div class="menu-item" onclick="shutdownSystem()">Arresta il sistema</div>
     </div>
 
@@ -672,39 +673,39 @@
         }
 
         // --- APPLICATION: SETTINGS ---
-function renderSettings(container) {
-    container.innerHTML = `
-        <div class="split-pane">
-            <div class="list-box" style="width: 130px;">
-                <div class="list-item selected" onclick="loadSettingApplet('sys', this)">Sistema</div>
-                <div class="list-item" onclick="loadSettingApplet('disp', this)">Schermo</div>
-            </div>
-            <div id="settings-panel" class="list-box" style="flex:1; padding: 8px; font-family: monospace; white-space: pre-wrap; font-size: 13px;"></div>
-        </div>
-    `;
-    loadSettingApplet('sys');
-}
+        function renderSettings(container) {
+            container.innerHTML = `
+                <div class="split-pane">
+                    <div class="list-box" style="width: 130px;">
+                        <div class="list-item selected" onclick="loadSettingApplet('sys', this)">Sistema</div>
+                        <div class="list-item" onclick="loadSettingApplet('disp', this)">Schermo</div>
+                    </div>
+                    <div id="settings-panel" class="list-box" style="flex:1; padding: 8px; font-family: monospace; white-space: pre-wrap; font-size: 13px;"></div>
+                </div>
+            `;
+            loadSettingApplet('sys');
+        }
 
-function loadSettingApplet(type, element) {
-    if (element) {
-        document.querySelectorAll('.split-pane .list-item').forEach(el => el.classList.remove('selected'));
-        element.classList.add('selected');
-    }
+        function loadSettingApplet(type, element) {
+            if (element) {
+                document.querySelectorAll('.split-pane .list-item').forEach(el => el.classList.remove('selected'));
+                element.classList.add('selected');
+            }
 
-    const panel = document.getElementById('settings-panel');
-    if (type === 'sys') {
-        panel.innerHTML = `--- INFORMAZIONI HARDWARE ---\n\n` +
-            `Sistema: Windows C++ Edition\n` +
-            `Cores CPU Rilevati: ${navigator.hardwareConcurrency || 'N/A'}\n` +
-            `Lingua Sistema: ${navigator.language}\n\n` +
-            `Prodotto di VigoneTech Team.\n<a href="https://aleprogramm-bit.github.io/VigoneTechTeam" target="_blank" style="color: blue; text-decoration: underline;">https://aleprogramm-bit.github.io/VigoneTechTeam</a>`;
-    } else if (type === 'disp') {
-        panel.innerHTML = `--- DISPLAY ---\n\n` +
-            `Risoluzione Web: ${window.innerWidth} x ${window.innerHeight}\n` +
-            `Risoluzione Schermo: ${screen.width} x ${screen.height}\n` +
-            `Profondità Colore: ${screen.colorDepth}-bit`;
-    }
-}
+            const panel = document.getElementById('settings-panel');
+            if (type === 'sys') {
+                panel.innerHTML = `--- INFORMAZIONI HARDWARE ---\n\n` +
+                    `Sistema: Windows C++ Edition\n` +
+                    `Cores CPU Rilevati: ${navigator.hardwareConcurrency || 'N/A'}\n` +
+                    `Lingua Sistema: ${navigator.language}\n\n` +
+                    `Prodotto di VigoneTech Team.\n<a href="https://aleprogramm-bit.github.io/VigoneTechTeam" target="_blank" style="color: blue; text-decoration: underline;">https://aleprogramm-bit.github.io/VigoneTechTeam</a>`;
+            } else if (type === 'disp') {
+                panel.innerHTML = `--- DISPLAY ---\n\n` +
+                    `Risoluzione Web: ${window.innerWidth} x ${window.innerHeight}\n` +
+                    `Risoluzione Schermo: ${screen.width} x ${screen.height}\n` +
+                    `Profondità Colore: ${screen.colorDepth}-bit`;
+            }
+        }
 
         // --- EFETTO MATRIX ON DESKTOP ---
         let matrixInterval = null;

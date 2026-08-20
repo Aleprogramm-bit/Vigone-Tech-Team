@@ -12,6 +12,7 @@
             --card-hover: #ffffff;
             --primary: #2563eb;
             --primary-hover: #1d4ed8;
+            --primary-light: rgba(37, 99, 235, 0.1);
             --text: #0f172a;
             --muted: #64748b;
             --border: rgba(226, 232, 240, 0.8);
@@ -25,10 +26,11 @@
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg: #0f172a;
-                --card-bg: rgba(30, 41, 59, 0.7);
+                --card-bg: rgba(30, 41, 59, 0.75);
                 --card-hover: #1e293b;
                 --primary: #60a5fa;
                 --primary-hover: #93c5fd;
+                --primary-light: rgba(96, 165, 250, 0.15);
                 --text: #f8fafc;
                 --muted: #94a3b8;
                 --border: rgba(51, 65, 85, 0.6);
@@ -62,13 +64,19 @@
             padding: 16px 32px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            justify-content: space-between;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
         header img {
@@ -89,6 +97,22 @@
         header p {
             font-size: 13px;
             color: var(--muted);
+        }
+
+        .back-portal {
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .back-portal:hover {
+            background: var(--border);
+            color: var(--text);
         }
 
         /* PAGE LAYOUT */
@@ -113,6 +137,8 @@
             -webkit-backdrop-filter: blur(12px);
             box-shadow: var(--shadow-md);
             align-self: start;
+            position: sticky;
+            top: 100px;
         }
 
         nav h2 {
@@ -182,18 +208,11 @@
             opacity: 0.9;
         }
 
-        /* SECTION */
-        .section {
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-        }
-
         .badge {
             display: inline-block;
             padding: 4px 12px;
             border-radius: 999px;
-            background: rgba(37, 99, 235, 0.1);
+            background: var(--primary-light);
             color: var(--primary);
             font-size: 12px;
             font-weight: 600;
@@ -202,25 +221,40 @@
             letter-spacing: 0.05em;
         }
 
+        /* TIMELINE CHANGELOG */
+        .section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
         .section h3 {
             font-size: 20px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
 
-        /* CHANGELOG LIST */
-        .changelog-list {
+        .changelog-timeline {
+            position: relative;
             list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            padding-left: 20px;
+        }
+
+        .changelog-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: var(--border);
+            border-radius: 2px;
         }
 
         .changelog-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px 16px;
+            position: relative;
+            margin-bottom: 20px;
+            padding: 14px 18px;
             background: var(--card-hover);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
@@ -228,9 +262,28 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
+        .changelog-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 18px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid var(--bg);
+        }
+
         .changelog-item:hover {
             transform: translateX(4px);
             box-shadow: var(--shadow-md);
+        }
+
+        .changelog-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
         }
 
         .version-tag {
@@ -242,8 +295,6 @@
             font-size: 12px;
             font-weight: 700;
             white-space: nowrap;
-            flex-shrink: 0;
-            margin-top: 2px;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -278,17 +329,16 @@
                 margin: 20px auto;
             }
 
+            nav {
+                position: static;
+            }
+
             header {
                 padding: 14px 20px;
             }
 
             main {
                 padding: 24px;
-            }
-
-            .changelog-item {
-                flex-direction: column;
-                gap: 6px;
             }
         }
     </style>
@@ -297,11 +347,14 @@
 <body>
 
     <header>
-        <img src="logo2.png" alt="Logo LorenzoOS" onerror="this.src='https://via.placeholder.com/44'">
-        <div>
-            <h1>LorenzoOS</h1>
-            <p>Changelog</p>
+        <div class="header-brand">
+            <img src="logo2.png" alt="Logo LorenzoOS" onerror="this.src='https://via.placeholder.com/44'">
+            <div>
+                <h1>LorenzoOS</h1>
+                <p>Changelog & Storico Versioni</p>
+            </div>
         </div>
+        <a href="index.html" class="back-portal">← Portale</a>
     </header>
 
     <div class="page">
@@ -317,58 +370,93 @@
         <main>
             <span class="badge">Cronologia Rilasci</span>
             <h2>Registro aggiornamenti</h2>
-            <p>Qui vengono pubblicate tutte le modifiche, versioni e novità introdotte in LorenzoOS.</p>
+            <p>Qui vengono pubblicate tutte le modifiche, le nuove funzionalità e lo storico delle versioni di LorenzoOS.</p>
 
             <div class="section">
                 <h3>Storico Versioni</h3>
-                <ul class="changelog-list">
+                <ul class="changelog-timeline">
                     <li class="changelog-item">
-                        <span class="version-tag">v4.0</span>
-                        <span class="changelog-text">Introduzione dell'utility Sticky Notes per appunti rapidi sul desktop.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v4.0</span>
+                        </div>
+                        <p class="changelog-text">Introduzione dell'utility Sticky Notes per appunti rapidi sul desktop.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v3.0</span>
-                        <span class="changelog-text">Aggiunti Colorizer, App Manager e avviso di disconnessione in stile Windows 3.x.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v3.0</span>
+                        </div>
+                        <p class="changelog-text">Aggiunti Colorizer, App Manager e avviso di disconnessione in stile Windows 3.x.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v2.0</span>
-                        <span class="changelog-text">Introduzione del comando Esegui, schermata di errore BSOD e disabilitazione della CLI di default.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v2.0</span>
+                        </div>
+                        <p class="changelog-text">Introduzione del comando Esegui, schermata di errore BSOD e disabilitazione della CLI di default.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v1.9</span>
-                        <span class="changelog-text">Implementazione del supporto multi-utente.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v1.9</span>
+                        </div>
+                        <p class="changelog-text">Implementazione del supporto multi-utente.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v1.8</span>
-                        <span class="changelog-text">Integrazione del Terminale CLI.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v1.8</span>
+                        </div>
+                        <p class="changelog-text">Integrazione del Terminale CLI.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v1.7</span>
-                        <span class="changelog-text">Nuove personalizzazioni cromatiche del sistema.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v1.7</span>
+                        </div>
+                        <p class="changelog-text">Nuove personalizzazioni cromatiche del sistema.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v1.6.5</span>
-                        <span class="changelog-text">Aggiunto il gioco Tris.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v1.6.5</span>
+                        </div>
+                        <p class="changelog-text">Aggiunto il gioco Tris.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v1.6</span>
-                        <span class="changelog-text">Nuova applicazione Orologio.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v1.6</span>
+                        </div>
+                        <p class="changelog-text">Nuova applicazione Orologio.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v1.5</span>
-                        <span class="changelog-text">Aggiunta dell'utility Winver per le informazioni di sistema.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v1.5</span>
+                        </div>
+                        <p class="changelog-text">Aggiunta dell'utility Winver per le informazioni di sistema.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v1.4</span>
-                        <span class="changelog-text">Introduzione del Task Manager per la gestione dei processi.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v1.4</span>
+                        </div>
+                        <p class="changelog-text">Introduzione del Task Manager per la gestione dei processi.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v1.3.1</span>
-                        <span class="changelog-text">Integrazione del classico gioco Snake.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v1.3.1</span>
+                        </div>
+                        <p class="changelog-text">Integrazione del classico gioco Snake.</p>
                     </li>
+
                     <li class="changelog-item">
-                        <span class="version-tag">v1.0</span>
-                        <span class="changelog-text">Rilascio iniziale con desktop personalizzabile, orologio RTC, blocco note, calcolatrice, impostazioni, screensaver, schermata di login e menu applicazioni.</span>
+                        <div class="changelog-header">
+                            <span class="version-tag">v1.0</span>
+                        </div>
+                        <p class="changelog-text">Rilascio iniziale con desktop personalizzabile, orologio RTC, blocco note, calcolatrice, impostazioni, screensaver, schermata di login e menu applicazioni.</p>
                     </li>
                 </ul>
             </div>

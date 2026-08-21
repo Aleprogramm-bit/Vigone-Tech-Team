@@ -5,6 +5,16 @@
     <title>OurVideos – Hub Spettacoli & Canali</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Meta Tag SEO Generali -->
+    <meta name="description" content="Piattaforma video fluida e indipendente: scopri i canali e i contenuti di OurVideos.">
+    <meta name="keywords" content="OurVideos, video, canali, Aleprogramm, LoreTNani, streaming">
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="OurVideos – Hub Spettacoli & Canali">
+    <meta property="og:description" content="Esplora i video e i canali della community OurVideos.">
+    <meta property="og:image" content="ourvideo.png">
+
     <style>
         :root {
             --bg-base: #07090e;
@@ -13,11 +23,13 @@
             --accent-green: #10b981;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
-            --glass-bg: rgba(13, 20, 28, 0.65);
+            --glass-bg: rgba(13, 20, 28, 0.75);
             --glass-border: rgba(0, 255, 102, 0.25);
             --glass-hover: rgba(0, 255, 102, 0.5);
             --radius-lg: 20px;
             --radius-md: 12px;
+            --particle-color: rgba(0, 255, 102, 0.35);
+            --particle-line: rgba(0, 255, 102, 0.12);
         }
 
         * {
@@ -28,11 +40,6 @@
 
         body {
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-image: url("");
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: cover;
             background-color: var(--bg-base);
             color: var(--text-main);
             min-height: 100vh;
@@ -42,12 +49,22 @@
             position: relative;
         }
 
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
         /* HEADER GLASS WITH SEARCH */
         header {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(7, 9, 14, 0.75);
+            background: rgba(7, 9, 14, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
@@ -71,6 +88,11 @@
             border-radius: 8px;
             object-fit: contain;
             filter: drop-shadow(0 0 8px var(--primary-glow));
+            transition: transform 0.3s ease;
+        }
+
+        .logo-left img:hover {
+            transform: scale(1.05);
         }
 
         .search-box {
@@ -103,7 +125,6 @@
             background: rgba(22, 32, 45, 0.9);
         }
 
-        /* Lente d'ingrandimento decorativa nell'input */
         .search-box::before {
             content: '🔍';
             position: absolute;
@@ -126,7 +147,7 @@
             width: 100%;
         }
 
-        /* BANNER PRINCIPALE WOW */
+        /* BANNER PRINCIPALE */
         .banner {
             width: 100%;
             border-radius: var(--radius-lg);
@@ -151,7 +172,7 @@
             display: block;
         }
 
-        /* GRIGLIA E CARD CANALI 3D */
+        /* GRIGLIA E CARD CANALI */
         .cards-list {
             display: flex;
             flex-direction: column;
@@ -172,10 +193,10 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            outline: none;
             transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease;
         }
 
-        /* Effetto scorrimento luce/riflesso sulla card */
         .card::before {
             content: '';
             position: absolute;
@@ -191,7 +212,7 @@
             left: 100%;
         }
 
-        .card:hover {
+        .card:hover, .card:focus-visible {
             transform: translateY(-6px) scale(1.01);
             border-color: var(--primary-neon);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 25px var(--primary-glow);
@@ -250,7 +271,6 @@
             color: var(--text-muted);
         }
 
-        /* BADGE O ICONA SULLA CARD */
         .card-badge {
             margin-left: auto;
             background: rgba(0, 255, 102, 0.1);
@@ -267,6 +287,60 @@
             background: var(--primary-neon);
             color: #000;
             box-shadow: 0 0 12px var(--primary-glow);
+        }
+
+        /* MESSAGGIO RICERCA VUOTA */
+        .no-results {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 16px;
+            background: var(--glass-bg);
+            border: 1px dashed var(--glass-border);
+            border-radius: var(--radius-lg);
+        }
+
+        /* BACK TO TOP BUTTON */
+        .back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--primary-neon);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            backdrop-filter: blur(8px);
+            z-index: 98;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .back-to-top:hover {
+            border-color: var(--primary-neon);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 28px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            background: rgba(7, 9, 14, 0.85);
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            margin-top: auto;
+            position: relative;
+            z-index: 1;
         }
 
         @media (max-width: 640px) {
@@ -301,12 +375,16 @@
 </head>
 <body>
 
+<canvas id="bgCanvas"></canvas>
+
 <header>
     <div class="logo-left">
-        <img src="ourvideo.png" alt="OurVideo" onerror="this.src='https://via.placeholder.com/120x40?text=OurVideos'">
+        <a href="#" style="display: flex; align-items: center;">
+            <img src="ourvideo.png" alt="OurVideos Logo" onerror="this.src='https://via.placeholder.com/120x40?text=OurVideos'">
+        </a>
     </div>
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Cerca canali o video...">
+        <input type="text" id="searchInput" placeholder="Cerca canali o video..." aria-label="Cerca canali o video">
     </div>
 </header>
 
@@ -314,16 +392,16 @@
 
     <!-- Banner centrale VigoneTech Team -->
     <div class="banner">
-        <img src="ourvideos.pmng" alt="VigoneTech Team Banner" onerror="this.src='https://via.placeholder.com/1000x220?text=VigoneTech+Team'">
+        <img src="ourvideos.png" alt="VigoneTech Team Banner" onerror="this.src='https://via.placeholder.com/1000x220?text=VigoneTech+Team'">
     </div>
 
     <!-- Lista Canali / Video -->
-    <div class="cards-list">
+    <div class="cards-list" id="cardsList">
         
         <!-- Canale Aleprogramm -->
-        <div class="card search-item" data-title="Aleprogramm Ale Channel">
+        <div class="card search-item" data-title="Aleprogramm Ale Channel" tabindex="0" role="button">
             <div class="card-img-wrapper">
-                <img src="ale.png" alt="Aleprogramm" onerror="this.src='https://via.placeholder.com/160x90?text=Aleprogramm'">
+                <img src="ale.png" alt="Aleprogramm" loading="lazy" onerror="this.src='https://via.placeholder.com/160x90?text=Aleprogramm'">
             </div>
             <div class="card-info">
                 <div class="card-title">Aleprogramm</div>
@@ -333,9 +411,9 @@
         </div>
 
         <!-- Canale LoreTNani -->
-        <div class="card search-item" data-title="LoreTNani Lore Channel">
+        <div class="card search-item" data-title="LoreTNani Lore Channel" tabindex="0" role="button">
             <div class="card-img-wrapper">
-                <img src="lore.png" alt="LoreTNani" onerror="this.src='https://via.placeholder.com/160x90?text=LoreTNani'">
+                <img src="lore.png" alt="LoreTNani" loading="lazy" onerror="this.src='https://via.placeholder.com/160x90?text=LoreTNani'">
             </div>
             <div class="card-info">
                 <div class="card-title">LoreTNani</div>
@@ -345,40 +423,161 @@
         </div>
 
     </div>
+
+    <div class="no-results" id="noResults">
+        Nessun canale o video corrisponde alla tua ricerca.
+    </div>
 </div>
 
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="Torna in alto">↑</button>
+
+<footer>
+    © 2026 · OurVideos · Powered by VigoneTech Team
+</footer>
+
 <script>
-const searchInput = document.getElementById('searchInput');
-const items = document.querySelectorAll('.search-item');
+    // --- GESTIONE RICERCA FILTRATA ---
+    const searchInput = document.getElementById('searchInput');
+    const items = document.querySelectorAll('.search-item');
+    const noResults = document.getElementById('noResults');
 
-// Filtraggio ricerca in tempo reale
-searchInput.addEventListener('input', function () {
-    const query = this.value.toLowerCase().trim();
+    searchInput.addEventListener('input', function () {
+        const query = this.value.toLowerCase().trim();
+        let visibleCount = 0;
 
-    items.forEach(item => {
-        const title = item.getAttribute('data-title').toLowerCase();
-        if (title.includes(query)) {
-            item.style.display = 'flex';
-        } else {
-            item.style.display = 'none';
+        items.forEach(item => {
+            const title = item.getAttribute('data-title').toLowerCase();
+            if (title.includes(query)) {
+                item.style.display = 'flex';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+
+    // Pulisci ricerca premendo ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.activeElement === searchInput) {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
         }
     });
-});
 
-// Click sui canali / video
-document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', () => {
+    // --- NAVIGAZIONE CLICK / KEYBOARD SU CARD ---
+    function navigateCard(card) {
         const title = card.querySelector('.card-title').textContent.toLowerCase();
         if (title.includes('aleprogramm') && !title.includes('video')) {
             location.href = 'ale.html';
         } else if (title.includes('loretnani') && !title.includes('video')) {
             location.href = 'lore.html';
+        }
+    }
+
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => navigateCard(card));
+        
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigateCard(card);
+            }
+        });
+    });
+
+    // --- SCROLL TO TOP ---
+    const backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopBtn.style.display = 'flex';
         } else {
-            // Esempio per link diretti Mega o player video:
-            // window.open('https://mega.nz/...', '_blank');
+            backToTopBtn.style.display = 'none';
         }
     });
-});
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- ANIMAZIONE CANVAS PARTICELLE NEON ---
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationFrameId = null;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(resizeCanvas, 150);
+    });
+    resizeCanvas();
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+            this.radius = Math.random() * 2 + 1;
+        }
+        update() {
+            this.x += this.vx; 
+            this.y += this.vy;
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+        draw(color) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < 35; i++) {
+        particles.push(new Particle());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const particleColor = 'rgba(0, 255, 102, 0.35)';
+        const lineBase = 'rgba(0, 255, 102, 0.1)';
+
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw(particleColor);
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 130) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = lineBase;
+                    ctx.stroke();
+                }
+            }
+        }
+        animationFrameId = requestAnimationFrame(animate);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            cancelAnimationFrame(animationFrameId);
+        } else {
+            animate();
+        }
+    });
+
+    animate();
 </script>
 
 </body>

@@ -2,9 +2,16 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Retro Rocket Duel</title>
     <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
         body {
             margin: 0;
             background: #050510;
@@ -14,39 +21,77 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
         }
+
+        .header-bar {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 0 5px;
+        }
+
+        .btn-home {
+            color: #00ff66;
+            background: #000;
+            border: 2px solid #00ff66;
+            padding: 6px 12px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-home:hover {
+            background: #00ff66;
+            color: #000;
+            box-shadow: 0 0 10px #00ff66;
+        }
+
         #gameContainer {
             position: relative;
             width: 800px;
             height: 450px;
+            max-width: 100%;
         }
+
         #gameCanvas {
             border: 3px solid #00ff66;
             background: #020208;
             box-shadow: 0 0 25px rgba(0, 255, 102, 0.2);
+            width: 100%;
+            height: 100%;
+            display: block;
         }
+
         .game-overlay {
             position: absolute;
             top: 0;
             left: 0;
-            width: 800px;
-            height: 450px;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             pointer-events: none;
         }
+
         .menu-box {
-            background: rgba(2, 2, 8, 0.9);
+            background: rgba(2, 2, 8, 0.95);
             border: 2px solid #00ff66;
-            padding: 20px;
+            padding: 25px;
             border-radius: 8px;
             text-align: center;
             pointer-events: auto;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
         }
+
         .btn {
             background: #000;
             color: #00ff66;
@@ -59,23 +104,65 @@
             margin: 5px;
             transition: all 0.2s ease;
         }
+
         .btn:hover {
             background: #00ff66;
             color: #000;
             box-shadow: 0 0 10px #00ff66;
         }
+
         .controls {
             display: flex;
             gap: 40px;
-            margin-top: 15px;
+            margin-top: 12px;
             font-size: 13px;
             text-align: center;
         }
-        .p1 { color: #ff3333; }
-        .p2 { color: #3333ff; }
+
+        .p1 { color: #ff3366; }
+        .p2 { color: #3399ff; }
+
+        .mobile-controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 10px;
+            padding: 0 10px;
+        }
+
+        .touch-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ctrl-btn {
+            width: 50px;
+            height: 45px;
+            background: #000;
+            border: 2px solid #00ff66;
+            color: #00ff66;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .ctrl-btn:active {
+            background: #00ff66;
+            color: #000;
+        }
     </style>
 </head>
 <body>
+
+    <div class="header-bar">
+        <a href="index.html" class="btn-home">🏠 HOME</a>
+        <span style="font-size: 12px; opacity: 0.8;">RETRO ROCKET DUEL</span>
+    </div>
 
     <div id="gameContainer">
         <canvas id="gameCanvas" width="800" height="450"></canvas>
@@ -93,7 +180,7 @@
         <div id="winOverlay" class="game-overlay" style="display: none;">
             <div class="menu-box" style="border-color: #ffcc00;">
                 <h2 id="winMessage" style="color: #ffcc00; margin-top: 0;"></h2>
-                <p style="margin-bottom: 15px;">Partita conclusa a 10 punti!</p>
+                <p style="margin-bottom: 15px; color: #fff;">Partita conclusa a 10 punti!</p>
                 <button class="btn" onclick="resetToMenu()">GIOCA ANCORA</button>
             </div>
         </div>
@@ -101,10 +188,24 @@
     
     <div class="controls">
         <div class="p1">
-            <strong>P1 (Rosso):</strong> Muoviti <kbd>W</kbd>/<kbd>S</kbd> | Spara <kbd>Spazio</kbd>
+            <strong>P1 (Rosso):</strong> <kbd>W</kbd>/<kbd>S</kbd> Muoviti | <kbd>Spazio</kbd> Spara
         </div>
         <div class="p2" id="p2Instructions">
-            <strong>P2 (Blu):</strong> Muoviti <kbd>↑</kbd>/<kbd>↓</kbd> | Spara <kbd>Invio</kbd>
+            <strong>P2 (Blu):</strong> <kbd>↑</kbd>/<kbd>↓</kbd> Muoviti | <kbd>Invio</kbd> Spara
+        </div>
+    </div>
+
+    <!-- Controlli Touch per Mobile -->
+    <div class="mobile-controls">
+        <div class="touch-group">
+            <div class="ctrl-btn" id="btnP1Up">▲</div>
+            <div class="ctrl-btn" id="btnP1Down">▼</div>
+            <div class="ctrl-btn" id="btnP1Shoot" style="border-color: #ff3366; color: #ff3366;">🚀</div>
+        </div>
+        <div class="touch-group" id="p2TouchGroup">
+            <div class="ctrl-btn" id="btnP2Shoot" style="border-color: #3399ff; color: #3399ff;">🚀</div>
+            <div class="ctrl-btn" id="btnP2Up">▲</div>
+            <div class="ctrl-btn" id="btnP2Down">▼</div>
         </div>
     </div>
 
@@ -112,19 +213,53 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const p1 = { x: 40, y: 200, w: 30, h: 50, speed: 6, score: 0, color: "#ff3333", lastShot: 0 };
-const p2 = { x: 730, y: 200, w: 30, h: 50, speed: 5, score: 0, color: "#3333ff", lastShot: 0 };
+const p1 = { x: 40, y: 200, w: 30, h: 50, speed: 6, score: 0, color: "#ff3366", lastShot: 0 };
+const p2 = { x: 730, y: 200, w: 30, h: 50, speed: 5, score: 0, color: "#3399ff", lastShot: 0 };
 
 let projectiles = [];
 let particles = [];
-const shootCooldown = 400; 
+let stars = [];
+const shootCooldown = 350; 
 
 let gameMode = 'pvp'; 
 let isPlaying = false;
 
+// Generazione sfondo stellare
+for (let i = 0; i < 60; i++) {
+    stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2,
+        speed: Math.random() * 0.5 + 0.1
+    });
+}
+
 const keys = {};
-window.addEventListener("keydown", e => { keys[e.key] = true; });
+window.addEventListener("keydown", e => { 
+    keys[e.key] = true; 
+    if(["Space", "ArrowUp", "ArrowDown"].includes(e.code)) e.preventDefault();
+});
 window.addEventListener("keyup", e => { keys[e.key] = false; });
+
+// Gestione Controlli Touch
+const bindTouch = (id, keyName) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    const start = (e) => { e.preventDefault(); keys[keyName] = true; };
+    const end = (e) => { e.preventDefault(); keys[keyName] = false; };
+    el.addEventListener('touchstart', start, { passive: false });
+    el.addEventListener('touchend', end, { passive: false });
+    el.addEventListener('mousedown', start);
+    el.addEventListener('mouseup', end);
+    el.addEventListener('mouseleave', end);
+};
+
+bindTouch('btnP1Up', 'w');
+bindTouch('btnP1Down', 's');
+bindTouch('btnP1Shoot', ' ');
+bindTouch('btnP2Up', 'ArrowUp');
+bindTouch('btnP2Down', 'ArrowDown');
+bindTouch('btnP2Shoot', 'Enter');
 
 function startRocketGame(mode) {
     gameMode = mode;
@@ -132,10 +267,16 @@ function startRocketGame(mode) {
     document.getElementById("winOverlay").style.display = "none";
     
     const p2Inst = document.getElementById("p2Instructions");
+    const p2Touch = document.getElementById("p2TouchGroup");
+    
     if (mode === 'bot') {
-        p2Inst.innerHTML = "<strong>P2 (BOT):</strong> Controllato dall'I.A.";
+        p2Inst.innerHTML = "<strong>P2 (BOT):</strong> I.A. Automatica";
+        p2Touch.style.opacity = "0.3";
+        p2Touch.style.pointerEvents = "none";
     } else {
-        p2Inst.innerHTML = "<strong>P2 (Blu):</strong> Muoviti <kbd>↑</kbd>/<kbd>↓</kbd> | Spara <kbd>Invio</kbd>";
+        p2Inst.innerHTML = "<strong>P2 (Blu):</strong> <kbd>↑</kbd>/<kbd>↓</kbd> Muoviti | <kbd>Invio</kbd> Spara";
+        p2Touch.style.opacity = "1";
+        p2Touch.style.pointerEvents = "auto";
     }
 
     p1.score = 0;
@@ -168,11 +309,11 @@ function finishGame(msg) {
 }
 
 function createExplosion(x, y, color) {
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 25; i++) {
         particles.push({
             x: x, y: y,
-            vx: (Math.random() - 0.5) * 6,
-            vy: (Math.random() - 0.5) * 6,
+            vx: (Math.random() - 0.5) * 8,
+            vy: (Math.random() - 0.5) * 8,
             radius: Math.random() * 3 + 1,
             alpha: 1,
             color: color
@@ -181,50 +322,68 @@ function createExplosion(x, y, color) {
 }
 
 function update() {
+    // Animazione stelle (anche nel menu)
+    stars.forEach(st => {
+        st.x -= st.speed;
+        if (st.x < 0) st.x = canvas.width;
+    });
+
     if (!isPlaying) return;
     const now = Date.now();
 
+    // Giocatore 1
     if ((keys["w"] || keys["W"]) && p1.y > 10) p1.y -= p1.speed;
     if ((keys["s"] || keys["S"]) && p1.y < canvas.height - p1.h - 10) p1.y += p1.speed;
     if (keys[" "] && now - p1.lastShot > shootCooldown) {
-        projectiles.push({ x: p1.x + p1.w, y: p1.y + p1.h/2 - 3, vx: 8, color: p1.color, owner: 1 });
+        projectiles.push({ x: p1.x + p1.w, y: p1.y + p1.h/2 - 3, vx: 9, color: p1.color, owner: 1 });
         p1.lastShot = now;
     }
 
+    // Giocatore 2 / Bot
     if (gameMode === 'pvp') {
         if (keys["ArrowUp"] && p2.y > 10) p2.y -= p2.speed;
         if (keys["ArrowDown"] && p2.y < canvas.height - p2.h - 10) p2.y += p2.speed;
         if (keys["Enter"] && now - p2.lastShot > shootCooldown) {
-            projectiles.push({ x: p2.x, y: p2.y + p2.h/2 - 3, vx: -8, color: p2.color, owner: 2 });
+            projectiles.push({ x: p2.x, y: p2.y + p2.h/2 - 3, vx: -9, color: p2.color, owner: 2 });
             p2.lastShot = now;
         }
     } else {
+        // Logica Bot Migliorata
         let incoming = null;
         let minX = 9999;
         projectiles.forEach(p => {
             if (p.owner === 1 && p.x < minX) { minX = p.x; incoming = p; }
         });
 
-        if (incoming && incoming.x > canvas.width / 2) {
+        if (incoming && incoming.x > canvas.width * 0.3) {
             let targetY = incoming.y - p2.h / 2;
-            if (p2.y < targetY && p2.y > 10) p2.y -= p2.speed;
-            else if (p2.y > targetY && p2.y < canvas.height - p2.h - 10) p2.y += p2.speed;
+            if (p2.y < targetY - 5 && p2.y < canvas.height - p2.h - 10) p2.y += p2.speed;
+            else if (p2.y > targetY + 5 && p2.y > 10) p2.y -= p2.speed;
         } else {
             let targetY = p1.y;
-            if (p2.y < targetY - 10 && p2.y > 10) p2.y += p2.speed;
-            else if (p2.y > targetY + 10 && p2.y < canvas.height - p2.h - 10) p2.y -= p2.speed;
+            if (p2.y < targetY - 10 && p2.y < canvas.height - p2.h - 10) p2.y += p2.speed * 0.8;
+            else if (p2.y > targetY + 10 && p2.y > 10) p2.y -= p2.speed * 0.8;
         }
 
-        if (Math.abs(p2.y - p1.y) < 40 && now - p2.lastShot > (shootCooldown + 200)) {
-            projectiles.push({ x: p2.x, y: p2.y + p2.h/2 - 3, vx: -8, color: p2.color, owner: 2 });
+        if (Math.abs((p2.y + p2.h/2) - (p1.y + p1.h/2)) < 35 && now - p2.lastShot > (shootCooldown + 150)) {
+            projectiles.push({ x: p2.x, y: p2.y + p2.h/2 - 3, vx: -9, color: p2.color, owner: 2 });
             p2.lastShot = now;
         }
     }
 
+    // Proiettili e Collisioni
     for (let i = projectiles.length - 1; i >= 0; i--) {
         const p = projectiles[i];
         p.x += p.vx;
 
+        // Scia del proiettile
+        particles.push({
+            x: p.x, y: p.y + 3,
+            vx: (Math.random() - 0.5) * 1, vy: (Math.random() - 0.5) * 1,
+            radius: 1.5, alpha: 0.6, color: p.color
+        });
+
+        // Hitbox P2
         if (p.owner === 1 && p.x > p2.x && p.x < p2.x + p2.w && p.y > p2.y && p.y < p2.y + p2.h) {
             p1.score++;
             createExplosion(p.x, p.y, p2.color);
@@ -233,6 +392,7 @@ function update() {
             continue;
         }
 
+        // Hitbox P1
         if (p.owner === 2 && p.x > p1.x && p.x < p1.x + p1.w && p.y > p1.y && p.y < p1.y + p1.h) {
             p2.score++;
             createExplosion(p.x, p.y, p1.color);
@@ -244,9 +404,10 @@ function update() {
         if (p.x < 0 || p.x > canvas.width) projectiles.splice(i, 1);
     }
 
+    // Particelle
     for (let i = particles.length - 1; i >= 0; i--) {
         const pt = particles[i];
-        pt.x += pt.vx; pt.y += pt.vy; pt.alpha -= 0.02;
+        pt.x += pt.vx; pt.y += pt.vy; pt.alpha -= 0.025;
         if (pt.alpha <= 0) particles.splice(i, 1);
     }
 }
@@ -254,6 +415,13 @@ function update() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Stelle di sfondo
+    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+    stars.forEach(st => {
+        ctx.fillRect(st.x, st.y, st.size, st.size);
+    });
+
+    // Griglia
     ctx.strokeStyle = "rgba(0, 255, 102, 0.04)";
     ctx.lineWidth = 1;
     for (let i = 0; i < canvas.width; i += 40) {
@@ -263,30 +431,43 @@ function draw() {
         ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke();
     }
 
+    // Navicella P1
     ctx.fillStyle = p1.color;
     ctx.beginPath();
-    ctx.moveTo(p1.x, p1.y); ctx.lineTo(p1.x + p1.w - 10, p1.y); ctx.lineTo(p1.x + p1.w, p1.y + p1.h/2);
-    ctx.lineTo(p1.x + p1.w - 10, p1.y + p1.h); ctx.lineTo(p1.x, p1.y + p1.h);
-    ctx.closePath(); ctx.fill();
+    ctx.moveTo(p1.x, p1.y); 
+    ctx.lineTo(p1.x + p1.w - 10, p1.y); 
+    ctx.lineTo(p1.x + p1.w, p1.y + p1.h/2);
+    ctx.lineTo(p1.x + p1.w - 10, p1.y + p1.h); 
+    ctx.lineTo(p1.x, p1.y + p1.h);
+    ctx.closePath(); 
+    ctx.fill();
 
+    // Navicella P2
     ctx.fillStyle = p2.color;
     ctx.beginPath();
-    ctx.moveTo(p2.x + p2.w, p2.y); ctx.lineTo(p2.x + 10, p2.y); ctx.lineTo(p2.x, p2.y + p2.h/2);
-    ctx.lineTo(p2.x + 10, p2.y + p2.h); ctx.lineTo(p2.x + p2.w, p2.y + p2.h);
-    ctx.closePath(); ctx.fill();
+    ctx.moveTo(p2.x + p2.w, p2.y); 
+    ctx.lineTo(p2.x + 10, p2.y); 
+    ctx.lineTo(p2.x, p2.y + p2.h/2);
+    ctx.lineTo(p2.x + 10, p2.y + p2.h); 
+    ctx.lineTo(p2.x + p2.w, p2.y + p2.h);
+    ctx.closePath(); 
+    ctx.fill();
 
+    // Proiettili
     projectiles.forEach(p => {
         ctx.fillStyle = p.color;
         ctx.fillRect(p.x, p.y, 15, 6);
     });
 
+    // Particelle
     particles.forEach(pt => {
         ctx.fillStyle = pt.color; ctx.globalAlpha = pt.alpha;
         ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2); ctx.fill();
     });
     ctx.globalAlpha = 1.0; 
 
-    ctx.font = "24px 'Courier New'";
+    // Segnapunti
+    ctx.font = "bold 24px 'Courier New'";
     ctx.fillStyle = p1.color; ctx.fillText(p1.score, canvas.width / 2 - 60, 40);
     ctx.fillStyle = "#00ff66"; ctx.fillText("-", canvas.width / 2 - 8, 40);
     ctx.fillStyle = p2.color; ctx.fillText(p2.score, canvas.width / 2 + 40, 40);

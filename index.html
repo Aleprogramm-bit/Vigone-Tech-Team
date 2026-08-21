@@ -406,7 +406,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-number" data-target="3">0</div>
-                <div class="stat-label">Giochi Playable</div>
+                <div class="stat-label">Giochi</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" data-target="99">0</div>
@@ -415,31 +415,32 @@
         </div>
     </div>
 
+    <!-- BARRA CONTROLLI CON FILTRI E RICERCA -->
     <div class="controls-bar">
         <div class="filter-btns">
             <button class="filter-btn active" onclick="filterCards('all', this)">Tutti</button>
-            <button class="filter-btn" onclick="filterCards('os', this)">Software & OS</button>
-            <button class="filter-btn" onclick="filterCards('game', this)">Giochi</button>
+            <button class="filter-btn" onclick="filterCards('os', this)">OS & Software</button>
             <button class="filter-btn" onclick="filterCards('service', this)">Servizi</button>
-            <button class="reset-btn" id="resetBtn" onclick="resetFilters()">✖ Reset Filtri</button>
+            <button class="reset-btn" id="resetBtn" onclick="resetFilters()">Azzera Filtri</button>
         </div>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Cerca un progetto..." onkeyup="searchCards()" aria-label="Cerca un progetto">
+            <input type="text" id="searchInput" placeholder="Cerca un progetto..." oninput="searchCards()">
             <span class="search-hint">/</span>
         </div>
     </div>
 
+    <!-- GRIGLIA SCHEDE -->
     <div class="cards" id="cardsGrid">
         
         <div class="card" data-category="os" data-id="lorenzo-os">
             <span class="badge badge-live">Live</span>
             <div class="card-content">
                 <img src="logo2.png" alt="LorenzoOS" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
-                <h3>LorenzoOS</h3>
-                <p>Il sistema operativo personalizzato sviluppato da LoreTnani.</p>
+                <h3>LSoftware & Giochi</h3>
+                <p>I nostri software e progetti interattivi!</p>
             </div>
             <div class="btn-group">
-                <a class="btn" href="main2.html">Vai al sito</a>
+                <a class="btn" href="main2.html">Guarda</a>
             </div>
         </div>
 
@@ -479,18 +480,6 @@
             </div>
         </div>
 
-        <div class="card" data-category="game" data-id="snake-game">
-            <span class="badge badge-live">Gioco</span>
-            <div class="card-content">
-                <img src="game.png" alt="Snake Game" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
-                <h3>Snake Game</h3>
-                <p>Il grande classico arcade rivisitato in chiave moderna.</p>
-            </div>
-            <div class="btn-group">
-                <a class="btn" href="game.html">Gioca Ora</a>
-            </div>
-        </div>
-
         <div class="card" data-category="service" data-id="ourvideos">
             <span class="badge badge-beta">Beta</span>
             <div class="card-content">
@@ -503,51 +492,12 @@
             </div>
         </div>
 
-        <div class="card" data-category="os" data-id="win-cpp">
-            <span class="badge badge-live">Win C++</span>
-            <div class="card-content">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg" alt="Windows C++ Edition" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
-                <h3>Windows C++ Edition</h3>
-                <p>L'esperienza Windows ricreata dal VigoneTech Team.</p>
-            </div>
-            <div class="btn-group">
-                <a class="btn" href="https://drive.google.com/file/d/1CqmQmhOglOgTJRTk6ay0JujOv43JUOAO/view?usp=drive_link" target="_blank" rel="noopener">Scarica</a>
-                <a class="btn btn-secondary" href="winhtml.html" target="_blank" rel="noopener">Provalo Web</a>
-            </div>
+        <!-- MESSAGGIO NESSUN RISULTATO -->
+        <div class="no-results" id="noResults">
+            <h3>Nessun Progetto Trovato</h3>
+            <p>Prova a cercare con altre parole chiave o rimuovi i filtri applicati.</p>
         </div>
 
-        <div class="card" data-category="game" data-id="retro-highway">
-            <span class="badge badge-live">Arcade</span>
-            <div class="card-content">
-                <img src="https://mariokarttour.com/_nuxt/img/f78440e.png" alt="Retro Highway Racer" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
-                <h3>Retro Highway Racer</h3>
-                <p>Sfreccia sull'autostrada in questo gioco arcade vintage.</p>
-            </div>
-            <div class="btn-group">
-                <a class="btn" href="https://drive.google.com/file/d/1ioJXolvKUpsxDL9oV8y7iiUVnqZfFdFb/view?usp=sharing" download>Scarica</a>
-                <a class="btn btn-secondary" href="highwayracer.html">Gioca Web</a>
-            </div>
-        </div>
-
-        <div class="card" data-category="game" data-id="rocket-duel">
-            <span class="badge badge-live">Multiplayer</span>
-            <div class="card-content">
-                <img src="https://models.spriters-resource.com/media/preview_icons/342/345554.png?updated=1755512855" alt="Retro Rocket Duel" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
-                <h3>Retro Rocket Duel</h3>
-                <p>Un avvincente duello spaziale tra razzi giocabile anche via browser!</p>
-            </div>
-            <div class="btn-group">
-                <a class="btn" href="https://drive.google.com/file/d/1jX7kI3XBOKGrHIvJUL3d1PfVC9qkXD86/view?usp=sharing" target="_blank" rel="noopener">Scarica</a>
-                <a class="btn btn-secondary" href="razzi.html">Sfida Web</a>
-            </div>
-        </div>
-
-        <!-- Empty State in caso di nessun risultato trovati -->
-        <div id="noResults" class="no-results">
-            <h3>🔍 Nessun progetto trovato</h3>
-            <p>Prova a modificare i termini di ricerca o a resettare i filtri applicati.</p>
-        </div>
-        
     </div>
 </div>
 
@@ -555,7 +505,7 @@
 
 <footer>
     © 2026 · VigoneTech Team · LorenzoOS · Aleprogramm · Alessio · LoreTnani
-    <button class="secret-egg" onclick="triggerSecret()" title="Secret" aria-label="Secret Egg">🥚</button>
+    <button class="secret-egg" onclick="triggerSecret()" title="Secret" aria-label="Secret Egg">.</button>
 </footer>
 
 <script>
@@ -694,7 +644,6 @@
         canvas.height = window.innerHeight;
     }
 
-    // Debounce sul resize della finestra per ridurre il carico di lavoro sulla CPU
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
@@ -750,7 +699,6 @@
         animationFrameId = requestAnimationFrame(animate);
     }
 
-    // Risparmio batteria/risorse: sospende l'animazione se la scheda del browser non è visibile
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             cancelAnimationFrame(animationFrameId);

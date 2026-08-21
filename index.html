@@ -5,6 +5,22 @@
     <title>VigoneTech Team – Next-Gen Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Meta Tag SEO Generali -->
+    <meta name="description" content="Il portale ufficiale del VigoneTech Team: scopri software, progetti open-source, giochi e servizi digitali.">
+    <meta name="keywords" content="VigoneTech, LorenzoOS, giochi web, software, servizi tech">
+
+    <!-- Open Graph / Facebook / WhatsApp / Telegram -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="VigoneTech Team – Next-Gen Portal">
+    <meta property="og:description" content="Esplora il portale con giochi, sistemi operativi e progetti firmati VigoneTech Team.">
+    <meta property="og:image" content="techteam.jpg">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="VigoneTech Team – Next-Gen Portal">
+    <meta name="twitter:description" content="Esplora il portale con giochi, sistemi operativi e progetti firmati VigoneTech Team.">
+    <meta name="twitter:image" content="techteam.jpg">
+
     <style>
         /* TEMA SCURO (DEFAULT) */
         :root {
@@ -284,6 +300,20 @@
         .card.hidden { display: none; }
         .card:hover { transform: translateY(-8px); border-color: var(--glass-hover); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), 0 0 25px var(--primary-glow); }
 
+        .no-results {
+            display: none;
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 48px 20px;
+            color: var(--text-muted);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(16px);
+        }
+        .no-results h3 { font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+        .no-results p { font-size: 14px; }
+
         .badge {
             position: absolute; top: 16px; right: 16px;
             padding: 4px 10px; border-radius: 12px;
@@ -353,11 +383,11 @@
 <header>
     <div class="header-brand">
         <div class="logo-wrapper">
-            <img src="techteam.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/52'">
+            <img src="techteam.jpg" alt="Logo VigoneTech Team" onerror="this.src='https://via.placeholder.com/52'">
         </div>
         <h1>VigoneTech Team</h1>
     </div>
-    <button class="theme-toggle-btn" id="themeBtn" onclick="toggleTheme()" title="Cambia Tema">🌙</button>
+    <button class="theme-toggle-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Cambia tema chiaro/scuro" title="Cambia Tema">🌙</button>
 </header>
 
 <div class="container">
@@ -394,7 +424,7 @@
             <button class="reset-btn" id="resetBtn" onclick="resetFilters()">✖ Reset Filtri</button>
         </div>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Cerca un progetto..." onkeyup="searchCards()">
+            <input type="text" id="searchInput" placeholder="Cerca un progetto..." onkeyup="searchCards()" aria-label="Cerca un progetto">
             <span class="search-hint">/</span>
         </div>
     </div>
@@ -404,7 +434,7 @@
         <div class="card" data-category="os" data-id="lorenzo-os">
             <span class="badge badge-live">Live</span>
             <div class="card-content">
-                <img src="logo2.png" alt="LorenzoOS" onerror="this.src='https://via.placeholder.com/90'">
+                <img src="logo2.png" alt="LorenzoOS" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>LorenzoOS</h3>
                 <p>Il sistema operativo personalizzato sviluppato da LoreTnani.</p>
             </div>
@@ -416,19 +446,19 @@
         <div class="card" data-category="service" data-id="giornale-tech">
             <span class="badge badge-live">Live</span>
             <div class="card-content">
-                <img src="giornale.png" alt="Giornale" onerror="this.src='https://via.placeholder.com/90'">
+                <img src="giornale.png" alt="Giornale Tecnologico" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Giornale Tecnologico</h3>
                 <p>Notizie e approfondimenti tech curati da Alessio.</p>
             </div>
             <div class="btn-group">
-                <a class="btn" href="https://sites.google.com/view/curiositynews/tecnologie-avanzate" target="_blank">Leggi Ora</a>
+                <a class="btn" href="https://sites.google.com/view/curiositynews/tecnologie-avanzate" target="_blank" rel="noopener">Leggi Ora</a>
             </div>
         </div>
 
         <div class="card" data-category="service" data-id="assistenza-tech">
             <span class="badge badge-live">Attivo</span>
             <div class="card-content">
-                <img src="aiuto.png" alt="Help" onerror="this.src='https://via.placeholder.com/90'">
+                <img src="aiuto.png" alt="Assistenza Informatica" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Assistenza Informatica</h3>
                 <p>Supporto tecnico diretto e risoluzione problemi rapida.</p>
             </div>
@@ -440,19 +470,19 @@
         <div class="card" data-category="service" data-id="mercato-smart">
             <span class="badge badge-live">Store</span>
             <div class="card-content">
-                <img src="mercato.png" alt="Mercato Smart" onerror="this.src='https://via.placeholder.com/90'">
+                <img src="mercato.png" alt="Mercato Smart" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Mercato Smart</h3>
                 <p>Il mercatino dell'usato tech gestito da Aleprogramm.</p>
             </div>
             <div class="btn-group">
-                <a class="btn" href="https://aleprogramm-bit.github.io/Mercatino-dell-usato-online/" target="_blank">Visita</a>
+                <a class="btn" href="https://aleprogramm-bit.github.io/Mercatino-dell-usato-online/" target="_blank" rel="noopener">Visita</a>
             </div>
         </div>
 
         <div class="card" data-category="game" data-id="snake-game">
             <span class="badge badge-live">Gioco</span>
             <div class="card-content">
-                <img src="game.png" alt="Game" onerror="this.src='https://via.placeholder.com/90'">
+                <img src="game.png" alt="Snake Game" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Snake Game</h3>
                 <p>Il grande classico arcade rivisitato in chiave moderna.</p>
             </div>
@@ -464,7 +494,7 @@
         <div class="card" data-category="service" data-id="ourvideos">
             <span class="badge badge-beta">Beta</span>
             <div class="card-content">
-                <img src="ourvideo.png" alt="OurVideo" onerror="this.src='https://via.placeholder.com/90'">
+                <img src="ourvideo.png" alt="OurVideos" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>OurVideos!</h3>
                 <p>Piattaforma video fluida e senza bisogno di registrazione.</p>
             </div>
@@ -476,20 +506,20 @@
         <div class="card" data-category="os" data-id="win-cpp">
             <span class="badge badge-live">Win C++</span>
             <div class="card-content">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg" alt="Windows C++ Edition" onerror="this.src='https://via.placeholder.com/90'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg" alt="Windows C++ Edition" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Windows C++ Edition</h3>
                 <p>L'esperienza Windows ricreata dal VigoneTech Team.</p>
             </div>
             <div class="btn-group">
-                <a class="btn" href="https://drive.google.com/file/d/1CqmQmhOglOgTJRTk6ay0JujOv43JUOAO/view?usp=drive_link" target="_blank">Scarica</a>
-                <a class="btn btn-secondary" href="winhtml.html" target="_blank">Provalo Web</a>
+                <a class="btn" href="https://drive.google.com/file/d/1CqmQmhOglOgTJRTk6ay0JujOv43JUOAO/view?usp=drive_link" target="_blank" rel="noopener">Scarica</a>
+                <a class="btn btn-secondary" href="winhtml.html" target="_blank" rel="noopener">Provalo Web</a>
             </div>
         </div>
 
         <div class="card" data-category="game" data-id="retro-highway">
             <span class="badge badge-live">Arcade</span>
             <div class="card-content">
-                <img src="https://mariokarttour.com/_nuxt/img/f78440e.png" alt="Retro Highway Racer" onerror="this.src='https://via.placeholder.com/90'">
+                <img src="https://mariokarttour.com/_nuxt/img/f78440e.png" alt="Retro Highway Racer" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Retro Highway Racer</h3>
                 <p>Sfreccia sull'autostrada in questo gioco arcade vintage.</p>
             </div>
@@ -502,27 +532,34 @@
         <div class="card" data-category="game" data-id="rocket-duel">
             <span class="badge badge-live">Multiplayer</span>
             <div class="card-content">
-                <img src="https://models.spriters-resource.com/media/preview_icons/342/345554.png?updated=1755512855" alt="Retro Rocket Duel" onerror="this.src='https://via.placeholder.com/90'">
+                <img src="https://models.spriters-resource.com/media/preview_icons/342/345554.png?updated=1755512855" alt="Retro Rocket Duel" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Retro Rocket Duel</h3>
                 <p>Un avvincente duello spaziale tra razzi giocabile anche via browser!</p>
             </div>
             <div class="btn-group">
-                <a class="btn" href="https://drive.google.com/file/d/1jX7kI3XBOKGrHIvJUL3d1PfVC9qkXD86/view?usp=sharing">Scarica</a>
+                <a class="btn" href="https://drive.google.com/file/d/1jX7kI3XBOKGrHIvJUL3d1PfVC9qkXD86/view?usp=sharing" target="_blank" rel="noopener">Scarica</a>
                 <a class="btn btn-secondary" href="razzi.html">Sfida Web</a>
             </div>
+        </div>
+
+        <!-- Empty State in caso di nessun risultato trovati -->
+        <div id="noResults" class="no-results">
+            <h3>🔍 Nessun progetto trovato</h3>
+            <p>Prova a modificare i termini di ricerca o a resettare i filtri applicati.</p>
         </div>
         
     </div>
 </div>
 
-<button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="Torna in alto">↑</button>
 
 <footer>
     © 2026 · VigoneTech Team · LorenzoOS · Aleprogramm · Alessio · LoreTnani
-    <button class="secret-egg" onclick="triggerSecret()" title="Secret">🥚</button>
+    <button class="secret-egg" onclick="triggerSecret()" title="Secret" aria-label="Secret Egg">🥚</button>
 </footer>
 
 <script>
+    // --- GESTIONE TEMA ---
     const htmlElem = document.documentElement;
     const themeBtn = document.getElementById('themeBtn');
 
@@ -546,6 +583,7 @@
         localStorage.setItem('vt_theme', newTheme);
     }
 
+    // --- MOUSE HOVER EFFECT SULLE CARD ---
     document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('mousemove', e => {
             const rect = card.getBoundingClientRect();
@@ -554,38 +592,58 @@
         });
     });
 
+    // --- FILTRAGGIO E RICERCA UNIFICATI ---
     let currentCategory = 'all';
+
+    function updateVisibility() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.card');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const cardCat = card.getAttribute('data-category');
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const text = card.querySelector('p').textContent.toLowerCase();
+
+            const matchesCategory = (currentCategory === 'all' || cardCat === currentCategory);
+            const matchesSearch = (title.includes(query) || text.includes(query));
+
+            if (matchesCategory && matchesSearch) {
+                card.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+
+        // Mostra o nasconde l'Empty State
+        document.getElementById('noResults').style.display = (visibleCount === 0) ? 'block' : 'none';
+
+        // Mostra o nasconde il tasto Reset
+        document.getElementById('resetBtn').style.display = (query !== '' || currentCategory !== 'all') ? 'inline-block' : 'none';
+    }
 
     function filterCards(category, btnElement) {
         currentCategory = category;
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         if (btnElement) btnElement.classList.add('active');
-        document.getElementById('resetBtn').style.display = (category !== 'all' || document.getElementById('searchInput').value) ? 'inline-block' : 'none';
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            const cardCat = card.getAttribute('data-category');
-            if (category === 'all' || cardCat === category) card.classList.remove('hidden');
-            else card.classList.add('hidden');
-        });
+        updateVisibility();
     }
 
     function searchCards() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const cards = document.querySelectorAll('.card');
-        document.getElementById('resetBtn').style.display = (query || currentCategory !== 'all') ? 'inline-block' : 'none';
-        cards.forEach(card => {
-            const title = card.querySelector('h3').textContent.toLowerCase();
-            const text = card.querySelector('p').textContent.toLowerCase();
-            if (title.includes(query) || text.includes(query)) card.classList.remove('hidden');
-            else card.classList.add('hidden');
-        });
+        updateVisibility();
     }
 
     function resetFilters() {
         document.getElementById('searchInput').value = '';
-        filterCards('all', document.querySelectorAll('.filter-btn')[0]);
+        currentCategory = 'all';
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        const allBtn = document.querySelector('.filter-btn[onclick*="all"]');
+        if (allBtn) allBtn.classList.add('active');
+        updateVisibility();
     }
 
+    // Shortcut tasto '/' per la barra di ricerca
     window.addEventListener('keydown', (e) => {
         if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
             e.preventDefault();
@@ -593,6 +651,7 @@
         }
     });
 
+    // --- SCROLL TO TOP ---
     const backToTopBtn = document.getElementById('backToTop');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 300) backToTopBtn.style.display = 'flex';
@@ -603,6 +662,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // --- ANIMAZIONE CONTATORI ---
     function animateCounters() {
         const counters = document.querySelectorAll('.stat-number');
         counters.forEach(counter => {
@@ -623,12 +683,23 @@
     }
     window.addEventListener('load', animateCounters);
 
+    // --- ANIMAZIONE CANVAS PARTICELLE OTTIMIZZATA ---
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
+    let animationFrameId = null;
 
-    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resizeCanvas);
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    // Debounce sul resize della finestra per ridurre il carico di lavoro sulla CPU
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(resizeCanvas, 150);
+    });
     resizeCanvas();
 
     class Particle {
@@ -659,6 +730,7 @@
         const style = getComputedStyle(document.documentElement);
         const particleColor = style.getPropertyValue('--particle-color').trim() || 'rgba(139, 92, 246, 0.4)';
         const lineBase = style.getPropertyValue('--particle-line').trim() || 'rgba(59, 130, 246, 0.12)';
+        
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
             particles[i].draw(particleColor);
@@ -675,8 +747,18 @@
                 }
             }
         }
-        requestAnimationFrame(animate);
+        animationFrameId = requestAnimationFrame(animate);
     }
+
+    // Risparmio batteria/risorse: sospende l'animazione se la scheda del browser non è visibile
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            cancelAnimationFrame(animationFrameId);
+        } else {
+            animate();
+        }
+    });
+
     animate();
 
     function triggerSecret() {

@@ -9,15 +9,16 @@
         /* TEMA SCURO (DEFAULT) */
         :root {
             --bg-base: #0a0c10;
+            --bg-overlay: rgba(10, 12, 16, 0.75);
             --primary: #3b82f6;
             --primary-glow: rgba(59, 130, 246, 0.5);
             --accent: #8b5cf6;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
-            --glass-bg: rgba(18, 24, 38, 0.65);
+            --glass-bg: rgba(18, 24, 38, 0.7);
             --glass-border: rgba(255, 255, 255, 0.12);
             --glass-hover: rgba(255, 255, 255, 0.22);
-            --header-bg: rgba(10, 12, 16, 0.75);
+            --header-bg: rgba(10, 12, 16, 0.85);
             --radius-lg: 24px;
             --radius-md: 14px;
             --particle-color: rgba(139, 92, 246, 0.4);
@@ -27,15 +28,16 @@
         /* TEMA CHIARO */
         [data-theme="light"] {
             --bg-base: #f0f4f9;
+            --bg-overlay: rgba(240, 244, 249, 0.75);
             --primary: #2563eb;
             --primary-glow: rgba(37, 99, 235, 0.3);
             --accent: #7c3aed;
             --text-main: #1f2937;
             --text-muted: #4b5563;
-            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(0, 0, 0, 0.1);
             --glass-hover: rgba(0, 0, 0, 0.18);
-            --header-bg: rgba(255, 255, 255, 0.85);
+            --header-bg: rgba(255, 255, 255, 0.9);
             --particle-color: rgba(37, 99, 235, 0.3);
             --particle-line: rgba(124, 58, 237, 0.15);
         }
@@ -44,8 +46,7 @@
 
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            /* SFONDO CON IMMAGINE BACK.PNG */
-            background-image: url("back.png");
+            background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url("back.png");
             background-position: center center;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -67,7 +68,7 @@
             pointer-events: none;
         }
 
-        /* BANNER ANNONCI / NEWS */
+        /* 1. BANNER ANNONCI CON STATUS PULSE */
         .announcement-bar {
             background: linear-gradient(90deg, var(--primary), var(--accent));
             color: #ffffff;
@@ -83,12 +84,19 @@
             gap: 10px;
         }
 
-        .announcement-bar span {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            text-transform: uppercase;
+        .status-dot {
+            width: 8px; height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
         header {
@@ -166,7 +174,6 @@
 
         .intro-box p { color: var(--text-muted); font-size: 16px; line-height: 1.7; text-align: center; }
 
-        /* CONTATORI */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -202,7 +209,7 @@
             font-weight: 500;
         }
 
-        /* BARRA FILTRI E RICERCA */
+        /* CONTROLLI E RICERCA CON KEYBOARD SHORTCUT */
         .controls-bar {
             display: flex;
             flex-wrap: wrap;
@@ -212,7 +219,7 @@
             margin-bottom: 28px;
         }
 
-        .filter-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
         .filter-btn {
             background: var(--glass-bg);
@@ -231,16 +238,32 @@
             box-shadow: 0 0 12px var(--primary-glow);
         }
 
+        /* 6. RESET BUTTON */
+        .reset-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #ef4444;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+            transition: all 0.2s;
+        }
+
+        .reset-btn:hover { background: rgba(239, 68, 68, 0.4); }
+
         .search-box {
             position: relative;
-            min-width: 240px;
+            min-width: 260px;
         }
 
         .search-box input {
             width: 100%;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            padding: 10px 16px;
+            padding: 10px 40px 10px 16px;
             border-radius: 20px;
             color: var(--text-main);
             font-size: 13px;
@@ -250,6 +273,20 @@
         }
 
         .search-box input:focus { border-color: var(--primary); }
+
+        /* 9. SHORTCUT HINT */
+        .search-hint {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--glass-border);
+            color: var(--text-muted);
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 6px;
+            pointer-events: none;
+        }
 
         /* GRID CARDS */
         .cards {
@@ -270,7 +307,6 @@
             transition: transform 0.3s ease, opacity 0.3s ease, border-color 0.3s ease, background-color 0.4s ease;
         }
 
-        /* SPOTLIGHT GLOW */
         .card::before {
             content: '';
             position: absolute;
@@ -286,13 +322,31 @@
         }
 
         .card:hover::before { opacity: 1; }
-
         .card.hidden { display: none; }
 
         .card:hover {
             transform: translateY(-8px);
             border-color: var(--glass-hover);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), 0 0 25px var(--primary-glow);
+        }
+
+        /* 2. STAR FAVORITE BUTTON */
+        .fav-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.4;
+            transition: all 0.2s;
+            z-index: 2;
+        }
+
+        .fav-btn:hover, .fav-btn.active {
+            opacity: 1;
+            transform: scale(1.2);
         }
 
         .badge {
@@ -303,18 +357,28 @@
         .badge-live { background: rgba(16, 185, 129, 0.2); color: #059669; border: 1px solid rgba(16, 185, 129, 0.4); }
         .badge-beta { background: rgba(245, 158, 11, 0.2); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.4); }
 
+        /* 8. BADGE CATEGORIA IN BASSO */
+        .cat-tag {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
         .card-content { display: flex; flex-direction: column; align-items: center; text-align: center; }
 
         .card img {
             width: 80px; height: 80px; border-radius: 50%;
-            object-fit: cover; margin-bottom: 16px;
+            object-fit: cover; margin-bottom: 12px;
             border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
-        .card p { font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px; }
+        .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
+        .card p { font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px; }
 
-        .btn-group { display: flex; gap: 10px; width: 100%; margin-top: auto; }
+        .btn-group { display: flex; gap: 8px; width: 100%; margin-top: auto; }
 
         .btn {
             flex: 1; padding: 10px;
@@ -322,11 +386,116 @@
             color: #ffffff; border-radius: var(--radius-md); text-decoration: none;
             font-weight: 600; font-size: 13px; text-align: center; transition: all 0.3s;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex; align-items: center; justify-content: center; gap: 6px;
         }
 
         .btn:hover { transform: scale(1.02); }
         .btn-secondary { background: rgba(0, 0, 0, 0.08); border: 1px solid var(--glass-border); color: var(--text-main); }
         [data-theme="dark"] .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #ffffff; }
+
+        /* 5. COPY LINK BUTTON */
+        .btn-icon-only {
+            width: 38px; flex: none;
+            padding: 0; display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+        }
+
+        /* 3. FLOATING CHAT / FEEDBACK WIDGET */
+        .feedback-fab {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff; border: none;
+            padding: 14px 20px; border-radius: 30px;
+            font-weight: 700; font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px var(--primary-glow);
+            z-index: 99;
+            display: flex; align-items: center; gap: 8px;
+            transition: transform 0.3s;
+        }
+
+        .feedback-fab:hover { transform: scale(1.05); }
+
+        .feedback-modal {
+            position: fixed;
+            inset: 0; background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: none; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+
+        .feedback-modal.active { display: flex; }
+
+        .modal-content {
+            background: var(--bg-base);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            width: 100%; max-width: 420px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content h3 { margin-bottom: 12px; font-size: 20px; }
+        .modal-content textarea {
+            width: 100%; height: 100px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            padding: 12px; font-family: inherit;
+            resize: none; margin-bottom: 16px;
+            outline: none;
+        }
+
+        .modal-close {
+            position: absolute; top: 16px; right: 16px;
+            background: transparent; border: none;
+            color: var(--text-muted); font-size: 20px; cursor: pointer;
+        }
+
+        /* 4. TOAST NOTIFICATIONS */
+        .toast-container {
+            position: fixed;
+            bottom: 24px; left: 24px;
+            z-index: 300;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .toast {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 12px 20px; border-radius: var(--radius-md);
+            font-size: 13px; font-weight: 600;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: slide-in 0.3s ease, fade-out 0.3s ease 2.7s forwards;
+        }
+
+        @keyframes slide-in { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fade-out { to { opacity: 0; transform: translateY(10px); } }
+
+        /* 7. BACK TO TOP BUTTON */
+        .back-to-top {
+            position: fixed;
+            bottom: 24px; right: 190px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none; align-items: center; justify-content: center;
+            font-size: 18px;
+            backdrop-filter: blur(8px);
+            z-index: 98;
+            transition: all 0.3s;
+        }
+
+        .back-to-top:hover { border-color: var(--primary); transform: translateY(-3px); }
 
         footer {
             padding: 32px 20px; text-align: center; font-size: 14px; color: var(--text-muted);
@@ -343,8 +512,9 @@
 
 <body>
 
-<!-- BANNER NOVITÀ -->
+<!-- BANNER NOVITÀ CON STATUS PING -->
 <div class="announcement-bar">
+    <span class="status-dot" title="Tutti i servizi attivi"></span>
     <span>Novità</span> Prova i nostri nuovi giochi Retro Arcade giocabili direttamente via browser!
 </div>
 
@@ -393,93 +563,118 @@
     <div class="controls-bar">
         <div class="filter-btns">
             <button class="filter-btn active" onclick="filterCards('all', this)">Tutti</button>
+
+            <!-- FILTRO PREFERITI -->
+            <button class="filter-btn" onclick="filterCards('fav', this)">⭐ Preferiti</button>
             <button class="filter-btn" onclick="filterCards('os', this)">Software & OS</button>
             <button class="filter-btn" onclick="filterCards('game', this)">Giochi</button>
             <button class="filter-btn" onclick="filterCards('service', this)">Servizi</button>
+            <button class="reset-btn" id="resetBtn" onclick="resetFilters()">✖ Reset Filtri</button>
         </div>
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="Cerca un progetto..." onkeyup="searchCards()">
+            <span class="search-hint">/</span>
         </div>
     </div>
 
     <div class="cards" id="cardsGrid">
         
-        <div class="card" data-category="os">
+        <div class="card" data-category="os" data-id="lorenzo-os">
+            <button class="fav-btn" onclick="toggleFav('lorenzo-os', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Live</span>
             <div class="card-content">
                 <img src="logo2.png" alt="LorenzoOS" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="cat-tag">Software & OS</div>
                 <h3>LorenzoOS</h3>
                 <p>Il sistema operativo personalizzato sviluppato da LoreTnani.</p>
             </div>
             <div class="btn-group">
                 <a class="btn" href="main2.html">Vai al sito</a>
+                <button class="btn btn-secondary btn-icon-only" onclick="copyLink('main2.html')" title="Copia Link">🔗</button>
             </div>
         </div>
 
-        <div class="card" data-category="service">
+        <div class="card" data-category="service" data-id="giornale-tech">
+            <button class="fav-btn" onclick="toggleFav('giornale-tech', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Live</span>
             <div class="card-content">
                 <img src="giornale.png" alt="Giornale" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="cat-tag">Servizi</div>
                 <h3>Giornale Tecnologico</h3>
                 <p>Notizie e approfondimenti tech curati da Alessio.</p>
             </div>
             <div class="btn-group">
                 <a class="btn" href="https://sites.google.com/view/curiositynews/tecnologie-avanzate" target="_blank">Leggi Ora</a>
+                <button class="btn btn-secondary btn-icon-only" onclick="copyLink('https://sites.google.com/view/curiositynews/tecnologie-avanzate')" title="Copia Link">🔗</button>
             </div>
         </div>
 
-        <div class="card" data-category="service">
+        <div class="card" data-category="service" data-id="assistenza-tech">
+            <button class="fav-btn" onclick="toggleFav('assistenza-tech', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Attivo</span>
             <div class="card-content">
                 <img src="aiuto.png" alt="Help" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="cat-tag">Servizi</div>
                 <h3>Assistenza Informatica</h3>
                 <p>Supporto tecnico diretto e risoluzione problemi rapida.</p>
             </div>
             <div class="btn-group">
                 <a class="btn" href="help.html">Chiedi Aiuto</a>
+                <button class="btn btn-secondary btn-icon-only" onclick="copyLink('help.html')" title="Copia Link">🔗</button>
             </div>
         </div>
 
-        <div class="card" data-category="service">
+        <div class="card" data-category="service" data-id="mercato-smart">
+            <button class="fav-btn" onclick="toggleFav('mercato-smart', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Store</span>
             <div class="card-content">
                 <img src="mercato.png" alt="Mercato Smart" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="cat-tag">Servizi</div>
                 <h3>Mercato Smart</h3>
                 <p>Il mercatino dell'usato tech gestito da Aleprogramm.</p>
             </div>
             <div class="btn-group">
                 <a class="btn" href="https://aleprogramm-bit.github.io/Mercatino-dell-usato-online/" target="_blank">Visita</a>
+                <button class="btn btn-secondary btn-icon-only" onclick="copyLink('https://aleprogramm-bit.github.io/Mercatino-dell-usato-online/')" title="Copia Link">🔗</button>
             </div>
         </div>
 
-        <div class="card" data-category="game">
+        <div class="card" data-category="game" data-id="snake-game">
+            <button class="fav-btn" onclick="toggleFav('snake-game', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Gioco</span>
             <div class="card-content">
                 <img src="game.png" alt="Game" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="cat-tag">Giochi</div>
                 <h3>Snake Game</h3>
                 <p>Il grande classico arcade rivisitato in chiave moderna.</p>
             </div>
             <div class="btn-group">
                 <a class="btn" href="game.html">Gioca Ora</a>
+                <button class="btn btn-secondary btn-icon-only" onclick="copyLink('game.html')" title="Copia Link">🔗</button>
             </div>
         </div>
 
-        <div class="card" data-category="service">
+        <div class="card" data-category="service" data-id="ourvideos">
+            <button class="fav-btn" onclick="toggleFav('ourvideos', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-beta">Beta</span>
             <div class="card-content">
                 <img src="ourvideo.png" alt="OurVideo" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="cat-tag">Servizi</div>
                 <h3>OurVideos!</h3>
                 <p>Piattaforma video fluida e senza bisogno di registrazione.</p>
             </div>
             <div class="btn-group">
                 <a class="btn" href="main.html">Guarda Ora</a>
+                <button class="btn btn-secondary btn-icon-only" onclick="copyLink('main.html')" title="Copia Link">🔗</button>
             </div>
         </div>
 
-        <div class="card" data-category="os">
+        <div class="card" data-category="os" data-id="win-cpp">
+            <button class="fav-btn" onclick="toggleFav('win-cpp', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Win C++</span>
             <div class="card-content">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg" alt="Windows C++ Edition" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="cat-tag">Software & OS</div>
                 <h3>Windows C++ Edition</h3>
                 <p>L'esperienza Windows ricreata dal VigoneTech Team.</p>
             </div>
@@ -489,10 +684,12 @@
             </div>
         </div>
 
-        <div class="card" data-category="game">
+        <div class="card" data-category="game" data-id="retro-highway">
+            <button class="fav-btn" onclick="toggleFav('retro-highway', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Arcade</span>
             <div class="card-content">
                 <img src="https://mariokarttour.com/_nuxt/img/f78440e.png" alt="Retro Highway Racer" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="cat-tag">Giochi</div>
                 <h3>Retro Highway Racer</h3>
                 <p>Sfreccia sull'autostrada in questo gioco arcade vintage.</p>
             </div>
@@ -502,10 +699,12 @@
             </div>
         </div>
 
-        <div class="card" data-category="game">
+        <div class="card" data-category="game" data-id="rocket-duel">
+            <button class="fav-btn" onclick="toggleFav('rocket-duel', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Multiplayer</span>
             <div class="card-content">
                 <img src="https://models.spriters-resource.com/media/preview_icons/342/345554.png?updated=1755512855" alt="Retro Rocket Duel" onerror="this.src='https://via.placeholder.com/90'">
+                <div class="cat-tag">Giochi</div>
                 <h3>Retro Rocket Duel</h3>
                 <p>Un avvincente duello spaziale tra razzi giocabile anche via browser!</p>
             </div>
@@ -518,13 +717,31 @@
     </div>
 </div>
 
+<!-- FLOATING FEEDBACK BUTTON & MODAL -->
+<button class="feedback-fab" onclick="openFeedback()">💬 Contattaci</button>
+
+<div class="feedback-modal" id="feedbackModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeFeedback()">✖</button>
+        <h3>Invia un messaggio al Team</h3>
+        <textarea id="feedbackText" placeholder="Scrivi qui consigli, bug o idee per i prossimi aggiornamenti..."></textarea>
+        <button class="btn" style="width: 100%;" onclick="sendFeedback()">Invia Messaggio</button>
+    </div>
+</div>
+
+<!-- BACK TO TOP BUTTON -->
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
 <footer>
     © 2026 · VigoneTech Team · LorenzoOS · Aleprogramm · Alessio · LoreTnani
     <button class="secret-egg" onclick="triggerSecret()" title="Secret">🥚</button>
 </footer>
 
 <script>
-    // CAMBIO TEMA + AUTODETECT SISTEMA
+    // TEMA LIGHT / DARK AUTODETECT
     const htmlElem = document.documentElement;
     const themeBtn = document.getElementById('themeBtn');
 
@@ -548,7 +765,7 @@
         localStorage.setItem('vt_theme', newTheme);
     }
 
-    // SPOTLIGHT MOUSE SU CARD
+    // SPOTLIGHT MOUSE SU CARDS
     document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('mousemove', e => {
             const rect = card.getBoundingClientRect();
@@ -557,7 +774,134 @@
         });
     });
 
-    // CONTATORI ANIMATI STATISTICHE
+    // SISTEMA PREFERITI (LOCALSTORAGE)
+    let favorites = JSON.parse(localStorage.getItem('vt_favs') || '[]');
+
+    function updateFavIcons() {
+        document.querySelectorAll('.card').forEach(card => {
+            const id = card.getAttribute('data-id');
+            const btn = card.querySelector('.fav-btn');
+            if (favorites.includes(id)) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    function toggleFav(id, btn) {
+        if (favorites.includes(id)) {
+            favorites = favorites.filter(item => item !== id);
+            showToast('Rimosso dai preferiti');
+        } else {
+            favorites.push(id);
+            showToast('Aggiunto ai preferiti ⭐');
+        }
+        localStorage.setItem('vt_favs', JSON.stringify(favorites));
+        updateFavIcons();
+    }
+
+    updateFavIcons();
+
+    // TOAST NOTIFICATIONS
+    function showToast(message) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = message;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // COPIA LINK
+    function copyLink(url) {
+        const fullUrl = window.location.origin + '/' + url;
+        navigator.clipboard.writeText(fullUrl).then(() => {
+            showToast('Link copiato negli appunti! 🔗');
+        });
+    }
+
+    // FILTRAGGIO CARDS + RESET BUTTON
+    let currentCategory = 'all';
+
+    function filterCards(category, btnElement) {
+        currentCategory = category;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        if (btnElement) btnElement.classList.add('active');
+
+        document.getElementById('resetBtn').style.display = (category !== 'all' || document.getElementById('searchInput').value) ? 'inline-block' : 'none';
+
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            const cardId = card.getAttribute('data-id');
+            const cardCat = card.getAttribute('data-category');
+
+            if (category === 'all') {
+                card.classList.remove('hidden');
+            } else if (category === 'fav') {
+                if (favorites.includes(cardId)) card.classList.remove('hidden');
+                else card.classList.add('hidden');
+            } else {
+                if (cardCat === category) card.classList.remove('hidden');
+                else card.classList.add('hidden');
+            }
+        });
+    }
+
+    function searchCards() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.querySelectorAll('.card');
+
+        document.getElementById('resetBtn').style.display = (query || currentCategory !== 'all') ? 'inline-block' : 'none';
+
+        cards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const text = card.querySelector('p').textContent.toLowerCase();
+            if (title.includes(query) || text.includes(query)) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    }
+
+    function resetFilters() {
+        document.getElementById('searchInput').value = '';
+        filterCards('all', document.querySelectorAll('.filter-btn')[0]);
+    }
+
+    // KEYBOARD SHORTCUT (PREMI '/' PER CERCARE)
+    window.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+            document.getElementById('searchInput').focus();
+        }
+    });
+
+    // BACK TO TOP BUTTON
+    const backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) backToTopBtn.style.display = 'flex';
+        else backToTopBtn.style.display = 'none';
+    });
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // FEEDBACK MODAL
+    function openFeedback() { document.getElementById('feedbackModal').classList.add('active'); }
+    function closeFeedback() { document.getElementById('feedbackModal').classList.remove('active'); }
+
+    function sendFeedback() {
+        const text = document.getElementById('feedbackText').value;
+        if (!text.trim()) return;
+        showToast('Grazie per il tuo feedback! 🚀');
+        document.getElementById('feedbackText').value = '';
+        closeFeedback();
+    }
+
+    // CONTATORI ANIMATI
     function animateCounters() {
         const counters = document.querySelectorAll('.stat-number');
         counters.forEach(counter => {
@@ -577,40 +921,9 @@
             updateCount();
         });
     }
-
     window.addEventListener('load', animateCounters);
 
-    // FILTRAGGIO E RICERCA
-    function filterCards(category, btnElement) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btnElement.classList.add('active');
-
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            if (category === 'all' || card.getAttribute('data-category') === category) {
-                card.classList.remove('hidden');
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-    }
-
-    function searchCards() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const cards = document.querySelectorAll('.card');
-
-        cards.forEach(card => {
-            const title = card.querySelector('h3').textContent.toLowerCase();
-            const text = card.querySelector('p').textContent.toLowerCase();
-            if (title.includes(query) || text.includes(query)) {
-                card.classList.remove('hidden');
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-    }
-
-    // CANVAS SFONDO PARTICELE
+    // CANVAS SFONDO PARTICELLE
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];

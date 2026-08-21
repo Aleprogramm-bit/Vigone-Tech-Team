@@ -33,6 +33,7 @@
         align-items: center;
         margin-bottom: 10px;
         padding: 0 10px;
+        font-weight: bold;
     }
 
     .btn-home {
@@ -42,8 +43,8 @@
         padding: 6px 12px;
         text-decoration: none;
         font-size: 12px;
-        font-weight: bold;
         border-radius: 4px;
+        transition: 0.2s;
     }
 
     .btn-home:hover {
@@ -56,34 +57,34 @@
         background: #000;
         box-shadow: 0 0 25px rgba(255,255,255,0.25);
         max-width: 100%;
-        max-height: 70vh;
+        max-height: 65vh;
     }
 
     .info {
-        margin-top: 10px;
+        margin-top: 8px;
         text-align: center;
-        font-size: 12px;
+        font-size: 11px;
         opacity: 0.8;
     }
 
     .mobile-controls {
         display: flex;
-        gap: 15px;
+        gap: 12px;
         margin-top: 10px;
     }
 
     .ctrl-btn {
-        width: 60px;
-        height: 45px;
+        width: 75px;
+        height: 50px;
         background: #222;
         border: 2px solid #fff;
         color: #fff;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: bold;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 6px;
+        border-radius: 8px;
         cursor: pointer;
     }
 
@@ -91,13 +92,20 @@
         background: #fff;
         color: #000;
     }
+
+    .multiplier-text {
+        color: #ffb703;
+    }
 </style>
 </head>
 <body>
 
 <div class="header-bar">
     <a href="index.html" class="btn-home">🏠 HOME</a>
-    <span id="scoreText">PUNTI: 0</span>
+    <div>
+        <span id="scoreText">PUNTI: 0</span>
+        <span id="multiplierText" class="multiplier-text">(1x)</span>
+    </div>
 </div>
 
 <canvas id="gameCanvas" width="400" height="600"></canvas>
@@ -109,17 +117,19 @@
 </div>
 
 <div class="info">
-    <p><strong>COMANDI:</strong> ← → per muoverti, ↑ per accelerare.</p>
+    <p><strong>COMANDI:</strong> ← → per muoverti, ↑ per accelerare e raddoppiare i punti!</p>
 </div>
 
 <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const scoreText = document.getElementById('scoreText');
+    const multiplierText = document.getElementById('multiplierText');
 
     // Stato di gioco
     let gameOver = false;
     let score = 0;
+    let distanceScore = 0;
     let speed = 5;
     let baseSpeed = 5;
     let roadOffsetY = 0;
@@ -130,7 +140,9 @@
         y: 480,
         width: 40,
         height: 70,
-        color: '#e63946'
+        color: '#e63946',
+        vx: 0,
+        speedX: 7
     };
 
     // Input
@@ -141,36 +153,46 @@
     function spawnEnemy() {
         const lanes = [60, 180, 300];
         const lane = lanes[Math.floor(Math.random() * lanes.length)];
-        enemies.push({
-            x: lane,
-            y: -80,
-            width: 40,
-            height: 70,
-            color: '#4895ef'
-        });
+        
+        // Evita spawn sovrapposti
+        const isOverlap = enemies.some(e => e.y < 100 && Math.abs(e.x - lane) < 10);
+        if (!isOverlap) {
+            enemies.push({
+                x: lane,
+                y: -80,
+                width: 40,
+                height: 70,
+                color: '#4895ef',
+                passed: false
+            });
+        }
     }
 
-    // Controlli Tastiera
+    // Controlli Tastiera Fluidi
     window.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
-        if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
-        if (e.key === 'ArrowUp' || e.key === 'w') keys.up = true;
-        if (gameOver && e.key === ' ') resetGame();
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+        if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.up = true;
+        if (gameOver && (e.key === ' ' || e.key === 'Enter')) resetGame();
     });
 
     window.addEventListener('keyup', (e) => {
-        if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
-        if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
-        if (e.key === 'ArrowUp' || e.key === 'w') keys.up = false;
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+        if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.up = false;
     });
 
-    // Controlli Touch / Mobile
+    // Controlli Touch Migliorati
     const bindTouch = (id, keyName) => {
         const el = document.getElementById(id);
-        el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[keyName] = true; });
-        el.addEventListener('touchend', (e) => { e.preventDefault(); keys[keyName] = false; });
-        el.addEventListener('mousedown', () => keys[keyName] = true);
-        el.addEventListener('mouseup', () => keys[keyName] = false);
+        const start = (e) => { e.preventDefault(); keys[keyName] = true; };
+        const end = (e) => { e.preventDefault(); keys[keyName] = false; };
+        
+        el.addEventListener('touchstart', start, { passive: false });
+        el.addEventListener('touchend', end, { passive: false });
+        el.addEventListener('mousedown', start);
+        el.addEventListener('mouseup', end);
+        el.addEventListener('mouseleave', end);
     };
 
     bindTouch('btnLeft', 'left');
@@ -184,62 +206,83 @@
     function update() {
         if (gameOver) return;
 
-        // Velocità
-        speed = keys.up ? baseSpeed * 1.8 : baseSpeed;
+        // Velocità e Moltiplicatore Punti
+        const multiplier = keys.up ? 2 : 1;
+        speed = keys.up ? baseSpeed * 1.7 : baseSpeed;
+        multiplierText.textContent = `(${multiplier}x)`;
 
-        // Movimento Giocatore
-        if (keys.left && player.x > 50) player.x -= 5;
-        if (keys.right && player.x < 310) player.x += 5;
+        // Movimento orizzontale continuo e fluido
+        player.vx = 0;
+        if (keys.left) player.vx = -player.speedX;
+        if (keys.right) player.vx = player.speedX;
 
-        // Sfondo animato (Strada)
+        player.x += player.vx;
+
+        // Limiti strada
+        if (player.x < 45) player.x = 45;
+        if (player.x > 315) player.x = 315;
+
+        // Punteggio basato sulla distanza percorsa
+        distanceScore += (speed / 10) * multiplier;
+        score = Math.floor(distanceScore);
+        scoreText.textContent = 'PUNTI: ' + score;
+
+        // Animazione strada
         roadOffsetY = (roadOffsetY + speed) % 40;
 
-        // Gestione Nemici
-        if (Math.random() < 0.02) spawnEnemy();
+        // Frequenza spawn dinamica basata sulla velocità base
+        if (Math.random() < 0.02 + (baseSpeed * 0.002)) spawnEnemy();
 
         for (let i = enemies.length - 1; i >= 0; i--) {
             let enemy = enemies[i];
-            enemy.y += speed - 2;
+            enemy.y += speed - 2.5;
 
-            // Collisione AABB
+            // Bonus Sorpasso (Punti extra quando superi un'auto)
+            if (!enemy.passed && enemy.y > player.y + player.height) {
+                enemy.passed = true;
+                distanceScore += 15 * multiplier; // Bonus +15 (+30 se in accelerazione)
+            }
+
+            // Collisione precisa (Box leggermente ridotto per tolleranza)
+            const margin = 4;
             if (
-                player.x < enemy.x + enemy.width &&
-                player.x + player.width > enemy.x &&
-                player.y < enemy.y + enemy.height &&
-                player.y + player.height > enemy.y
+                player.x + margin < enemy.x + enemy.width - margin &&
+                player.x + player.width - margin > enemy.x + margin &&
+                player.y + margin < enemy.y + enemy.height - margin &&
+                player.y + player.height - margin > enemy.y
             ) {
                 gameOver = true;
             }
 
-            // Punteggio e rimozione nemici fuori schermo
+            // Rimozione nemici fuori schermo
             if (enemy.y > canvas.height) {
                 enemies.splice(i, 1);
-                score += 10;
-                scoreText.textContent = 'PUNTI: ' + score;
-                if (score % 50 === 0) baseSpeed += 0.5;
             }
         }
+
+        // Aumento graduale della difficoltà
+        baseSpeed = 5 + Math.floor(score / 150) * 0.5;
     }
 
     function drawCar(x, y, color) {
         ctx.fillStyle = color;
         ctx.fillRect(x, y, 40, 70);
         // Parabrezza
-        ctx.fillStyle = '#000';
+        ctx.fillStyle = '#111';
         ctx.fillRect(x + 5, y + 15, 30, 20);
-        // Luci
+        // Fari anteriori / posteriori
         ctx.fillStyle = '#ffb703';
         ctx.fillRect(x + 4, y + 2, 8, 4);
         ctx.fillRect(x + 28, y + 2, 8, 4);
     }
 
     function draw() {
-        // Sfondo verde bordo
+        // Bordi campo
         ctx.fillStyle = '#1b4332';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // Strada
-        ctx.fillStyle = '#333';
+        ctx.fillStyle = '#262626';
         ctx.fillRect(40, 0, 320, canvas.height);
 
         // Linee di corsia tratteggiate
@@ -261,7 +304,7 @@
 
         // Schermata Game Over
         if (gameOver) {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             ctx.fillStyle = '#ff0055';
@@ -271,13 +314,14 @@
 
             ctx.fillStyle = '#fff';
             ctx.font = '16px Courier New';
-            ctx.fillText('Punteggio: ' + score, canvas.width / 2, 300);
-            ctx.fillText('Clicca o premi Spazio', canvas.width / 2, 340);
+            ctx.fillText('Punteggio Finale: ' + score, canvas.width / 2, 300);
+            ctx.fillText('Premi Spazio o Clicca', canvas.width / 2, 340);
         }
     }
 
     function resetGame() {
         score = 0;
+        distanceScore = 0;
         baseSpeed = 5;
         gameOver = false;
         enemies.length = 0;

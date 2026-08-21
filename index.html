@@ -68,7 +68,7 @@
             pointer-events: none;
         }
 
-        /* 1. BANNER ANNONCI CON STATUS PULSE */
+        /* BANNER ANNONCI CON STATUS PULSE */
         .announcement-bar {
             background: linear-gradient(90deg, var(--primary), var(--accent));
             color: #ffffff;
@@ -209,7 +209,7 @@
             font-weight: 500;
         }
 
-        /* CONTROLLI E RICERCA CON KEYBOARD SHORTCUT */
+        /* CONTROLLI E RICERCA */
         .controls-bar {
             display: flex;
             flex-wrap: wrap;
@@ -238,7 +238,6 @@
             box-shadow: 0 0 12px var(--primary-glow);
         }
 
-        /* 6. RESET BUTTON */
         .reset-btn {
             background: rgba(239, 68, 68, 0.2);
             border: 1px solid rgba(239, 68, 68, 0.4);
@@ -274,7 +273,6 @@
 
         .search-box input:focus { border-color: var(--primary); }
 
-        /* 9. SHORTCUT HINT */
         .search-hint {
             position: absolute;
             right: 12px;
@@ -330,25 +328,6 @@
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), 0 0 25px var(--primary-glow);
         }
 
-        /* 2. STAR FAVORITE BUTTON */
-        .fav-btn {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            background: transparent;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            opacity: 0.4;
-            transition: all 0.2s;
-            z-index: 2;
-        }
-
-        .fav-btn:hover, .fav-btn.active {
-            opacity: 1;
-            transform: scale(1.2);
-        }
-
         .badge {
             position: absolute; top: 16px; right: 16px;
             padding: 4px 10px; border-radius: 12px;
@@ -357,25 +336,15 @@
         .badge-live { background: rgba(16, 185, 129, 0.2); color: #059669; border: 1px solid rgba(16, 185, 129, 0.4); }
         .badge-beta { background: rgba(245, 158, 11, 0.2); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.4); }
 
-        /* 8. BADGE CATEGORIA IN BASSO */
-        .cat-tag {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--primary);
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-        }
-
         .card-content { display: flex; flex-direction: column; align-items: center; text-align: center; }
 
         .card img {
             width: 80px; height: 80px; border-radius: 50%;
-            object-fit: cover; margin-bottom: 12px;
+            object-fit: cover; margin-bottom: 16px;
             border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
+        .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .card p { font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px; }
 
         .btn-group { display: flex; gap: 8px; width: 100%; margin-top: auto; }
@@ -393,95 +362,16 @@
         .btn-secondary { background: rgba(0, 0, 0, 0.08); border: 1px solid var(--glass-border); color: var(--text-main); }
         [data-theme="dark"] .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #ffffff; }
 
-        /* 5. COPY LINK BUTTON */
         .btn-icon-only {
             width: 38px; flex: none;
             padding: 0; display: flex; align-items: center; justify-content: center;
             cursor: pointer;
         }
 
-        /* 3. FLOATING CHAT / FEEDBACK WIDGET */
-        .feedback-fab {
-            position: fixed;
-            bottom: 24px; right: 24px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: #fff; border: none;
-            padding: 14px 20px; border-radius: 30px;
-            font-weight: 700; font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 10px 25px var(--primary-glow);
-            z-index: 99;
-            display: flex; align-items: center; gap: 8px;
-            transition: transform 0.3s;
-        }
-
-        .feedback-fab:hover { transform: scale(1.05); }
-
-        .feedback-modal {
-            position: fixed;
-            inset: 0; background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            z-index: 200;
-            display: none; justify-content: center; align-items: center;
-            padding: 20px;
-        }
-
-        .feedback-modal.active { display: flex; }
-
-        .modal-content {
-            background: var(--bg-base);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 30px;
-            width: 100%; max-width: 420px;
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content h3 { margin-bottom: 12px; font-size: 20px; }
-        .modal-content textarea {
-            width: 100%; height: 100px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            color: var(--text-main);
-            padding: 12px; font-family: inherit;
-            resize: none; margin-bottom: 16px;
-            outline: none;
-        }
-
-        .modal-close {
-            position: absolute; top: 16px; right: 16px;
-            background: transparent; border: none;
-            color: var(--text-muted); font-size: 20px; cursor: pointer;
-        }
-
-        /* 4. TOAST NOTIFICATIONS */
-        .toast-container {
-            position: fixed;
-            bottom: 24px; left: 24px;
-            z-index: 300;
-            display: flex; flex-direction: column; gap: 10px;
-        }
-
-        .toast {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 12px 20px; border-radius: var(--radius-md);
-            font-size: 13px; font-weight: 600;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            animation: slide-in 0.3s ease, fade-out 0.3s ease 2.7s forwards;
-        }
-
-        @keyframes slide-in { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fade-out { to { opacity: 0; transform: translateY(10px); } }
-
-        /* 7. BACK TO TOP BUTTON */
+        /* BACK TO TOP BUTTON */
         .back-to-top {
             position: fixed;
-            bottom: 24px; right: 190px;
+            bottom: 24px; right: 24px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
@@ -563,9 +453,6 @@
     <div class="controls-bar">
         <div class="filter-btns">
             <button class="filter-btn active" onclick="filterCards('all', this)">Tutti</button>
-
-            <!-- FILTRO PREFERITI -->
-            <button class="filter-btn" onclick="filterCards('fav', this)">⭐ Preferiti</button>
             <button class="filter-btn" onclick="filterCards('os', this)">Software & OS</button>
             <button class="filter-btn" onclick="filterCards('game', this)">Giochi</button>
             <button class="filter-btn" onclick="filterCards('service', this)">Servizi</button>
@@ -580,11 +467,9 @@
     <div class="cards" id="cardsGrid">
         
         <div class="card" data-category="os" data-id="lorenzo-os">
-            <button class="fav-btn" onclick="toggleFav('lorenzo-os', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Live</span>
             <div class="card-content">
                 <img src="logo2.png" alt="LorenzoOS" onerror="this.src='https://via.placeholder.com/90'">
-                <div class="cat-tag">Software & OS</div>
                 <h3>LorenzoOS</h3>
                 <p>Il sistema operativo personalizzato sviluppato da LoreTnani.</p>
             </div>
@@ -595,11 +480,9 @@
         </div>
 
         <div class="card" data-category="service" data-id="giornale-tech">
-            <button class="fav-btn" onclick="toggleFav('giornale-tech', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Live</span>
             <div class="card-content">
                 <img src="giornale.png" alt="Giornale" onerror="this.src='https://via.placeholder.com/90'">
-                <div class="cat-tag">Servizi</div>
                 <h3>Giornale Tecnologico</h3>
                 <p>Notizie e approfondimenti tech curati da Alessio.</p>
             </div>
@@ -610,11 +493,9 @@
         </div>
 
         <div class="card" data-category="service" data-id="assistenza-tech">
-            <button class="fav-btn" onclick="toggleFav('assistenza-tech', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Attivo</span>
             <div class="card-content">
                 <img src="aiuto.png" alt="Help" onerror="this.src='https://via.placeholder.com/90'">
-                <div class="cat-tag">Servizi</div>
                 <h3>Assistenza Informatica</h3>
                 <p>Supporto tecnico diretto e risoluzione problemi rapida.</p>
             </div>
@@ -625,11 +506,9 @@
         </div>
 
         <div class="card" data-category="service" data-id="mercato-smart">
-            <button class="fav-btn" onclick="toggleFav('mercato-smart', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Store</span>
             <div class="card-content">
                 <img src="mercato.png" alt="Mercato Smart" onerror="this.src='https://via.placeholder.com/90'">
-                <div class="cat-tag">Servizi</div>
                 <h3>Mercato Smart</h3>
                 <p>Il mercatino dell'usato tech gestito da Aleprogramm.</p>
             </div>
@@ -640,11 +519,9 @@
         </div>
 
         <div class="card" data-category="game" data-id="snake-game">
-            <button class="fav-btn" onclick="toggleFav('snake-game', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Gioco</span>
             <div class="card-content">
                 <img src="game.png" alt="Game" onerror="this.src='https://via.placeholder.com/90'">
-                <div class="cat-tag">Giochi</div>
                 <h3>Snake Game</h3>
                 <p>Il grande classico arcade rivisitato in chiave moderna.</p>
             </div>
@@ -655,11 +532,9 @@
         </div>
 
         <div class="card" data-category="service" data-id="ourvideos">
-            <button class="fav-btn" onclick="toggleFav('ourvideos', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-beta">Beta</span>
             <div class="card-content">
                 <img src="ourvideo.png" alt="OurVideo" onerror="this.src='https://via.placeholder.com/90'">
-                <div class="cat-tag">Servizi</div>
                 <h3>OurVideos!</h3>
                 <p>Piattaforma video fluida e senza bisogno di registrazione.</p>
             </div>
@@ -670,11 +545,9 @@
         </div>
 
         <div class="card" data-category="os" data-id="win-cpp">
-            <button class="fav-btn" onclick="toggleFav('win-cpp', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Win C++</span>
             <div class="card-content">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg" alt="Windows C++ Edition" onerror="this.src='https://via.placeholder.com/90'">
-                <div class="cat-tag">Software & OS</div>
                 <h3>Windows C++ Edition</h3>
                 <p>L'esperienza Windows ricreata dal VigoneTech Team.</p>
             </div>
@@ -685,11 +558,9 @@
         </div>
 
         <div class="card" data-category="game" data-id="retro-highway">
-            <button class="fav-btn" onclick="toggleFav('retro-highway', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Arcade</span>
             <div class="card-content">
                 <img src="https://mariokarttour.com/_nuxt/img/f78440e.png" alt="Retro Highway Racer" onerror="this.src='https://via.placeholder.com/90'">
-                <div class="cat-tag">Giochi</div>
                 <h3>Retro Highway Racer</h3>
                 <p>Sfreccia sull'autostrada in questo gioco arcade vintage.</p>
             </div>
@@ -700,11 +571,9 @@
         </div>
 
         <div class="card" data-category="game" data-id="rocket-duel">
-            <button class="fav-btn" onclick="toggleFav('rocket-duel', this)" title="Aggiungi ai preferiti">⭐</button>
             <span class="badge badge-live">Multiplayer</span>
             <div class="card-content">
                 <img src="https://models.spriters-resource.com/media/preview_icons/342/345554.png?updated=1755512855" alt="Retro Rocket Duel" onerror="this.src='https://via.placeholder.com/90'">
-                <div class="cat-tag">Giochi</div>
                 <h3>Retro Rocket Duel</h3>
                 <p>Un avvincente duello spaziale tra razzi giocabile anche via browser!</p>
             </div>
@@ -717,23 +586,8 @@
     </div>
 </div>
 
-<!-- FLOATING FEEDBACK BUTTON & MODAL -->
-<button class="feedback-fab" onclick="openFeedback()">💬 Contattaci</button>
-
-<div class="feedback-modal" id="feedbackModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeFeedback()">✖</button>
-        <h3>Invia un messaggio al Team</h3>
-        <textarea id="feedbackText" placeholder="Scrivi qui consigli, bug o idee per i prossimi aggiornamenti..."></textarea>
-        <button class="btn" style="width: 100%;" onclick="sendFeedback()">Invia Messaggio</button>
-    </div>
-</div>
-
 <!-- BACK TO TOP BUTTON -->
 <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
-
-<!-- TOAST CONTAINER -->
-<div class="toast-container" id="toastContainer"></div>
 
 <footer>
     © 2026 · VigoneTech Team · LorenzoOS · Aleprogramm · Alessio · LoreTnani
@@ -774,51 +628,10 @@
         });
     });
 
-    // SISTEMA PREFERITI (LOCALSTORAGE)
-    let favorites = JSON.parse(localStorage.getItem('vt_favs') || '[]');
-
-    function updateFavIcons() {
-        document.querySelectorAll('.card').forEach(card => {
-            const id = card.getAttribute('data-id');
-            const btn = card.querySelector('.fav-btn');
-            if (favorites.includes(id)) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-    }
-
-    function toggleFav(id, btn) {
-        if (favorites.includes(id)) {
-            favorites = favorites.filter(item => item !== id);
-            showToast('Rimosso dai preferiti');
-        } else {
-            favorites.push(id);
-            showToast('Aggiunto ai preferiti ⭐');
-        }
-        localStorage.setItem('vt_favs', JSON.stringify(favorites));
-        updateFavIcons();
-    }
-
-    updateFavIcons();
-
-    // TOAST NOTIFICATIONS
-    function showToast(message) {
-        const container = document.getElementById('toastContainer');
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerText = message;
-        container.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
-
     // COPIA LINK
     function copyLink(url) {
         const fullUrl = window.location.origin + '/' + url;
-        navigator.clipboard.writeText(fullUrl).then(() => {
-            showToast('Link copiato negli appunti! 🔗');
-        });
+        navigator.clipboard.writeText(fullUrl);
     }
 
     // FILTRAGGIO CARDS + RESET BUTTON
@@ -833,17 +646,12 @@
 
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
-            const cardId = card.getAttribute('data-id');
             const cardCat = card.getAttribute('data-category');
 
-            if (category === 'all') {
+            if (category === 'all' || cardCat === category) {
                 card.classList.remove('hidden');
-            } else if (category === 'fav') {
-                if (favorites.includes(cardId)) card.classList.remove('hidden');
-                else card.classList.add('hidden');
             } else {
-                if (cardCat === category) card.classList.remove('hidden');
-                else card.classList.add('hidden');
+                card.classList.add('hidden');
             }
         });
     }
@@ -887,18 +695,6 @@
 
     function scrollToTop() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // FEEDBACK MODAL
-    function openFeedback() { document.getElementById('feedbackModal').classList.add('active'); }
-    function closeFeedback() { document.getElementById('feedbackModal').classList.remove('active'); }
-
-    function sendFeedback() {
-        const text = document.getElementById('feedbackText').value;
-        if (!text.trim()) return;
-        showToast('Grazie per il tuo feedback! 🚀');
-        document.getElementById('feedbackText').value = '';
-        closeFeedback();
     }
 
     // CONTATORI ANIMATI

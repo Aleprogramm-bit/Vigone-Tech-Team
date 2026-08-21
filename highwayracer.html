@@ -2,9 +2,16 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Retro Highway Racer+</title>
 <style>
+    * {
+        box-sizing: border-box;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
     body {
         margin: 0;
         background: #111;
@@ -14,29 +21,278 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100vh;
+        min-height: 100vh;
         overflow: hidden;
+    }
+
+    .header-bar {
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 0 10px;
+    }
+
+    .btn-home {
+        color: #fff;
+        background: #222;
+        border: 1px solid #fff;
+        padding: 6px 12px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 4px;
+    }
+
+    .btn-home:hover {
+        background: #fff;
+        color: #000;
     }
 
     #gameCanvas {
         border: 4px solid #fff;
         background: #000;
         box-shadow: 0 0 25px rgba(255,255,255,0.25);
+        max-width: 100%;
+        max-height: 70vh;
     }
 
     .info {
-        margin-top: 15px;
+        margin-top: 10px;
         text-align: center;
-        font-size: 14px;
+        font-size: 12px;
         opacity: 0.8;
+    }
+
+    .mobile-controls {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .ctrl-btn {
+        width: 60px;
+        height: 45px;
+        background: #222;
+        border: 2px solid #fff;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .ctrl-btn:active {
+        background: #fff;
+        color: #000;
     }
 </style>
 </head>
 <body>
 
+<div class="header-bar">
+    <a href="index.html" class="btn-home">🏠 HOME</a>
+    <span id="scoreText">PUNTI: 0</span>
+</div>
+
 <canvas id="gameCanvas" width="400" height="600"></canvas>
 
-<div class="info">
-    <p><strong>COMANDI:</strong> Frecce ← → per muoverti, ↑ per accelerare.</p>
-    <p>Evita le auto e sopravvivi il più possibile!</p>
+<div class="controls mobile-controls">
+    <div class="ctrl-btn" id="btnLeft">◄</div>
+    <div class="ctrl-btn" id="btnAccel">▲</div>
+    <div class="ctrl-btn" id="btnRight">►</div>
 </div>
+
+<div class="info">
+    <p><strong>COMANDI:</strong> ← → per muoverti, ↑ per accelerare.</p>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreText = document.getElementById('scoreText');
+
+    // Stato di gioco
+    let gameOver = false;
+    let score = 0;
+    let speed = 5;
+    let baseSpeed = 5;
+    let roadOffsetY = 0;
+
+    // Giocatore
+    const player = {
+        x: 180,
+        y: 480,
+        width: 40,
+        height: 70,
+        color: '#e63946'
+    };
+
+    // Input
+    const keys = { left: false, right: false, up: false };
+
+    // Gestione Nemici
+    const enemies = [];
+    function spawnEnemy() {
+        const lanes = [60, 180, 300];
+        const lane = lanes[Math.floor(Math.random() * lanes.length)];
+        enemies.push({
+            x: lane,
+            y: -80,
+            width: 40,
+            height: 70,
+            color: '#4895ef'
+        });
+    }
+
+    // Controlli Tastiera
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
+        if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
+        if (e.key === 'ArrowUp' || e.key === 'w') keys.up = true;
+        if (gameOver && e.key === ' ') resetGame();
+    });
+
+    window.addEventListener('keyup', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
+        if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
+        if (e.key === 'ArrowUp' || e.key === 'w') keys.up = false;
+    });
+
+    // Controlli Touch / Mobile
+    const bindTouch = (id, keyName) => {
+        const el = document.getElementById(id);
+        el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[keyName] = true; });
+        el.addEventListener('touchend', (e) => { e.preventDefault(); keys[keyName] = false; });
+        el.addEventListener('mousedown', () => keys[keyName] = true);
+        el.addEventListener('mouseup', () => keys[keyName] = false);
+    };
+
+    bindTouch('btnLeft', 'left');
+    bindTouch('btnRight', 'right');
+    bindTouch('btnAccel', 'up');
+
+    canvas.addEventListener('click', () => {
+        if (gameOver) resetGame();
+    });
+
+    function update() {
+        if (gameOver) return;
+
+        // Velocità
+        speed = keys.up ? baseSpeed * 1.8 : baseSpeed;
+
+        // Movimento Giocatore
+        if (keys.left && player.x > 50) player.x -= 5;
+        if (keys.right && player.x < 310) player.x += 5;
+
+        // Sfondo animato (Strada)
+        roadOffsetY = (roadOffsetY + speed) % 40;
+
+        // Gestione Nemici
+        if (Math.random() < 0.02) spawnEnemy();
+
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            let enemy = enemies[i];
+            enemy.y += speed - 2;
+
+            // Collisione AABB
+            if (
+                player.x < enemy.x + enemy.width &&
+                player.x + player.width > enemy.x &&
+                player.y < enemy.y + enemy.height &&
+                player.y + player.height > enemy.y
+            ) {
+                gameOver = true;
+            }
+
+            // Punteggio e rimozione nemici fuori schermo
+            if (enemy.y > canvas.height) {
+                enemies.splice(i, 1);
+                score += 10;
+                scoreText.textContent = 'PUNTI: ' + score;
+                if (score % 50 === 0) baseSpeed += 0.5;
+            }
+        }
+    }
+
+    function drawCar(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, 40, 70);
+        // Parabrezza
+        ctx.fillStyle = '#000';
+        ctx.fillRect(x + 5, y + 15, 30, 20);
+        // Luci
+        ctx.fillStyle = '#ffb703';
+        ctx.fillRect(x + 4, y + 2, 8, 4);
+        ctx.fillRect(x + 28, y + 2, 8, 4);
+    }
+
+    function draw() {
+        // Sfondo verde bordo
+        ctx.fillStyle = '#1b4332';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Strada
+        ctx.fillStyle = '#333';
+        ctx.fillRect(40, 0, 320, canvas.height);
+
+        // Linee di corsia tratteggiate
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([20, 20]);
+        ctx.lineDashOffset = -roadOffsetY;
+
+        ctx.beginPath();
+        ctx.moveTo(146, 0);
+        ctx.lineTo(146, canvas.height);
+        ctx.moveTo(253, 0);
+        ctx.lineTo(253, canvas.height);
+        ctx.stroke();
+
+        // Disegna Giocatore e Nemici
+        drawCar(player.x, player.y, player.color);
+        enemies.forEach(e => drawCar(e.x, e.y, e.color));
+
+        // Schermata Game Over
+        if (gameOver) {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#ff0055';
+            ctx.font = '28px Courier New';
+            ctx.textAlign = 'center';
+            ctx.fillText('GAME OVER', canvas.width / 2, 260);
+
+            ctx.fillStyle = '#fff';
+            ctx.font = '16px Courier New';
+            ctx.fillText('Punteggio: ' + score, canvas.width / 2, 300);
+            ctx.fillText('Clicca o premi Spazio', canvas.width / 2, 340);
+        }
+    }
+
+    function resetGame() {
+        score = 0;
+        baseSpeed = 5;
+        gameOver = false;
+        enemies.length = 0;
+        player.x = 180;
+        scoreText.textContent = 'PUNTI: 0';
+    }
+
+    function gameLoop() {
+        update();
+        draw();
+        requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+</script>
+
+</body>
+</html>

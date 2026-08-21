@@ -21,14 +21,10 @@
             --radius-md: 14px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-image: url("back.png");
             background-position: center center;
             background-repeat: no-repeat;
@@ -40,167 +36,123 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            position: relative;
         }
 
-        /* SFONDO ANIMATO CANVAS */
         #bgCanvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: 0;
             pointer-events: none;
         }
 
-        /* HEADER GLASS */
         header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
             background: rgba(10, 12, 16, 0.65);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
             padding: 16px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
         }
 
-        .header-brand {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+        .header-brand { display: flex; align-items: center; gap: 16px; }
 
-        .logo-wrapper {
-            position: relative;
-        }
-
+        .logo-wrapper { position: relative; }
         .logo-wrapper::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
+            content: ''; position: absolute; inset: -2px;
             border-radius: 50%;
             background: linear-gradient(45deg, var(--primary), var(--accent));
-            z-index: -1;
-            filter: blur(6px);
-            opacity: 0.8;
+            z-index: -1; filter: blur(6px); opacity: 0.8;
         }
-
         .logo-wrapper img {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
+            width: 48px; height: 48px; border-radius: 50%;
+            object-fit: cover; display: block;
             border: 2px solid rgba(255, 255, 255, 0.8);
         }
 
         header h1 {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+            font-size: 22px; font-weight: 800;
             background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* MAIN CONTAINER */
         .container {
-            max-width: 1280px;
-            margin: 40px auto;
-            padding: 0 24px;
-            flex: 1;
-            position: relative;
-            z-index: 1;
+            max-width: 1280px; margin: 40px auto; padding: 0 24px;
+            flex: 1; position: relative; z-index: 1;
         }
 
-        /* INTRO BOX WOW */
         .intro-box {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
-            padding: 40px;
-            margin-bottom: 48px;
+            padding: 40px; margin-bottom: 32px;
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .intro-box::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 60%);
-            pointer-events: none;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
         }
 
         .intro-box h2 {
-            font-size: 30px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            text-align: center;
+            font-size: 30px; font-weight: 800; margin-bottom: 16px; text-align: center;
             background: linear-gradient(135deg, #ffffff 30%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .intro-box p {
-            color: var(--text-muted);
-            font-size: 16px;
-            line-height: 1.7;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+        .intro-box p { color: var(--text-muted); font-size: 16px; line-height: 1.7; text-align: center; }
 
-        .intro-box p strong {
-            color: var(--text-main);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        /* CONTROLLI FILTRI E RICERCA */
+        .controls-bar {
+            display: flex;
+            flex-wrap: wrap;
             gap: 16px;
-            margin: 28px 0;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
         }
 
-        .feature-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: var(--radius-md);
-            padding: 16px 20px;
-            font-size: 14px;
+        .filter-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
             color: var(--text-muted);
-            backdrop-filter: blur(8px);
+            padding: 8px 16px; border-radius: 20px;
+            font-size: 13px; font-weight: 600; cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .feature-item:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.06);
-            transform: translateY(-2px);
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 12px var(--primary-glow);
         }
 
-        .feature-item strong {
+        .search-box {
+            position: relative;
+            min-width: 240px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 10px 16px;
+            border-radius: 20px;
             color: var(--text-main);
-            display: block;
-            margin-bottom: 4px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.3s;
         }
 
-        /* GRID CARDS 3D EFFECT */
+        .search-box input:focus {
+            border-color: var(--primary);
+        }
+
+        /* GRID CARDS */
         .cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 28px;
-            perspective: 1000px;
         }
 
         .card {
@@ -209,164 +161,71 @@
             border-radius: var(--radius-lg);
             padding: 28px 24px;
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.4s ease, box-shadow 0.4s ease;
-            transform-style: preserve-3d;
+            display: flex; flex-direction: column; justify-content: space-between;
+            position: relative; overflow: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease, border-color 0.3s ease;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .card:hover::before {
-            left: 100%;
-        }
+        .card.hidden { display: none; }
 
         .card:hover {
-            transform: translateY(-10px) rotateX(4deg) rotateY(-2deg);
+            transform: translateY(-8px);
             border-color: var(--glass-hover);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px var(--primary-glow);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 25px var(--primary-glow);
         }
 
-        .card-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            width: 100%;
+        /* BADGES */
+        .badge {
+            position: absolute; top: 16px; right: 16px;
+            padding: 4px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
         }
+        .badge-live { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .badge-beta { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
 
-        .img-container {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .img-container::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            filter: blur(8px);
-            z-index: 0;
-        }
-
-        .card:hover .img-container::after {
-            opacity: 0.7;
-        }
+        .card-content { display: flex; flex-direction: column; align-items: center; text-align: center; }
 
         .card img {
-            width: 84px;
-            height: 84px;
-            border-radius: 50%;
-            object-fit: cover;
-            position: relative;
-            z-index: 1;
+            width: 80px; height: 80px; border-radius: 50%;
+            object-fit: cover; margin-bottom: 16px;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            background: #151922;
         }
 
-        .card h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--text-main);
-        }
+        .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .card p { font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px; }
 
-        .card p {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin-bottom: 24px;
-        }
+        .btn-group { display: flex; gap: 10px; width: 100%; margin-top: auto; }
 
-        /* BUTTON FUTURISTICO */
         .btn {
-            width: 100%;
-            padding: 12px 20px;
+            flex: 1; padding: 10px;
             background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
-            color: #ffffff;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 14px var(--primary-glow);
+            color: #ffffff; border-radius: var(--radius-md); text-decoration: none;
+            font-weight: 600; font-size: 13px; text-align: center; transition: all 0.3s;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
         }
 
-        .btn:hover {
-            background: linear-gradient(135deg, #60a5fa 0%, var(--primary) 100%);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
-            transform: scale(1.02);
-        }
+        .btn:hover { transform: scale(1.02); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); }
 
-        /* FOOTER */
         footer {
-            position: relative;
-            z-index: 1;
-            padding: 32px 20px;
-            text-align: center;
-            font-size: 14px;
-            color: var(--text-muted);
-            background: rgba(10, 12, 16, 0.8);
-            border-top: 1px solid var(--glass-border);
-            backdrop-filter: blur(12px);
-            margin-top: auto;
+            padding: 32px 20px; text-align: center; font-size: 14px; color: var(--text-muted);
+            background: rgba(10, 12, 16, 0.8); border-top: 1px solid var(--glass-border);
+            margin-top: auto; position: relative; z-index: 1;
         }
 
-        .secret-egg {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 14px;
-            margin-left: 6px;
-            opacity: 0.2;
-            transition: opacity 0.3s, transform 0.3s;
-        }
-
-        .secret-egg:hover {
-            opacity: 1;
-            transform: scale(1.3);
-        }
-
-        @media (max-width: 768px) {
-            header { padding: 16px 20px; }
-            .intro-box { padding: 24px; }
-            .intro-box h2 { font-size: 24px; }
-        }
+        .secret-egg { background: transparent; border: none; cursor: pointer; opacity: 0.2; margin-left: 6px; }
+        .secret-egg:hover { opacity: 1; transform: scale(1.3); }
     </style>
 </head>
 
 <body>
 
-<!-- SFONDO ANIMATO -->
 <canvas id="bgCanvas"></canvas>
 
 <header>
     <div class="header-brand">
         <div class="logo-wrapper">
-            <img src="techteam.jpg" alt="VigoneTech Logo" onerror="this.src='https://via.placeholder.com/52'">
+            <img src="techteam.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/52'">
         </div>
         <h1>VigoneTech Team</h1>
     </div>
@@ -374,173 +233,135 @@
 
 <div class="container">
     
-    <!-- HERO INTRODUZIONE -->
     <div class="intro-box">
         <h2>Benvenuti nel portale ufficiale</h2>
-        <p>
-            Il nostro hub digitale dove prendono forma passione per la tecnologia, sviluppo software ed esperienze interattive. 
-            Il team — composto da <strong>Aleprogramm</strong>, <strong>LoreTnani</strong>, <strong>Alessio</strong> e supportato dall'<strong>AI</strong> — crea soluzioni all'avanguardia per tutti.
-        </p>
-
-        <div class="features-grid">
-            <div class="feature-item">
-                <strong>💻 Software & OS</strong>
-                LorenzoOS e Windows C++ Edition pronti da testare o scaricare.
-            </div>
-            <div class="feature-item">
-                <strong>📰 Informazione Tech</strong>
-                News e approfondimenti curati dal Giornale Tecnologico.
-            </div>
-            <div class="feature-item">
-                <strong>🛒 Servizi & Usato</strong>
-                Offerte usate e supporto con l'Assistenza Informatica.
-            </div>
-            <div class="feature-item">
-                <strong>🎮 Media & Gaming</strong>
-                Intrattenimento immediato con i nostri giochi e OurVideos!
-            </div>
-        </div>
-
-        <p style="font-size: 14px; color: var(--primary);">
-            ✨ Esplora i nostri progetti... e prova a scovare l'<strong>easter egg nascosto</strong>! 🥚
-        </p>
+        <p>Il nostro hub digitale per esplorare software, giochi e servizi creati dal team.</p>
     </div>
 
-    <!-- CARDS GRID -->
-    <div class="cards">
+    <!-- CONTROLLI RICERCA E FILTRI -->
+    <div class="controls-bar">
+        <div class="filter-btns">
+            <button class="filter-btn active" onclick="filterCards('all', this)">Tutti</button>
+            <button class="filter-btn" onclick="filterCards('os', this)">Software & OS</button>
+            <button class="filter-btn" onclick="filterCards('game', this)">Giochi</button>
+            <button class="filter-btn" onclick="filterCards('service', this)">Servizi</button>
+        </div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Cerca un progetto..." onkeyup="searchCards()">
+        </div>
+    </div>
+
+    <div class="cards" id="cardsGrid">
         
-        <div class="card">
+        <div class="card" data-category="os">
+            <span class="badge badge-live">Live</span>
             <div class="card-content">
-                <div class="img-container">
-                    <img src="logo2.png" alt="LorenzoOS" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
+                <img src="logo2.png" alt="LorenzoOS" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>LorenzoOS</h3>
                 <p>Il sistema operativo personalizzato sviluppato da LoreTnani.</p>
             </div>
-            <a class="btn" href="main2.html">Vai al sito</a>
-        </div>
-
-        <div class="card">
-            <div class="card-content">
-                <div class="img-container">
-                    <img src="giornale.png" alt="Giornale" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
-                <h3>Giornale Tecnologico</h3>
-                <p>Notizie, guide e approfondimenti tech curati da Alessio.</p>
+            <div class="btn-group">
+                <a class="btn" href="main2.html">Vai al sito</a>
             </div>
-            <a class="btn" href="https://sites.google.com/view/curiositynews/tecnologie-avanzate" target="_blank" rel="noopener">Leggi Ora</a>
         </div>
 
-        <div class="card">
+        <div class="card" data-category="service">
+            <span class="badge badge-live">Live</span>
             <div class="card-content">
-                <div class="img-container">
-                    <img src="aiuto.png" alt="Help" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
+                <img src="giornale.png" alt="Giornale" onerror="this.src='https://via.placeholder.com/90'">
+                <h3>Giornale Tecnologico</h3>
+                <p>Notizie e approfondimenti tech curati da Alessio.</p>
+            </div>
+            <div class="btn-group">
+                <a class="btn" href="https://sites.google.com/view/curiositynews/tecnologie-avanzate" target="_blank">Leggi Ora</a>
+            </div>
+        </div>
+
+        <div class="card" data-category="service">
+            <span class="badge badge-live">Attivo</span>
+            <div class="card-content">
+                <img src="aiuto.png" alt="Help" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Assistenza Informatica</h3>
                 <p>Supporto tecnico diretto e risoluzione problemi rapida.</p>
             </div>
-            <a class="btn" href="help.html">Chiedi Aiuto</a>
+            <div class="btn-group">
+                <a class="btn" href="help.html">Chiedi Aiuto</a>
+            </div>
         </div>
 
-        <div class="card">
+        <div class="card" data-category="service">
+            <span class="badge badge-live">Store</span>
             <div class="card-content">
-                <div class="img-container">
-                    <img src="mercato.png" alt="Mercato Smart" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
+                <img src="mercato.png" alt="Mercato Smart" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Mercato Smart</h3>
                 <p>Il mercatino dell'usato tech gestito da Aleprogramm.</p>
             </div>
-            <a class="btn" href="https://aleprogramm-bit.github.io/Mercatino-dell-usato-online/" target="_blank" rel="noopener">Visita</a>
+            <div class="btn-group">
+                <a class="btn" href="https://aleprogramm-bit.github.io/Mercatino-dell-usato-online/" target="_blank">Visita</a>
+            </div>
         </div>
 
-        <div class="card">
+        <div class="card" data-category="game">
+            <span class="badge badge-live">Gioco</span>
             <div class="card-content">
-                <div class="img-container">
-                    <img src="game.png" alt="Game" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
+                <img src="game.png" alt="Game" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Snake Game</h3>
                 <p>Il grande classico arcade rivisitato in chiave moderna.</p>
             </div>
-            <a class="btn" href="game.html">Gioca Ora</a>
+            <div class="btn-group">
+                <a class="btn" href="game.html">Gioca Ora</a>
+            </div>
         </div>
 
-        <div class="card">
+        <div class="card" data-category="service">
+            <span class="badge badge-beta">Beta</span>
             <div class="card-content">
-                <div class="img-container">
-                    <img src="ourvideo.png" alt="OurVideo" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
+                <img src="ourvideo.png" alt="OurVideo" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>OurVideos!</h3>
-                <p>Piattaforma video fluida e senza bisogno di registrazione. (ATTUALMENTE IN FASE BETA)</p>
+                <p>Piattaforma video fluida e senza bisogno di registrazione.</p>
             </div>
-            <a class="btn" href="main.html">Guarda Ora</a>
+            <div class="btn-group">
+                <a class="btn" href="main.html">Guarda Ora</a>
+            </div>
         </div>
 
-        <div class="card">
+        <div class="card" data-category="os">
+            <span class="badge badge-live">Win C++</span>
             <div class="card-content">
-                <div class="img-container">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg" alt="Windows C++ Edition" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg" alt="Windows C++ Edition" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Windows C++ Edition</h3>
-                <p>L'esperienza Windows ricreata in C++ dal VigoneTech Team.</p>
+                <p>L'esperienza Windows ricreata dal VigoneTech Team.</p>
             </div>
-            <a class="btn" href="https://drive.google.com/file/d/1CqmQmhOglOgTJRTk6ay0JujOv43JUOAO/view?usp=drive_link" target="_blank" rel="noopener">Scarica Ora</a>
+            <div class="btn-group">
+                <a class="btn" href="https://drive.google.com/file/d/1CqmQmhOglOgTJRTk6ay0JujOv43JUOAO/view?usp=drive_link" target="_blank">Scarica</a>
+                <a class="btn btn-secondary" href="winhtml.html" target="_blank">Provalo Web</a>
+            </div>
         </div>
 
-        <div class="card">
+        <div class="card" data-category="game">
+            <span class="badge badge-live">Arcade</span>
             <div class="card-content">
-                <div class="img-container">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Windows_Logo_%281992-2001%29.svg" alt="Windows C++ Web" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
-                <h3>Windows C++ Web</h3>
-                <p>Testa l'esperienza di Windows C++ direttamente nel browser.</p>
-            </div>
-            <a class="btn" href="winhtml.html" target="_blank" rel="noopener">Provalo!</a>
-        </div>
-
-        <!-- NUOVA CARD: RETRO HIGHWAY RACER -->
-        <div class="card">
-            <div class="card-content">
-                <div class="img-container">
-                    <img src="https://mariokarttour.com/_nuxt/img/f78440e.png" alt="Retro Highway Racer" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
+                <img src="https://mariokarttour.com/_nuxt/img/f78440e.png" alt="Retro Highway Racer" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Retro Highway Racer</h3>
-                <p>Sfreccia sull'autostrada in questo entusiasmante gioco arcade vintage.</p>
+                <p>Sfreccia sull'autostrada in questo gioco arcade vintage.</p>
             </div>
-            <a class="btn" href="https://drive.google.com/file/d/1ioJXolvKUpsxDL9oV8y7iiUVnqZfFdFb/view?usp=sharing" download>Scarica Ora</a>
+            <div class="btn-group">
+                <a class="btn" href="https://drive.google.com/file/d/1ioJXolvKUpsxDL9oV8y7iiUVnqZfFdFb/view?usp=sharing" download>Scarica</a>
+                <a class="btn btn-secondary" href="highwayracer.html">Gioca Web</a>
+            </div>
         </div>
 
-        <div class="card">
+        <div class="card" data-category="game">
+            <span class="badge badge-live">Multiplayer</span>
             <div class="card-content">
-                <div class="img-container">
-                    <img src="https://mariokarttour.com/_nuxt/img/f78440e.png" alt="Retro Highway Racer" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
-                <h3>Retro Highway Racer Web</h3>
-                <p>Prova il gioco sul tuo browser!.</p>
-            </div>
-            <a class="btn" href="highwayracer.html">Provalo!</a>
-        </div>
-
-<div class="card">
-            <div class="card-content">
-                <div class="img-container">
-                    <img src="https://models.spriters-resource.com/media/preview_icons/342/345554.png?updated=1755512855" alt="Retro Highway Racer" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
+                <img src="https://models.spriters-resource.com/media/preview_icons/342/345554.png?updated=1755512855" alt="Retro Rocket Duel" onerror="this.src='https://via.placeholder.com/90'">
                 <h3>Retro Rocket Duel</h3>
-                <p>Un duello spaziale tra razzi!</p>
+                <p>Un avvincente duello spaziale tra razzi giocabile anche via browser!</p>
             </div>
-            <a class="btn" href="https://drive.google.com/file/d/1jX7kI3XBOKGrHIvJUL3d1PfVC9qkXD86/view?usp=sharing">Scarica Ora</a>
-        </div>
-
-        
-<div class="card">
-            <div class="card-content">
-                <div class="img-container">
-                    <img src="https://models.spriters-resource.com/media/preview_icons/342/345554.png?updated=1755512855" alt="Retro Highway Racer" onerror="this.src='https://via.placeholder.com/90'">
-                </div>
-                <h3>Retro Rocket Duel Web</h3>
-                <p>Sfida spaziale sul tuo browser!.</p>
+            <div class="btn-group">
+                <a class="btn" href="https://drive.google.com/file/d/1jX7kI3XBOKGrHIvJUL3d1PfVC9qkXD86/view?usp=sharing">Scarica</a>
+                <a class="btn btn-secondary" href="razzi.html">Sfida Web</a>
             </div>
-            <a class="btn" href="razzi.html">Provalo!</a>
         </div>
         
     </div>
@@ -552,18 +373,43 @@
 </footer>
 
 <script>
-    // EFFETTO PARTICELE CANVAS DINAMICO
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
+    // FILTRAGGIO CATEGORIE
+    function filterCards(category, btnElement) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
 
-    let particles = [];
-    const particleCount = 45;
-
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
     }
 
+    // RICERCA TESTUALE ISTANTANEA
+    function searchCards() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.querySelectorAll('.card');
+
+        cards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const text = card.querySelector('p').textContent.toLowerCase();
+            if (title.includes(query) || text.includes(query)) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    }
+
+    // PARTICELE CANVAS
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
@@ -571,19 +417,15 @@
         constructor() {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.vx = (Math.random() - 0.5) * 0.6;
-            this.vy = (Math.random() - 0.5) * 0.6;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
             this.radius = Math.random() * 2 + 1;
         }
-
         update() {
-            this.x += this.vx;
-            this.y += this.vy;
-
+            this.x += this.vx; this.y += this.vy;
             if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
             if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
         }
-
         draw() {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
@@ -592,38 +434,30 @@
         }
     }
 
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-    }
+    for (let i = 0; i < 40; i++) particles.push(new Particle());
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
             particles[i].draw();
-
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < 130) {
+                if (dist < 120) {
                     ctx.beginPath();
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 * (1 - dist / 130)})`;
-                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = `rgba(59, 130, 246, ${0.12 * (1 - dist / 120)})`;
                     ctx.stroke();
                 }
             }
         }
         requestAnimationFrame(animate);
     }
-
     animate();
 
-    // EASTER EGG REINDIRIZZAMENTO
     function triggerSecret() {
         window.location.href = 'https://mega.nz/file/21ZjRKxD#SXBncYNwsb9KSLJvDcIhMh2hHSrXAVnngRs4KGcSFh8';
     }

@@ -208,68 +208,6 @@
         .stat-number { font-size: 28px; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
         .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
 
-        .controls-bar {
-            display: flex; flex-wrap: wrap; gap: 16px;
-            justify-content: space-between; align-items: center; margin-bottom: 28px;
-        }
-
-        .filter-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-
-        .filter-btn {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 8px 16px; border-radius: 20px;
-            font-size: 13px; font-weight: 600; cursor: pointer;
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-            box-shadow: 0 0 12px var(--primary-glow);
-        }
-
-        .reset-btn {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #ef4444;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            display: none;
-            transition: all 0.2s;
-        }
-
-        .search-box { position: relative; min-width: 260px; }
-
-        .search-box input {
-            width: 100%;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 10px 40px 10px 16px;
-            border-radius: 20px;
-            color: var(--text-main);
-            font-size: 13px;
-            outline: none;
-            backdrop-filter: blur(8px);
-        }
-
-        .search-hint {
-            position: absolute; right: 12px; top: 50%;
-            transform: translateY(-50%);
-            background: var(--glass-border);
-            color: var(--text-muted);
-            font-size: 11px;
-            padding: 2px 6px;
-            border-radius: 6px;
-            pointer-events: none;
-        }
-
         .cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -297,22 +235,7 @@
         }
 
         .card:hover::before { opacity: 1; }
-        .card.hidden { display: none; }
         .card:hover { transform: translateY(-8px); border-color: var(--glass-hover); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), 0 0 25px var(--primary-glow); }
-
-        .no-results {
-            display: none;
-            text-align: center;
-            grid-column: 1 / -1;
-            padding: 48px 20px;
-            color: var(--text-muted);
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            backdrop-filter: blur(16px);
-        }
-        .no-results h3 { font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
-        .no-results p { font-size: 14px; }
 
         .badge {
             position: absolute; top: 16px; right: 16px;
@@ -415,24 +338,10 @@
         </div>
     </div>
 
-    <!-- BARRA CONTROLLI CON FILTRI E RICERCA -->
-    <div class="controls-bar">
-        <div class="filter-btns">
-            <button class="filter-btn active" onclick="filterCards('all', this)">Tutti</button>
-            <button class="filter-btn" onclick="filterCards('os', this)">OS & Software</button>
-            <button class="filter-btn" onclick="filterCards('service', this)">Servizi</button>
-            <button class="reset-btn" id="resetBtn" onclick="resetFilters()">Azzera Filtri</button>
-        </div>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Cerca un progetto..." oninput="searchCards()">
-            <span class="search-hint">/</span>
-        </div>
-    </div>
-
     <!-- GRIGLIA SCHEDE -->
     <div class="cards" id="cardsGrid">
         
-        <div class="card" data-category="os" data-id="lorenzo-os">
+        <div class="card" data-id="lorenzo-os">
             <span class="badge badge-live">Live</span>
             <div class="card-content">
                 <img src="logo2.png" alt="LorenzoOS" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
@@ -444,7 +353,7 @@
             </div>
         </div>
 
-        <div class="card" data-category="service" data-id="giornale-tech">
+        <div class="card" data-id="giornale-tech">
             <span class="badge badge-live">Live</span>
             <div class="card-content">
                 <img src="giornale.png" alt="Giornale Tecnologico" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
@@ -456,7 +365,7 @@
             </div>
         </div>
 
-        <div class="card" data-category="service" data-id="assistenza-tech">
+        <div class="card" data-id="assistenza-tech">
             <span class="badge badge-live">Attivo</span>
             <div class="card-content">
                 <img src="aiuto.png" alt="Assistenza Informatica" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
@@ -468,7 +377,7 @@
             </div>
         </div>
 
-        <div class="card" data-category="service" data-id="mercato-smart">
+        <div class="card" data-id="mercato-smart">
             <span class="badge badge-live">Store</span>
             <div class="card-content">
                 <img src="mercato.png" alt="Mercato Smart" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
@@ -480,7 +389,7 @@
             </div>
         </div>
 
-        <div class="card" data-category="service" data-id="ourvideos">
+        <div class="card" data-id="ourvideos">
             <span class="badge badge-beta">Beta</span>
             <div class="card-content">
                 <img src="ourvideo.png" alt="OurVideos" loading="lazy" onerror="this.src='https://via.placeholder.com/90'">
@@ -490,12 +399,6 @@
             <div class="btn-group">
                 <a class="btn" href="main.html">Guarda Ora</a>
             </div>
-        </div>
-
-        <!-- MESSAGGIO NESSUN RISULTATO -->
-        <div class="no-results" id="noResults">
-            <h3>Nessun Progetto Trovato</h3>
-            <p>Prova a cercare con altre parole chiave o rimuovi i filtri applicati.</p>
         </div>
 
     </div>
@@ -540,65 +443,6 @@
             card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
             card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
         });
-    });
-
-    // --- FILTRAGGIO E RICERCA UNIFICATI ---
-    let currentCategory = 'all';
-
-    function updateVisibility() {
-        const query = document.getElementById('searchInput').value.toLowerCase().trim();
-        const cards = document.querySelectorAll('.card');
-        let visibleCount = 0;
-
-        cards.forEach(card => {
-            const cardCat = card.getAttribute('data-category');
-            const title = card.querySelector('h3').textContent.toLowerCase();
-            const text = card.querySelector('p').textContent.toLowerCase();
-
-            const matchesCategory = (currentCategory === 'all' || cardCat === currentCategory);
-            const matchesSearch = (title.includes(query) || text.includes(query));
-
-            if (matchesCategory && matchesSearch) {
-                card.classList.remove('hidden');
-                visibleCount++;
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-
-        // Mostra o nasconde l'Empty State
-        document.getElementById('noResults').style.display = (visibleCount === 0) ? 'block' : 'none';
-
-        // Mostra o nasconde il tasto Reset
-        document.getElementById('resetBtn').style.display = (query !== '' || currentCategory !== 'all') ? 'inline-block' : 'none';
-    }
-
-    function filterCards(category, btnElement) {
-        currentCategory = category;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        if (btnElement) btnElement.classList.add('active');
-        updateVisibility();
-    }
-
-    function searchCards() {
-        updateVisibility();
-    }
-
-    function resetFilters() {
-        document.getElementById('searchInput').value = '';
-        currentCategory = 'all';
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        const allBtn = document.querySelector('.filter-btn[onclick*="all"]');
-        if (allBtn) allBtn.classList.add('active');
-        updateVisibility();
-    }
-
-    // Shortcut tasto '/' per la barra di ricerca
-    window.addEventListener('keydown', (e) => {
-        if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-            e.preventDefault();
-            document.getElementById('searchInput').focus();
-        }
     });
 
     // --- SCROLL TO TOP ---

@@ -117,7 +117,7 @@
 </div>
 
 <div class="info">
-    <p><strong>COMANDI:</strong> ← → per muoverti, ↑ per accelerare e raddoppiare i punti!</p>
+    <p><strong>COMANDI:</strong> ← → per muoverti, ↑ per accelerare.</p>
 </div>
 
 <script>
@@ -126,7 +126,6 @@
     const scoreText = document.getElementById('scoreText');
     const multiplierText = document.getElementById('multiplierText');
 
-    // Stato di gioco
     let gameOver = false;
     let score = 0;
     let distanceScore = 0;
@@ -134,27 +133,22 @@
     let baseSpeed = 5;
     let roadOffsetY = 0;
 
-    // Giocatore
     const player = {
         x: 180,
         y: 480,
         width: 40,
         height: 70,
         color: '#e63946',
-        vx: 0,
         speedX: 7
     };
 
-    // Input
     const keys = { left: false, right: false, up: false };
 
-    // Gestione Nemici
     const enemies = [];
     function spawnEnemy() {
         const lanes = [60, 180, 300];
         const lane = lanes[Math.floor(Math.random() * lanes.length)];
         
-        // Evita spawn sovrapposti
         const isOverlap = enemies.some(e => e.y < 100 && Math.abs(e.x - lane) < 10);
         if (!isOverlap) {
             enemies.push({
@@ -168,7 +162,16 @@
         }
     }
 
-    // Controlli Tastiera Fluidi
+    // Reset generale di tutti gli input
+    function resetKeys() {
+        keys.left = false;
+        keys.right = false;
+        keys.up = false;
+    }
+
+    // Quando la finestra perde il focus, resetta i tasti per evitare blocchi
+    window.addEventListener('blur', resetKeys);
+
     window.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
         if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
@@ -182,22 +185,37 @@
         if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.up = false;
     });
 
-    // Controlli Touch Migliorati
+    // Gestione Touch/Mouse migliorata per evitare che il pulsante rimanga bloccato
     const bindTouch = (id, keyName) => {
         const el = document.getElementById(id);
-        const start = (e) => { e.preventDefault(); keys[keyName] = true; };
-        const end = (e) => { e.preventDefault(); keys[keyName] = false; };
         
-        el.addEventListener('touchstart', start, { passive: false });
-        el.addEventListener('touchend', end, { passive: false });
-        el.addEventListener('mousedown', start);
-        el.addEventListener('mouseup', end);
-        el.addEventListener('mouseleave', end);
+        const press = (e) => { 
+            e.preventDefault(); 
+            keys[keyName] = true; 
+        };
+        const release = (e) => { 
+            if (e) e.preventDefault(); 
+            keys[keyName] = false; 
+        };
+
+        el.addEventListener('touchstart', press, { passive: false });
+        el.addEventListener('touchend', release, { passive: false });
+        el.addEventListener('touchcancel', release, { passive: false });
+        
+        el.addEventListener('mousedown', press);
+        el.addEventListener('mouseup', release);
+        el.addEventListener('mouseleave', release);
     };
 
     bindTouch('btnLeft', 'left');
     bindTouch('btnRight', 'right');
     bindTouch('btnAccel', 'up');
+
+    // Rilascia i tasti se si rilascia il touch/click in qualunque punto dello schermo
+    window.addEventListener('mouseup', resetKeys);
+    window.addEventListener('touchend', (e) => {
+        if (e.touches.length === 0) resetKeys();
+    });
 
     canvas.addEventListener('click', () => {
         if (gameOver) resetGame();
@@ -206,44 +224,36 @@
     function update() {
         if (gameOver) return;
 
-        // Velocità e Moltiplicatore Punti
+        // Calcolo dinamico velocità e moltiplicatore
         const multiplier = keys.up ? 2 : 1;
         speed = keys.up ? baseSpeed * 1.7 : baseSpeed;
         multiplierText.textContent = `(${multiplier}x)`;
 
-        // Movimento orizzontale continuo e fluido
-        player.vx = 0;
-        if (keys.left) player.vx = -player.speedX;
-        if (keys.right) player.vx = player.speedX;
+        // Movimento
+        if (keys.left) player.x -= player.speedX;
+        if (keys.right) player.x += player.speedX;
 
-        player.x += player.vx;
-
-        // Limiti strada
         if (player.x < 45) player.x = 45;
         if (player.x > 315) player.x = 315;
 
-        // Punteggio basato sulla distanza percorsa
+        // Punteggio
         distanceScore += (speed / 10) * multiplier;
         score = Math.floor(distanceScore);
         scoreText.textContent = 'PUNTI: ' + score;
 
-        // Animazione strada
         roadOffsetY = (roadOffsetY + speed) % 40;
 
-        // Frequenza spawn dinamica basata sulla velocità base
         if (Math.random() < 0.02 + (baseSpeed * 0.002)) spawnEnemy();
 
         for (let i = enemies.length - 1; i >= 0; i--) {
             let enemy = enemies[i];
             enemy.y += speed - 2.5;
 
-            // Bonus Sorpasso (Punti extra quando superi un'auto)
             if (!enemy.passed && enemy.y > player.y + player.height) {
                 enemy.passed = true;
-                distanceScore += 15 * multiplier; // Bonus +15 (+30 se in accelerazione)
+                distanceScore += 15 * multiplier;
             }
 
-            // Collisione precisa (Box leggermente ridotto per tolleranza)
             const margin = 4;
             if (
                 player.x + margin < enemy.x + enemy.width - margin &&
@@ -252,40 +262,34 @@
                 player.y + player.height - margin > enemy.y
             ) {
                 gameOver = true;
+                resetKeys();
             }
 
-            // Rimozione nemici fuori schermo
             if (enemy.y > canvas.height) {
                 enemies.splice(i, 1);
             }
         }
 
-        // Aumento graduale della difficoltà
         baseSpeed = 5 + Math.floor(score / 150) * 0.5;
     }
 
     function drawCar(x, y, color) {
         ctx.fillStyle = color;
         ctx.fillRect(x, y, 40, 70);
-        // Parabrezza
         ctx.fillStyle = '#111';
         ctx.fillRect(x + 5, y + 15, 30, 20);
-        // Fari anteriori / posteriori
         ctx.fillStyle = '#ffb703';
         ctx.fillRect(x + 4, y + 2, 8, 4);
         ctx.fillRect(x + 28, y + 2, 8, 4);
     }
 
     function draw() {
-        // Bordi campo
         ctx.fillStyle = '#1b4332';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Strada
         ctx.fillStyle = '#262626';
         ctx.fillRect(40, 0, 320, canvas.height);
 
-        // Linee di corsia tratteggiate
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 4;
         ctx.setLineDash([20, 20]);
@@ -298,11 +302,9 @@
         ctx.lineTo(253, canvas.height);
         ctx.stroke();
 
-        // Disegna Giocatore e Nemici
         drawCar(player.x, player.y, player.color);
         enemies.forEach(e => drawCar(e.x, e.y, e.color));
 
-        // Schermata Game Over
         if (gameOver) {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -327,6 +329,7 @@
         enemies.length = 0;
         player.x = 180;
         scoreText.textContent = 'PUNTI: 0';
+        resetKeys();
     }
 
     function gameLoop() {

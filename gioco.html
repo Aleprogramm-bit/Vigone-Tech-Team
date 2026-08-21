@@ -1,229 +1,42 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro Highway Racer</title>
-    <style>
-        body {
-            margin: 0;
-            background: #222;
-            color: white;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        #gameCanvas {
-            border: 4px solid #fff;
-            background: #111;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-        .info {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 14px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retro Highway Racer+</title>
+<style>
+    body {
+        margin: 0;
+        background: #111;
+        color: white;
+        font-family: 'Courier New', monospace;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    #gameCanvas {
+        border: 4px solid #fff;
+        background: #000;
+        box-shadow: 0 0 25px rgba(255,255,255,0.25);
+    }
+
+    .info {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+        opacity: 0.8;
+    }
+</style>
 </head>
 <body>
 
-    <canvas id="gameCanvas" width="400" height="600"></canvas>
-    
-    <div class="info">
-        <p><strong>COMANDI:</strong> Usa le Frecce <kbd>←</kbd> <kbd>→</kbd> per muoverti. Freccia <kbd>↑</kbd> per accelerare.</p>
-        <p>Schiva le altre macchine e resisti il più a lungo possibile!</p>
-    </div>
+<canvas id="gameCanvas" width="400" height="600"></canvas>
 
-<script>
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-
-// Configurazione Giocatore
-const player = {
-    x: 175,
-    y: 500,
-    width: 40,
-    height: 70,
-    speed: 5,
-    color: "#ff0055"
-};
-
-// Controlli
-const keys = { Left: false, Right: false, Up: false };
-
-// Stato del gioco
-let enemies = [];
-let score = 0;
-let gameOver = false;
-let roadOffset = 0;
-let baseSpeed = 4; 
-let currentSpeed = 4;
-
-// Gestione tastiera
-window.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft" || e.key === "Left") keys.Left = true;
-    if (e.key === "ArrowRight" || e.key === "Right") keys.Right = true;
-    if (e.key === "ArrowUp" || e.key === "Up") keys.Up = true;
-    if (e.key === " " && gameOver) restartGame(); 
-});
-
-window.addEventListener("keyup", (e) => {
-    if (e.key === "ArrowLeft" || e.key === "Left") keys.Left = false;
-    if (e.key === "ArrowRight" || e.key === "Right") keys.Right = false;
-    if (e.key === "ArrowUp" || e.key === "Up") keys.Up = false;
-});
-
-// Funzione per generare auto nemiche nelle 3 corsie
-function spawnEnemy() {
-    const lanes = [65, 175, 285]; 
-    const randomLane = lanes[Math.floor(Math.random() * lanes.length)];
-    
-    if (enemies.some(e => e.lane === randomLane && e.y < 150)) return;
-
-    const colors = ["#00ffcc", "#ffcc00", "#00ff33", "#ffffff"];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-    enemies.push({
-        x: randomLane,
-        y: -80,
-        width: 40,
-        height: 70,
-        lane: randomLane,
-        color: randomColor,
-        speedMultiplier: 0.5 + Math.random() * 0.5 
-    });
-}
-
-// Riavvia il gioco
-function restartGame() {
-    enemies = [];
-    score = 0;
-    player.x = 175;
-    gameOver = false;
-    currentSpeed = baseSpeed;
-    gameLoop();
-}
-
-// Disegna l'autostrada
-function drawRoad() {
-    ctx.fillStyle = "#1e5e1e";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = "#3a3a3a";
-    ctx.fillRect(50, 0, 300, canvas.height);
-
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(50, 0, 8, canvas.height);
-    ctx.fillRect(342, 0, 8, canvas.height);
-
-    ctx.fillStyle = "#ffffff";
-    roadOffset += currentSpeed;
-    if (roadOffset >= 40) roadOffset = 0;
-
-    for (let y = roadOffset - 40; y < canvas.height; y += 40) {
-        ctx.fillRect(145, y, 4, 20);
-        ctx.fillRect(250, y, 4, 20);
-    }
-}
-
-// Disegna una macchina
-function drawCar(car) {
-    ctx.fillStyle = car.color;
-    ctx.fillRect(car.x, car.y, car.width, car.height);
-
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(car.x - 4, car.y + 10, 4, 15); 
-    ctx.fillRect(car.x + car.width, car.y + 10, 4, 15); 
-    ctx.fillRect(car.x - 4, car.y + 45, 4, 15); 
-    ctx.fillRect(car.x + car.width, car.y + 45, 4, 15); 
-
-    ctx.fillStyle = "#88ccff";
-    ctx.fillRect(car.x + 4, car.y + 20, car.width - 8, 12);
-}
-
-// Collisioni
-function checkCollision(rect1, rect2) {
-    return rect1.x < rect2.x + rect2.width &&
-           rect1.x + rect1.width > rect2.x &&
-           rect1.y < rect2.y + rect2.height &&
-           rect1.y + rect1.height > rect2.y;
-}
-
-// Logica
-function update() {
-    if (gameOver) return;
-
-    if (keys.Up) {
-        currentSpeed = baseSpeed * 1.8;
-        score += 2; 
-    } else {
-        currentSpeed = baseSpeed;
-        score += 1;
-    }
-
-    if (keys.Left && player.x > 58) player.x -= player.speed;
-    if (keys.Right && player.x < 302) player.x += player.speed;
-
-    if (Math.random() < 0.02) {
-        spawnEnemy();
-    }
-
-    for (let i = enemies.length - 1; i >= 0; i--) {
-        enemies[i].y += currentSpeed * enemies[i].speedMultiplier;
-
-        if (checkCollision(player, enemies[i])) {
-            gameOver = true;
-        }
-
-        if (enemies[i].y > canvas.height) {
-            enemies.splice(i, 1);
-        }
-    }
-}
-
-// Grafica
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    drawRoad();
-    drawCar(player);
-    enemies.forEach(drawCar);
-
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "20px 'Courier New'";
-    ctx.fillText("SCORE: " + score, 15, 30);
-
-    if (gameOver) {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "#ff0055";
-        ctx.font = "30px 'Courier New'";
-        ctx.textAlign = "center";
-        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 20);
-
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "16px 'Courier New'";
-        ctx.fillText("Premi SPAZIO per rigiocare", canvas.width / 2, canvas.height / 2 + 30);
-        ctx.textAlign = "left"; 
-    }
-}
-
-// Loop principale
-function gameLoop() {
-    update();
-    draw();
-    if (!gameOver) {
-        requestAnimationFrame(gameLoop);
-    }
-}
-
-gameLoop();
-</script>
-
-</body>
-</html>
+<div class="info">
+    <p><strong>COMANDI:</strong> Frecce ← → per muoverti, ↑ per accelerare.</p>
+    <p>Evita le auto e sopravvivi il più possibile!</p>
+</div>

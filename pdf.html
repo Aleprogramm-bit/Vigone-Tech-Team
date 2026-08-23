@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>PDF Tools</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --neon: #39ff14;
+      --neon-soft: #1aff7a;
+      --card-bg: #050505;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--neon);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      display: flex;
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--neon-soft);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      width: 260px;
+      box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 25px rgba(57, 255, 20, 0.7);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--neon-soft);
+      margin-bottom: 1.2rem;
+    }
+
+    .card a {
+      display: inline-block;
+      text-decoration: none;
+      color: var(--bg);
+      background: var(--neon);
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.7);
+      transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card a:hover {
+      background: var(--bg);
+      color: var(--neon);
+      box-shadow: 0 0 18px rgba(57, 255, 20, 1);
+      border: 1px solid var(--neon);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Card 1: Modifica sul web -->
+    <div class="card">
+      <div>
+        <div class="card-title">Modifica sul web</div>
+        <div class="card-desc">
+          Apri <strong>editor.html</strong> direttamente nel browser per modificare il contenuto online.
+        </div>
+      </div>
+      <a href="editor.html">Apri editor</a>
+    </div>
+
+    <!-- Card 2: Download diretto -->
+    <div class="card">
+      <div>
+        <div class="card-title">Download diretto</div>
+        <div class="card-desc">
+          Scarica subito il file <strong>editor.html</strong> sul tuo dispositivo.
+        </div>
+      </div>
+      <a href="editor.html" download="editor.html">Scarica editor</a>
+    </div>
+  </div>
+</body>
+</html>

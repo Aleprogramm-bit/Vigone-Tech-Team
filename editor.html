@@ -34,18 +34,24 @@ body {
   padding: 4px;
   cursor: pointer;
   background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  min-height: 120px;
 }
 .pageThumb.selected {
   border-color: #00aaff;
 }
 .pageThumb canvas {
-  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
   display: block;
 }
 
 /* SIDEBAR STRUMENTI (FISSA) */
 #sidebar {
-  width: 260px;
+  width: 280px;
   background: #2b2b2b;
   padding: 10px;
   box-sizing: border-box;
@@ -63,7 +69,7 @@ body {
 /* AREA PRINCIPALE */
 #main {
   position: absolute;
-  left: 500px;
+  left: 520px;
   right: 0;
   top: 0;
   bottom: 0;
@@ -78,6 +84,7 @@ body {
   margin-bottom: 20px;
   border: 2px solid #444;
   background: #fff;
+  transition: all 0.3s ease;
 }
 
 .pageCanvas {
@@ -115,6 +122,56 @@ body {
   height: 100%;
   display: block;
 }
+
+input[type="number"], select {
+  background: #3a3a3a;
+  color: white;
+  border: 1px solid #555;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+button {
+  background: #444;
+  color: white;
+  border: 1px solid #555;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #555;
+}
+
+hr {
+  border: 1px solid #444;
+  margin: 8px 0;
+}
+
+label {
+  font-size: 13px;
+  display: block;
+  margin-top: 8px;
+}
+
+#autoSaveIndicator {
+  font-size: 11px;
+  color: #888;
+  text-align: center;
+  padding: 4px;
+  margin-top: 10px;
+  border-top: 1px solid #555;
+}
+
+#autoSaveIndicator.saving {
+  color: #ffaa00;
+}
+
+#autoSaveIndicator.saved {
+  color: #00aa44;
+}
 </style>
 
 <!-- pdf.js -->
@@ -136,6 +193,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
   <h3>Pagine</h3>
   <div id="pagesList"></div>
   <button id="addPageBtn">➕ Aggiungi pagina</button>
+  <div id="autoSaveIndicator">💾 Pronto</div>
 </div>
 
 <!-- SIDEBAR STRUMENTI -->
@@ -172,14 +230,24 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
     <option value="landscape">Orizzontale</option>
   </select>
 
+  <label>📐Rotazione</label>
+  <select id="pageRotation">
+    <option value="0">0°</option>
+    <option value="90">90°</option>
+    <option value="180">180°</option>
+    <option value="270">270°</option>
+  </select>
+
   <label>↔Larghezza pagina</label>
-  <input type="number" id="pageWidth" value="800">
+  <input type="number" id="pageWidth" value="800" min="200">
 
   <label>↕Altezza pagina</label>
-  <input type="number" id="pageHeight" value="1100">
+  <input type="number" id="pageHeight" value="1100" min="200">
 
   <label>🎨Colore sfondo pagina</label>
   <input type="color" id="pageBgColor" value="#ffffff">
+
+  <button id="applyPageSettings" style="margin-top: 10px; background: #00aa44; font-weight: bold;">✔ Applica modifiche</button>
 
   <hr>
 
@@ -204,6 +272,159 @@ let pages = [];
 let boxes = [];
 let selectedBox = null;
 let selectedPageIndex = 0;
+let autoSaveTimeout = null;
+let lastSaveTime = Date.now();
+
+/* Struttura pagina con configurazioni */
+class PageConfig {
+  constructor() {
+    this.width = 800;
+    this.height = 1100;
+    this.bgColor = "#ffffff";
+    this.rotation = 0;
+    this.orientation = "portrait";
+  }
+}
+
+/* ---------------- AUTO SAVE FUNZIONI ---------------- */
+function showAutoSaving() {
+  const indicator = document.getElementById("autoSaveIndicator");
+  indicator.textContent = "💾 Salvataggio...";
+  indicator.classList.remove("saved");
+  indicator.classList.add("saving");
+}
+
+function showAutoSaved() {
+  const indicator = document.getElementById("autoSaveIndicator");
+  indicator.textContent = "✔ Salvato!";
+  indicator.classList.remove("saving");
+  indicator.classList.add("saved");
+  
+  setTimeout(() => {
+    if (indicator.classList.contains("saved")) {
+      indicator.textContent = "💾 Pronto";
+      indicator.classList.remove("saved");
+    }
+  }, 2000);
+}
+
+function triggerAutoSave() {
+  clearTimeout(autoSaveTimeout);
+  showAutoSaving();
+  
+  autoSaveTimeout = setTimeout(async () => {
+    await performAutoSave();
+    showAutoSaved();
+  }, 500);
+}
+
+async function performAutoSave() {
+  if (pages.length === 0) return;
+
+  try {
+    let pdfDoc;
+    
+    if (!pdfDocOriginal) {
+      pdfDoc = await PDFLib.PDFDocument.create();
+
+      for (let i = 0; i < pages.length; i++) {
+        const pageConfig = pages[i].config;
+        const [width, height] = 
+          pageConfig.orientation === "landscape" 
+            ? [pageConfig.height, pageConfig.width]
+            : [pageConfig.width, pageConfig.height];
+
+        const newPage = pdfDoc.addPage([width, height]);
+        newPage.drawRectangle({
+          x: 0,
+          y: 0,
+          width,
+          height,
+          color: hexToRgb(pageConfig.bgColor)
+        });
+
+        await addBoxesToPage(pdfDoc, newPage, i, width, height);
+      }
+    } else {
+      pdfDoc = await PDFLib.PDFDocument.load(pdfDocOriginal);
+
+      while (pdfDoc.getPageCount() > pages.length) {
+        pdfDoc.removePage(pdfDoc.getPageCount() - 1);
+      }
+
+      while (pdfDoc.getPageCount() < pages.length) {
+        const pageConfig = pages[pdfDoc.getPageCount()];
+        const [width, height] = 
+          pageConfig.config.orientation === "landscape"
+            ? [pageConfig.config.height, pageConfig.config.width]
+            : [pageConfig.config.width, pageConfig.config.height];
+
+        pdfDoc.addPage([width, height]);
+      }
+
+      for (let i = 0; i < pages.length; i++) {
+        const pdfPage = pdfDoc.getPages()[i];
+        const pageConfig = pages[i].config;
+
+        const bgRgb = hexToRgb(pageConfig.bgColor);
+        pdfPage.drawRectangle({
+          x: 0,
+          y: 0,
+          width: pdfPage.getWidth(),
+          height: pdfPage.getHeight(),
+          color: bgRgb
+        });
+
+        await addBoxesToPage(pdfDoc, pdfPage, i, pdfPage.getWidth(), pdfPage.getHeight());
+      }
+    }
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const reader = new FileReader();
+    
+    reader.onload = () => {
+      const base64 = reader.result.split(',')[1];
+      localStorage.setItem('pdfEditorAutoSave', base64);
+      localStorage.setItem('pdfEditorAutoSaveTime', new Date().toLocaleTimeString('it-IT'));
+    };
+    
+    reader.readAsDataURL(blob);
+    lastSaveTime = Date.now();
+  } catch (error) {
+    console.error("Errore nel salvataggio automatico:", error);
+  }
+}
+
+/* Ripristina da localStorage se disponibile */
+function restoreFromAutoSave() {
+  const autoSave = localStorage.getItem('pdfEditorAutoSave');
+  if (autoSave) {
+    const saveTime = localStorage.getItem('pdfEditorAutoSaveTime');
+    const confirmed = confirm(`Trovato salvataggio automatico da ${saveTime}.\nVuoi ripristinarlo?`);
+    if (confirmed) {
+      const binaryString = atob(autoSave);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      pdfDocOriginal = bytes.buffer;
+      
+      const event = new Event('change', { bubbles: true });
+      const input = document.getElementById("pdfInput");
+      Object.defineProperty(input, 'files', {
+        value: [{
+          arrayBuffer: async () => pdfDocOriginal,
+          name: 'recuperato.pdf'
+        }],
+        writable: false
+      });
+      input.dispatchEvent(event);
+    }
+  }
+}
+
+window.addEventListener('load', restoreFromAutoSave);
 
 /* ---------------- CARICA PDF ---------------- */
 document.getElementById("pdfInput").addEventListener("change", async (e) => {
@@ -227,17 +448,35 @@ document.getElementById("pdfInput").addEventListener("change", async (e) => {
     const page = await pdf.getPage(i);
     const viewport = page.getViewport({ scale: 1 });
 
-    createPageFromCanvas(viewport.width, viewport.height, async (canvas) => {
+    createPageFromPDF(viewport.width, viewport.height, async (canvas) => {
       const ctx = canvas.getContext("2d");
       await page.render({ canvasContext: ctx, viewport }).promise;
     });
   }
 
   selectPage(0);
+  triggerAutoSave();
 });
 
-/* ---------------- CREA PAGINA ---------------- */
+/* ---------------- CREA PAGINA DA PDF O VUOTA ---------------- */
+function createPageFromPDF(pdfWidth, pdfHeight, renderCallback) {
+  const pageConfig = new PageConfig();
+  
+  pageConfig.width = pdfWidth;
+  pageConfig.height = pdfHeight;
+
+  createPage(pageConfig, renderCallback);
+}
+
 function createPageFromCanvas(width, height, renderCallback) {
+  const pageConfig = new PageConfig();
+  pageConfig.width = width;
+  pageConfig.height = height;
+
+  createPage(pageConfig, renderCallback);
+}
+
+function createPage(pageConfig, renderCallback) {
   const container = document.getElementById("pdfContainer");
   const pagesList = document.getElementById("pagesList");
 
@@ -246,8 +485,8 @@ function createPageFromCanvas(width, height, renderCallback) {
 
   const canvas = document.createElement("canvas");
   canvas.className = "pageCanvas";
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = pageConfig.width;
+  canvas.height = pageConfig.height;
 
   const layer = document.createElement("div");
   layer.className = "layer";
@@ -261,9 +500,6 @@ function createPageFromCanvas(width, height, renderCallback) {
 
   const thumbCanvas = document.createElement("canvas");
   const tctx = thumbCanvas.getContext("2d");
-  const scale = 0.4;
-  thumbCanvas.width = width * scale;
-  thumbCanvas.height = height * scale;
 
   thumb.appendChild(thumbCanvas);
   pagesList.appendChild(thumb);
@@ -271,14 +507,26 @@ function createPageFromCanvas(width, height, renderCallback) {
   const pageIndex = pages.length;
   thumb.onclick = () => selectPage(pageIndex);
 
-  pages.push({ wrapper, canvas, layer, thumbCanvas, thumb });
+  pages.push({ 
+    wrapper, 
+    canvas, 
+    layer, 
+    thumbCanvas, 
+    thumb, 
+    config: pageConfig,
+    originalContent: null 
+  });
 
   canvas.dataset.page = pageIndex;
   canvas.addEventListener("click", (ev) => createTextBox(ev, pageIndex));
 
-  if (renderCallback) renderCallback(canvas);
+  if (renderCallback) {
+    renderCallback(canvas);
+    pages[pageIndex].originalContent = canvas.toDataURL();
+  }
 
   updateThumbnail(pageIndex);
+  applyPageTransform(pageIndex);
 }
 
 /* ---------------- SELEZIONA PAGINA ---------------- */
@@ -287,21 +535,199 @@ function selectPage(index) {
   pages.forEach((p, i) => p.thumb.classList.toggle("selected", i === index));
 
   const page = pages[index];
-  document.getElementById("pageWidth").value = page.canvas.width;
-  document.getElementById("pageHeight").value = page.canvas.height;
+  document.getElementById("pageWidth").value = page.config.width;
+  document.getElementById("pageHeight").value = page.config.height;
+  document.getElementById("pageOrientation").value = page.config.orientation;
+  document.getElementById("pageRotation").value = page.config.rotation;
+  document.getElementById("pageBgColor").value = page.config.bgColor;
 }
 
-/* ---------------- MINIATURE ---------------- */
+/* ---------------- APPLICA TRASFORMAZIONI PAGINA E CANVAS PRINCIPALE ---------------- */
+function applyPageTransform(index) {
+  const page = pages[index];
+  const config = page.config;
+  const wrapper = page.wrapper;
+
+  wrapper.style.transform = `rotate(${config.rotation}deg)`;
+  page.canvas.style.background = config.bgColor;
+
+  updateThumbnail(index);
+}
+
+/* Ridisegna il canvas con il contenuto aggiornato */
+function redrawPageCanvas(index) {
+  const page = pages[index];
+  const config = page.config;
+  const ctx = page.canvas.getContext("2d");
+
+  ctx.fillStyle = config.bgColor;
+  ctx.fillRect(0, 0, config.width, config.height);
+
+  if (page.originalContent) {
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, config.width, config.height);
+    };
+    img.src = page.originalContent;
+  }
+}
+
+/* Aggiorna miniatura con il nuovo aspetto */
 function updateThumbnail(index) {
   const page = pages[index];
   const tctx = page.thumbCanvas.getContext("2d");
-  const scale = 0.4;
+  const config = page.config;
 
-  page.thumbCanvas.width = page.canvas.width * scale;
-  page.thumbCanvas.height = page.canvas.height * scale;
+  let thumbWidth = 200;
+  let thumbHeight = 200;
 
-  tctx.drawImage(page.canvas, 0, 0, page.thumbCanvas.width, page.thumbCanvas.height);
+  const ratio = config.width / config.height;
+  if (ratio > 1) {
+    thumbHeight = thumbWidth / ratio;
+  } else {
+    thumbWidth = thumbHeight * ratio;
+  }
+
+  page.thumbCanvas.width = thumbWidth;
+  page.thumbCanvas.height = thumbHeight;
+
+  tctx.fillStyle = config.bgColor;
+  tctx.fillRect(0, 0, thumbWidth, thumbHeight);
+
+  tctx.drawImage(page.canvas, 0, 0, config.width, config.height, 0, 0, thumbWidth, thumbHeight);
+
+  tctx.strokeStyle = "#666";
+  tctx.lineWidth = 1;
+  tctx.strokeRect(0, 0, thumbWidth, thumbHeight);
 }
+
+/* ---------------- APPLICA MODIFICHE PAGINA SELEZIONATA ---------------- */
+document.getElementById("applyPageSettings").onclick = () => {
+  if (pages.length === 0) {
+    alert("Nessuna pagina disponibile");
+    return;
+  }
+
+  const page = pages[selectedPageIndex];
+  const config = page.config;
+
+  const newWidth = parseInt(document.getElementById("pageWidth").value);
+  const newHeight = parseInt(document.getElementById("pageHeight").value);
+  const newOrientation = document.getElementById("pageOrientation").value;
+  const newRotation = parseInt(document.getElementById("pageRotation").value);
+  const newBgColor = document.getElementById("pageBgColor").value;
+
+  if (newWidth < 200 || newHeight < 200) {
+    alert("Dimensioni minime: 200x200");
+    return;
+  }
+
+  config.width = newWidth;
+  config.height = newHeight;
+  config.orientation = newOrientation;
+  config.rotation = newRotation;
+  config.bgColor = newBgColor;
+
+  page.canvas.width = newWidth;
+  page.canvas.height = newHeight;
+
+  if (page.originalContent) {
+    const img = new Image();
+    img.onload = () => {
+      const ctx = page.canvas.getContext("2d");
+      ctx.fillStyle = newBgColor;
+      ctx.fillRect(0, 0, newWidth, newHeight);
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
+      
+      applyPageTransform(selectedPageIndex);
+      triggerAutoSave();
+    };
+    img.src = page.originalContent;
+  } else {
+    const ctx = page.canvas.getContext("2d");
+    ctx.fillStyle = newBgColor;
+    ctx.fillRect(0, 0, newWidth, newHeight);
+    
+    applyPageTransform(selectedPageIndex);
+    triggerAutoSave();
+  }
+
+  alert("✔ Modifiche applicate!");
+};
+
+/* Anteprima e aggiornamenti pagina */
+let previewTimeout = null;
+
+document.getElementById("pageWidth").addEventListener("input", () => {
+  clearTimeout(previewTimeout);
+  previewTimeout = setTimeout(() => {
+    if (pages.length > 0) {
+      const page = pages[selectedPageIndex];
+      const newWidth = parseInt(document.getElementById("pageWidth").value);
+      if (newWidth >= 200) {
+        page.canvas.width = newWidth;
+        redrawPageCanvas(selectedPageIndex);
+        updateThumbnail(selectedPageIndex);
+      }
+    }
+  }, 300);
+});
+
+document.getElementById("pageHeight").addEventListener("input", () => {
+  clearTimeout(previewTimeout);
+  previewTimeout = setTimeout(() => {
+    if (pages.length > 0) {
+      const page = pages[selectedPageIndex];
+      const newHeight = parseInt(document.getElementById("pageHeight").value);
+      if (newHeight >= 200) {
+        page.canvas.height = newHeight;
+        redrawPageCanvas(selectedPageIndex);
+        updateThumbnail(selectedPageIndex);
+      }
+    }
+  }, 300);
+});
+
+document.getElementById("pageRotation").addEventListener("change", () => {
+  if (pages.length > 0) {
+    const page = pages[selectedPageIndex];
+    const config = page.config;
+    config.rotation = parseInt(document.getElementById("pageRotation").value);
+    applyPageTransform(selectedPageIndex);
+    triggerAutoSave();
+  }
+});
+
+document.getElementById("pageOrientation").addEventListener("change", () => {
+  if (pages.length > 0) {
+    const page = pages[selectedPageIndex];
+    const config = page.config;
+    config.orientation = document.getElementById("pageOrientation").value;
+    triggerAutoSave();
+  }
+});
+
+document.getElementById("pageBgColor").addEventListener("change", () => {
+  if (pages.length > 0) {
+    const page = pages[selectedPageIndex];
+    const config = page.config;
+    config.bgColor = document.getElementById("pageBgColor").value;
+    page.canvas.style.background = config.bgColor;
+    redrawPageCanvas(selectedPageIndex);
+    updateThumbnail(selectedPageIndex);
+    triggerAutoSave();
+  }
+});
+
+document.getElementById("pageBgColor").addEventListener("input", () => {
+  if (pages.length > 0) {
+    const page = pages[selectedPageIndex];
+    const config = page.config;
+    const newColor = document.getElementById("pageBgColor").value;
+    page.canvas.style.background = newColor;
+    updateThumbnail(selectedPageIndex);
+  }
+});
 
 /* ---------------- CREA CASELLA DI TESTO ---------------- */
 function createTextBox(ev, pageIndex) {
@@ -326,6 +752,13 @@ function createTextBox(ev, pageIndex) {
 
   page.layer.appendChild(box);
   boxes.push(box);
+  
+  box.addEventListener("blur", () => {
+    updateThumbnail(pageIndex);
+    triggerAutoSave();
+  });
+  
+  box.focus();
 }
 
 /* ---------------- AGGIUNGI IMMAGINE ---------------- */
@@ -364,6 +797,9 @@ document.getElementById("addImageBtn").onclick = () => {
       enableBoxEvents(box);
       page.layer.appendChild(box);
       boxes.push(box);
+      
+      updateThumbnail(selectedPageIndex);
+      triggerAutoSave();
     };
     reader.readAsDataURL(file);
   };
@@ -373,7 +809,12 @@ document.getElementById("addImageBtn").onclick = () => {
 
 /* ---------------- DRAG & DROP ---------------- */
 function enableBoxEvents(box) {
+  let isDragging = false;
+
   box.addEventListener("mousedown", (e) => {
+    if (e.target !== box && box.dataset.type === "text") return;
+
+    isDragging = true;
     selectedBox = box;
     boxes.forEach(b => b.classList.remove("selected"));
     box.classList.add("selected");
@@ -387,13 +828,17 @@ function enableBoxEvents(box) {
     function move(ev) {
       const x = ev.clientX - layerRect.left - offsetX;
       const y = ev.clientY - layerRect.top - offsetY;
-      box.style.left = x + "px";
-      box.style.top = y + "px";
+      box.style.left = Math.max(0, x) + "px";
+      box.style.top = Math.max(0, y) + "px";
+      updateThumbnail(parseInt(box.dataset.page));
     }
 
     function stop() {
+      isDragging = false;
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", stop);
+      updateThumbnail(parseInt(box.dataset.page));
+      triggerAutoSave();
     }
 
     document.addEventListener("mousemove", move);
@@ -404,12 +849,15 @@ function enableBoxEvents(box) {
 /* ---------------- ELIMINA BOX ---------------- */
 document.getElementById("deleteBox").onclick = () => {
   if (!selectedBox) return;
+  const pageIndex = parseInt(selectedBox.dataset.page);
   selectedBox.remove();
   boxes = boxes.filter(b => b !== selectedBox);
   selectedBox = null;
+  updateThumbnail(pageIndex);
+  triggerAutoSave();
 };
 
-/* ---------------- STILE BOX ---------------- */
+/* ---------------- STILE BOX TESTO ---------------- */
 function updateBoxStyle(box) {
   box.style.fontSize = document.getElementById("fontSize").value + "px";
   box.style.color = document.getElementById("fontColor").value;
@@ -430,71 +878,136 @@ document.getElementById("fontAlign").oninput =
 document.getElementById("fontUnderline").oninput =
 document.getElementById("highlightOn").oninput =
 document.getElementById("highlightColor").oninput = () => {
-  if (selectedBox) updateBoxStyle(selectedBox);
+  if (selectedBox && selectedBox.dataset.type === "text") {
+    updateBoxStyle(selectedBox);
+    updateThumbnail(parseInt(selectedBox.dataset.page));
+    triggerAutoSave();
+  }
 };
 
-/* ---------------- AGGIUNGI PAGINA ---------------- */
+/* ---------------- AGGIUNGI PAGINA VUOTA ---------------- */
 document.getElementById("addPageBtn").onclick = () => {
-  createPageFromCanvas(800, 1100, (canvas) => {
+  const width = parseInt(document.getElementById("pageWidth").value) || 800;
+  const height = parseInt(document.getElementById("pageHeight").value) || 1100;
+  
+  createPageFromCanvas(width, height, (canvas) => {
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   });
 
   selectPage(pages.length - 1);
+  triggerAutoSave();
 };
 
-/* ---------------- SALVA PDF ---------------- */
+/* ---------------- SALVA PDF DEFINITIVO ---------------- */
 document.getElementById("savePDF").onclick = async () => {
-  if (!pdfDocOriginal) {
-    alert("Carica prima un PDF.");
+  if (pages.length === 0) {
+    alert("Nessuna pagina da salvare");
     return;
   }
 
-  const pdfDoc = await PDFLib.PDFDocument.load(pdfDocOriginal);
+  if (!pdfDocOriginal) {
+    const pdfDoc = await PDFLib.PDFDocument.create();
 
-  while (pdfDoc.getPageCount() < pages.length) {
-    const p = pages[pdfDoc.getPageCount()];
-    pdfDoc.addPage([p.canvas.width, p.canvas.height]);
+    for (let i = 0; i < pages.length; i++) {
+      const pageConfig = pages[i].config;
+      const [width, height] = 
+        pageConfig.orientation === "landscape" 
+          ? [pageConfig.height, pageConfig.width]
+          : [pageConfig.width, pageConfig.height];
+
+      const newPage = pdfDoc.addPage([width, height]);
+      
+      newPage.drawRectangle({
+        x: 0,
+        y: 0,
+        width,
+        height,
+        color: hexToRgb(pageConfig.bgColor)
+      });
+
+      await addBoxesToPage(pdfDoc, newPage, i, width, height);
+    }
+
+    await downloadPDF(pdfDoc, "nuovo_documento");
+  } else {
+    const pdfDoc = await PDFLib.PDFDocument.load(pdfDocOriginal);
+
+    while (pdfDoc.getPageCount() > pages.length) {
+      pdfDoc.removePage(pdfDoc.getPageCount() - 1);
+    }
+
+    while (pdfDoc.getPageCount() < pages.length) {
+      const pageConfig = pages[pdfDoc.getPageCount()];
+      const [width, height] = 
+        pageConfig.config.orientation === "landscape"
+          ? [pageConfig.config.height, pageConfig.config.width]
+          : [pageConfig.config.width, pageConfig.config.height];
+
+      pdfDoc.addPage([width, height]);
+    }
+
+    for (let i = 0; i < pages.length; i++) {
+      const pdfPage = pdfDoc.getPages()[i];
+      const pageConfig = pages[i].config;
+
+      const bgRgb = hexToRgb(pageConfig.bgColor);
+      pdfPage.drawRectangle({
+        x: 0,
+        y: 0,
+        width: pdfPage.getWidth(),
+        height: pdfPage.getHeight(),
+        color: bgRgb
+      });
+
+      await addBoxesToPage(pdfDoc, pdfPage, i, pdfPage.getWidth(), pdfPage.getHeight());
+    }
+
+    await downloadPDF(pdfDoc, "documento_modificato");
   }
+  
+  localStorage.removeItem('pdfEditorAutoSave');
+  localStorage.removeItem('pdfEditorAutoSaveTime');
+};
+
+async function addBoxesToPage(pdfDoc, pdfPage, pageIndex, pageWidth, pageHeight) {
+  const pageObj = pages[pageIndex];
+  const canvas = pageObj.canvas;
 
   for (const box of boxes) {
-    const pageIndex = parseInt(box.dataset.page);
-    const page = pdfDoc.getPages()[pageIndex];
+    if (parseInt(box.dataset.page) !== pageIndex) continue;
 
-    const pageObj = pages[pageIndex];
-    const canvas = pageObj.canvas;
-
-    const canvasRect = canvas.getBoundingClientRect();
     const boxRect = box.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
 
     const xCanvas = boxRect.left - canvasRect.left;
     const yCanvas = boxRect.top - canvasRect.top;
 
     const x = xCanvas;
-    const y = canvas.height - yCanvas - box.offsetHeight;
+    const y = pageHeight - yCanvas - box.offsetHeight;
 
     if (box.dataset.type === "text") {
       const text = box.innerText || "";
       const size = parseInt(box.style.fontSize) || 18;
-      const colorArr = convertColor(box.style.color || "#ff0000");
+      const colorRgb = hexToRgb(box.style.color || "#ff0000");
 
-      page.drawText(text, {
+      pdfPage.drawText(text, {
         x,
         y,
         size,
-        color: PDFLib.rgb(colorArr[0], colorArr[1], colorArr[2])
+        color: PDFLib.rgb(colorRgb.red, colorRgb.green, colorRgb.blue)
       });
 
       if (box.style.background && box.style.background !== "transparent") {
         const bgColor = box.style.background.substring(0, 7);
-        const bgArr = convertColor(bgColor);
-        page.drawRectangle({
+        const bgRgb = hexToRgb(bgColor);
+        pdfPage.drawRectangle({
           x,
           y: y - (size * 0.2),
           width: boxRect.width,
           height: size + 6,
-          color: PDFLib.rgb(bgArr[0], bgArr[1], bgArr[2]),
+          color: PDFLib.rgb(bgRgb.red, bgRgb.green, bgRgb.blue),
           opacity: 0.4
         });
       }
@@ -503,52 +1016,52 @@ document.getElementById("savePDF").onclick = async () => {
     if (box.dataset.type === "image") {
       const dataUrl = box.dataset.imgSrc;
       const imgBytes = dataURLToUint8Array(dataUrl);
-      let imgEmbed = await pdfDoc.embedPng(imgBytes);
+      const imgEmbed = await pdfDoc.embedPng(imgBytes);
 
-      page.drawImage(imgEmbed, {
+      pdfPage.drawImage(imgEmbed, {
         x,
         y,
-        width: boxRect.width,
-        height: boxRect.height
+        width: box.offsetWidth,
+        height: box.offsetHeight
       });
     }
   }
+}
 
+async function downloadPDF(pdfDoc, baseName) {
   const pdfBytes = await pdfDoc.save();
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
   const url = URL.createObjectURL(blob);
 
-  // ricava il nome del file originale
-  const originalName = document.getElementById("pdfInput").files[0].name;
-
-  // separa nome ed estensione
-  const dotIndex = originalName.lastIndexOf(".");
-  const baseName = originalName.substring(0, dotIndex);
-  const extension = originalName.substring(dotIndex);
-
-  // crea il nuovo nome
-  const newName = baseName + "2" + extension;
-
-  // salva il PDF con il nuovo nome
   const a = document.createElement("a");
   a.href = url;
-  a.download = newName;
+  a.download = baseName + ".pdf";
   a.click();
-  };
 
-/* ---------------- COLORI ---------------- */
-function convertColor(color) {
-  if (color.startsWith("rgb")) {
-    const nums = color.match(/\d+/g).map(Number);
-    return [nums[0] / 255, nums[1] / 255, nums[2] / 255];
+  URL.revokeObjectURL(url);
+}
+
+/* ---------------- UTILITY COLORI ---------------- */
+function hexToRgb(hex) {
+  if (hex.startsWith("rgb")) {
+    const nums = hex.match(/\d+/g).map(Number);
+    return { 
+      red: nums[0] / 255, 
+      green: nums[1] / 255, 
+      blue: nums[2] / 255 
+    };
   }
-  if (color.startsWith("#")) {
-    const r = parseInt(color.substring(1, 3), 16);
-    const g = parseInt(color.substring(3, 5), 16);
-    const b = parseInt(color.substring(5, 7), 16);
-    return [r / 255, g / 255, b / 255];
+  if (hex.startsWith("#")) {
+    const r = parseInt(hex.substring(1, 3), 16);
+    const g = parseInt(hex.substring(3, 5), 16);
+    const b = parseInt(hex.substring(5, 7), 16);
+    return { 
+      red: r / 255, 
+      green: g / 255, 
+      blue: b / 255 
+    };
   }
-  return [1, 0, 0];
+  return { red: 1, green: 0, blue: 0 };
 }
 
 function dataURLToUint8Array(dataURL) {

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>VigoneTech Fun Facts</title>
+<style>
+    body {
+        background: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Sfondo animato */
+    .bg {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at 10% 20%, #333 0, transparent 40%),
+                    radial-gradient(circle at 80% 80%, #222 0, transparent 45%);
+        z-index: -2;
+    }
+    .blob {
+        position: fixed;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 60%);
+        border-radius: 50%;
+        animation: float 18s linear infinite;
+        z-index: -1;
+    }
+    .blob:nth-child(2) { top: 10%; left: 15%; animation-duration: 22s; }
+    .blob:nth-child(3) { bottom: 5%; right: 10%; animation-duration: 26s; }
+    .blob:nth-child(4) { top: 50%; right: 40%; animation-duration: 30s; }
+
+    @keyframes float {
+        0%   { transform: translate(0, 0); }
+        50%  { transform: translate(40px, -30px); }
+        100% { transform: translate(0, 0); }
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        font-weight: 400;
+    }
+
+    .card {
+        background: rgba(20, 20, 20, 0.6);
+        backdrop-filter: blur(18px);
+        border-radius: 16px;
+        padding: 28px 32px;
+        width: min(700px, 90vw);
+        text-align: center;
+        box-shadow: 0 0 30px rgba(0,0,0,0.7);
+        font-size: 22px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 40px rgba(0,0,0,0.9);
+    }
+
+    button {
+        margin-top: 22px;
+        padding: 12px 26px;
+        font-size: 17px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #4a4aff, #9b5bff);
+        color: white;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0 18px rgba(155,91,255,0.6);
+    }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="blob"></div>
+<div class="blob"></div>
+<div class="blob"></div>
+
+<h1>VigoneTech Fun Facts</h1>
+
+<div class="card" id="factBox">
+    Clicca il bottone per scoprire un Fun Fact segreto.
+</div>
+
+<button onclick="generateFact()">Genera un altro</button>
+
+<script>
+// SOLO TU modifichi questa lista:
+const facts = [
+    "Aleprogramm ha più idee che ore di sonno.",
+    "Il 73% dei progetti di Aleprogramm nasce da un bug.",
+    "LorenzoOS esiste perché qualcuno ha detto 'non si può fare'.",
+    "Il sito VigoneTech è stato toccato più volte di quanto sia stato visto.",
+    "Aleprogramm ha rotto più CSS che mouse.",
+    "Ogni commit nasconde almeno un pensiero non detto.",
+    "Se qualcosa funziona al primo colpo, è sospetto.",
+    "Il vero sistema operativo è la testa di Aleprogramm."
+];
+
+function generateFact() {
+    const box = document.getElementById("factBox");
+    const randomFact = facts[Math.floor(Math.random() * facts.length)];
+    box.innerHTML = randomFact;
+}
+</script>
+
+</body>
+</html>

@@ -5,4 +5,4 @@ Benvenuti nel mondo del nostro OS e del nostro giornale digitale.
 
 Team: Aleprogramm • LoreTnani • Alessio • AI
 
-vigone tech team github aleprogramm-bit
+https://aleprogramm-bit.github.io/Vigone-Tech-Team

@@ -4,3 +4,5 @@ Benvenuti nel mondo del nostro OS e del nostro giornale digitale.
 🥚🥚Cercate anche gli easter eggs nascosti!
 
 Team: Aleprogramm • LoreTnani • Alessio • AI
+
+vigone tech team github aleprogramm-bit

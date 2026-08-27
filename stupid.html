@@ -96,25 +96,26 @@
     Clicca il bottone per scoprire un Fun Fact segreto.
 </div>
 
-<button onclick="generateFact()">Genera un altro</button>
+<button onclick="nextFact()">Prossimo</button>
 
 <script>
 // SOLO TU modifichi questa lista:
 const facts = [
-    "Aleprogramm ha più idee che ore di sonno.",
-    "Il 73% dei progetti di Aleprogramm nasce da un bug.",
-    "LorenzoOS esiste perché qualcuno ha detto 'non si può fare'.",
+    "Aleprogramm: i miei unici strumenti di programmazione solo la mia fantasia e il mio cervello.",
+    "Aleprogramm: ogni idea è saltata fuori da un problema.",
+    "LorenzoOS esiste perché voleva essere il preferito della prof.",
     "Il sito VigoneTech è stato toccato più volte di quanto sia stato visto.",
-    "Aleprogramm ha rotto più CSS che mouse.",
-    "Ogni commit nasconde almeno un pensiero non detto.",
-    "Se qualcosa funziona al primo colpo, è sospetto.",
-    "Il vero sistema operativo è la testa di Aleprogramm."
+    "Se qualcosa funziona al primo colpo, non è normale.",
 ];
 
-function generateFact() {
+// Mostra i fatti in ordine decrescente
+let index = facts.length - 1;
+
+function nextFact() {
     const box = document.getElementById("factBox");
-    const randomFact = facts[Math.floor(Math.random() * facts.length)];
-    box.innerHTML = randomFact;
+    box.innerHTML = facts[index];
+    index--;
+    if (index < 0) index = facts.length - 1; // ricomincia da capo
 }
 </script>
 

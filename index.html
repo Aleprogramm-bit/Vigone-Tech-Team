@@ -21,6 +21,89 @@
     <meta name="twitter:description" content="Esplora il portale con giochi, sistemi operativi e progetti firmati VigoneTech Team.">
     <meta name="twitter:image" content="techteam.jpg">
 
+    <!-- POPUP FARMING SIMULATOR + POPUP NINTENDO WII -->
+<style>
+  .vtt-popup {
+    position: fixed;
+    right: -320px;
+    top: 20%;
+    width: 300px;
+    background: #111;
+    color: #eee;
+    border-left: 3px solid #0f0;
+    padding: 20px;
+    box-shadow: -4px 4px 15px rgba(0,0,0,0.4);
+    transition: right 0.5s ease;
+    z-index: 9999;
+    font-family: Arial;
+  }
+
+  .vtt-popup.show {
+    right: 0;
+  }
+
+  .vtt-img {
+    width: 100%;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  .vtt-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #0f0;
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+  }
+
+  .vtt-close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 22px;
+    color: #eee;
+  }
+</style>
+
+<!-- POPUP 1 - Farming Simulator -->
+<div id="popup1" class="vtt-popup">
+  <span class="vtt-close" onclick="closePopup1()">×</span>
+  <img src="b.png" class="vtt-img">
+  <h3>Vuoi confrontare i vari Farming Simulator?</h3>
+  <a href="https://aleprogramm-bit.github.io/Farming-Simulator-web/" class="vtt-btn">APRI</a>
+</div>
+
+<!-- POPUP 2 - Nintendo Wii -->
+<div id="popup2" class="vtt-popup">
+  <span class="vtt-close" onclick="closePopup2()">×</span>
+  <img src="c.png" class="vtt-img">
+  <h3>Oppure vuoi una mini‑guida sulla Nintendo Wii?</h3>
+  <a href="https://github.com/vigonetechteam-bit/Manuale-Elettronico-Canale-Notizie-Original-WAD-File-Dump-" class="vtt-btn">APRI</a>
+</div>
+
+<script>
+  // Mostra il primo popup dopo 1.5 secondi
+  setTimeout(() => {
+    document.getElementById('popup1').classList.add('show');
+  }, 1500);
+
+  function closePopup1() {
+    document.getElementById('popup1').classList.remove('show');
+    setTimeout(() => {
+      document.getElementById('popup2').classList.add('show');
+    }, 600);
+  }
+
+  function closePopup2() {
+    document.getElementById('popup2').classList.remove('show');
+  }
+</script>
+
+
     <style>
         /* TEMA SCURO (DEFAULT) */
         :root {

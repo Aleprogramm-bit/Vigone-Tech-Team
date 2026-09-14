@@ -3,6 +3,6 @@ Benvenuti nel mondo del nostro OS e del nostro giornale digitale.
 📰🗞️ Buona lettura e buon viaggio tra le nostre pagine.
 🥚🥚Cercate anche gli easter eggs nascosti!
 
-Team: Aleprogramm • LoreTnani •Fraprogramm • Alessio • AI
+Team: Aleprogramm • LoreTnani • Fraprogramm (fratello di Aleprogramm) • Alessio • AI
 
 https://aleprogramm-bit.github.io/Vigone-Tech-Team

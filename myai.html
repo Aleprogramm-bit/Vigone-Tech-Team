@@ -2,13 +2,13 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Mini AI</title>
+<title>Mini AI Meteo + Speedtest</title>
 
 <style>
   body {
     background: #000;
     color: #0f0;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     text-align: center;
     padding: 20px;
   }
@@ -57,7 +57,6 @@
     background: #001100;
   }
 
-  /* SPEED TEST GRAPH */
   #speedGraph {
     width: 80%;
     height: 120px;
@@ -83,7 +82,13 @@
 <img id="logo" src="myai.png" alt="AI Logo">
 
 <h1>Mini AI Meteo</h1>
-<p>Comandi: <b>meteo &lt;provincia&gt;</b>, <b>parla &lt;testo&gt;</b>, <b>ascolta</b>, <b>speedtest</b></p>
+<p>
+  Comandi:<br>
+  <b>meteo &lt;provincia&gt;</b> ·
+  <b>parla &lt;testo&gt;</b> ·
+  <b>ascolta</b> ·
+  <b>speedtest</b>
+</p>
 
 <input id="inputBox" placeholder="Scrivi un comando bro...">
 <button id="sendBtn">Invia</button>
@@ -92,7 +97,7 @@
 <div id="speedGraph"></div>
 
 <script>
-// ---- OUTPUT ----
+// ---- BASE ----
 const input = document.getElementById("inputBox");
 const output = document.getElementById("output");
 const sendBtn = document.getElementById("sendBtn");
@@ -100,9 +105,11 @@ const sendBtn = document.getElementById("sendBtn");
 sendBtn.addEventListener("click", eseguiComando);
 input.addEventListener("keydown", e => { if (e.key === "Enter") eseguiComando(); });
 
-function setOutput(text) { output.innerHTML = text; }
+function setOutput(text) {
+  output.innerHTML = text;
+}
 
-// ---- TRADUZIONE METEO ----
+// ---- METEO DESCRIZIONE ----
 function descriviMeteo(code, rain, snow) {
   if (code === 0) return "Soleggiato ☀️";
   if (code === 1) return "Prevalentemente soleggiato 🌤️";
@@ -120,7 +127,7 @@ function descriviMeteo(code, rain, snow) {
   return "Condizione meteo non riconosciuta bro.";
 }
 
-// ---- PROVINCE ----
+// ---- COORDINATE PROVINCE ----
 const coords = {
   "torino": { lat: 45.07, lon: 7.69 },
   "vercelli": { lat: 45.32, lon: 8.42 },
@@ -256,7 +263,9 @@ async function getMeteo(localita) {
   if (!coords[key]) return "Località non trovata bro.";
 
   const { lat, lon } = coords[key];
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=precipitation,rain,snowfall`;
+  const url =
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+    `&current_weather=true&hourly=precipitation,rain,snowfall`;
 
   try {
     const res = await fetch(url);
@@ -281,7 +290,6 @@ async function getMeteo(localita) {
            `Direzione vento: ${meteo.winddirection}°\n` +
            `Pioggia: ${rain} mm\n` +
            `Neve: ${snow} mm`;
-
   } catch (err) {
     return "Errore nel recupero meteo bro.";
   }
@@ -326,7 +334,7 @@ function ascolta() {
   rec.start();
 }
 
-// ---- SPEED TEST COMPLETO ----
+// ---- SPEEDTEST COMPLETO ----
 async function speedTest() {
   setOutput("Speed test in corso...");
   const graph = document.getElementById("speedGraph");
@@ -334,6 +342,7 @@ async function speedTest() {
 
   const testUrl = "https://speed.hetzner.de/100MB.bin";
 
+  // Ping
   const startPing = performance.now();
   await fetch("https://speed.hetzner.de/");
   const ping = performance.now() - startPing;
@@ -349,4 +358,98 @@ async function speedTest() {
     let jitter = [];
     let speeds = [];
 
-    while (true
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+
+      const now = performance.now();
+      jitter.push(now - lastTime);
+      lastTime = now;
+
+      received += chunk.value.length;
+
+      const seconds = (now - start) / 1000;
+      const mb = received / (1024 * 1024);
+      const speedMbps = (mb / seconds) * 8;
+      speeds.push(speedMbps);
+
+      const bar = document.createElement("div");
+      bar.className = "speedBar";
+      bar.style.height = Math.min(speedMbps * 2, 120) + "px";
+      bar.style.left = speeds.length * 5 + "px";
+      graph.appendChild(bar);
+    }
+
+    const end = performance.now();
+    const seconds = (end - start) / 1000;
+    const mb = received / (1024 * 1024);
+    const downloadMbps = (mb / seconds) * 8;
+    const jitterAvg = jitter.reduce((a, b) => a + b, 0) / jitter.length;
+
+    // Upload test (2MB)
+    const uploadData = new Uint8Array(2 * 1024 * 1024);
+    const upStart = performance.now();
+    await fetch("https://httpbin.org/post", {
+      method: "POST",
+      body: uploadData
+    });
+    const upEnd = performance.now();
+    const uploadMbps = ((2 / ((upEnd - upStart) / 1000)) * 8);
+
+    setOutput(
+      "📡 RISULTATI SPEED TEST\n\n" +
+      "Download: " + downloadMbps.toFixed(2) + " Mbps\n" +
+      "Upload: " + uploadMbps.toFixed(2) + " Mbps\n" +
+      "Ping: " + ping.toFixed(2) + " ms\n" +
+      "Jitter: " + jitterAvg.toFixed(2) + " ms\n" +
+      "Dati scaricati: " + mb.toFixed(2) + " MB\n" +
+      "Durata: " + seconds.toFixed(2) + " s"
+    );
+  } catch (err) {
+    setOutput("Errore speed test bro: " + err);
+  }
+}
+
+// ---- INTERPRETAZIONE COMANDI ----
+function eseguiComando() {
+  const q = input.value.trim();
+  if (!q) {
+    setOutput("Scrivi qualcosa bro.");
+    return;
+  }
+
+  const lower = q.toLowerCase();
+
+  if (lower.startsWith("meteo")) {
+    const localita = q.slice(6).trim();
+    if (!localita) {
+      setOutput("Scrivi: meteo <provincia>");
+      return;
+    }
+    setOutput("Recupero meteo per " + localita + "...");
+    getMeteo(localita).then(r => setOutput(r));
+    return;
+  }
+
+  if (lower.startsWith("parla")) {
+    const text = q.slice(6).trim();
+    parla(text);
+    return;
+  }
+
+  if (lower === "ascolta") {
+    ascolta();
+    return;
+  }
+
+  if (lower === "speedtest") {
+    speedTest();
+    return;
+  }
+
+  setOutput("Comando non riconosciuto bro.\nProva: meteo <provincia>, parla <testo>, ascolta, speedtest.");
+}
+</script>
+
+</body>
+</html>

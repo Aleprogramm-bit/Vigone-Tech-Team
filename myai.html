@@ -256,8 +256,8 @@ const coords = {
   "sud sardegna": { lat: 39.30, lon: 8.52 }
 };
 
-// ---- METEO 2 SETTIMANE ORARIE ----
-async function getMeteo2Settimane(localita) {
+// ---- METEO COMPLETO 14 GIORNI ----
+async function getMeteo(localita) {
   const key = localita.toLowerCase();
   if (!coords[key]) return "Località non trovata bro.";
 
@@ -265,12 +265,32 @@ async function getMeteo2Settimane(localita) {
 
   const url =
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+    `&current_weather=true` +
     `&hourly=temperature_2m,weathercode,rain,snowfall` +
-    `&forecast_days=14`;
+    `&forecast_days=14` +
+    `&timezone=auto`;
 
   try {
     const res = await fetch(url);
     const data = await res.json();
+
+    if (!data.hourly || !data.hourly.time) {
+      return "Errore nel recupero meteo bro (dati orari mancanti).";
+    }
+
+    const meteo = data.current_weather;
+
+    let output = "";
+    const now = new Date();
+    const ora = now.toLocaleTimeString("it-IT");
+    const dataStr = now.toLocaleDateString("it-IT");
+
+    output += `Meteo ${localita} (${dataStr} ${ora})\n`;
+    output += `Attuale: ${descriviMeteo(meteo.weathercode, 0, 0)}\n`;
+    output += `Temperatura: ${meteo.temperature}°C\n`;
+    output += `Vento: ${meteo.windspeed} km/h\n`;
+    output += `Direzione vento: ${meteo.winddirection}°\n\n`;
+    output += `📅 Previsioni orarie prossime 2 settimane:\n\n`;
 
     const ore = data.hourly.time;
     const temp = data.hourly.temperature_2m;
@@ -278,11 +298,22 @@ async function getMeteo2Settimane(localita) {
     const rain = data.hourly.rain;
     const snow = data.hourly.snowfall;
 
-    let output = `📅 Meteo ${localita} — Previsioni orarie 14 giorni\n\n`;
+    let giornoCorrente = "";
 
     for (let i = 0; i < ore.length; i++) {
+      const dt = new Date(ore[i]);
+      const giorno = dt.toLocaleDateString("it-IT");
+      const oraStr = dt.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+
+      // --- CAMBIO GIORNO IN ROSSO ---
+      if (giorno !== giornoCorrente) {
+        giornoCorrente = giorno;
+        output += `\x1b[31m=== ${giorno} ===\x1b[0m\n`;
+      }
+
       const descr = descriviMeteo(codes[i], rain[i], snow[i]);
-      output += `${ore[i]} — ${descr} — ${temp[i]}°C — Pioggia ${rain[i]}mm — Neve ${snow[i]}mm\n`;
+
+      output += `${oraStr} — ${descr} — ${temp[i]}°C — Pioggia ${rain[i]} mm — Neve ${snow[i]} mm\n`;
     }
 
     return output;
@@ -291,6 +322,8 @@ async function getMeteo2Settimane(localita) {
     return "Errore nel recupero meteo bro.";
   }
 }
+
+
 
 // ---- PARLA ----
 function parla(text) {
@@ -331,82 +364,6 @@ function ascolta() {
   rec.start();
 }
 
-// ---- SPEEDTEST COMPLETO ----
-async function speedTest() {
-  setOutput("Speed test in corso...");
-  const graph = document.getElementById("speedGraph");
-  graph.innerHTML = "";
-
-  const testUrl = "https://speed.hetzner.de/100MB.bin";
-
-  // Ping
-  const startPing = performance.now();
-  await fetch("https://speed.hetzner.de/");
-  const ping = performance.now() - startPing;
-
-  const start = performance.now();
-
-  try {
-    const res = await fetch(testUrl);
-    const reader = res.body.getReader();
-
-    let received = 0;
-    let lastTime = start;
-    let jitter = [];
-    let speeds = [];
-
-    while (true) {
-      const chunk = await reader.read();
-      if (chunk.done) break;
-
-      const now = performance.now();
-      jitter.push(now - lastTime);
-      lastTime = now;
-
-      received += chunk.value.length;
-
-      const seconds = (now - start) / 1000;
-      const mb = received / (1024 * 1024);
-      const speedMbps = (mb / seconds) * 8;
-      speeds.push(speedMbps);
-
-      const bar = document.createElement("div");
-      bar.className = "speedBar";
-      bar.style.height = Math.min(speedMbps * 2, 120) + "px";
-      bar.style.left = speeds.length * 5 + "px";
-      graph.appendChild(bar);
-    }
-
-    const end = performance.now();
-    const seconds = (end - start) / 1000;
-    const mb = received / (1024 * 1024);
-    const downloadMbps = (mb / seconds) * 8;
-    const jitterAvg = jitter.reduce((a, b) => a + b, 0) / jitter.length;
-
-    // Upload test (2MB)
-    const uploadData = new Uint8Array(2 * 1024 * 1024);
-    const upStart = performance.now();
-    await fetch("https://httpbin.org/post", {
-      method: "POST",
-      body: uploadData
-    });
-    const upEnd = performance.now();
-    const uploadMbps = ((2 / ((upEnd - upStart) / 1000)) * 8);
-
-    setOutput(
-      "📡 RISULTATI SPEED TEST\n\n" +
-      "Download: " + downloadMbps.toFixed(2) + " Mbps\n" +
-      "Upload: " + uploadMbps.toFixed(2) + " Mbps\n" +
-      "Ping: " + ping.toFixed(2) + " ms\n" +
-      "Jitter: " + jitterAvg.toFixed(2) + " ms\n" +
-      "Dati scaricati: " + mb.toFixed(2) + " MB\n" +
-      "Durata: " + seconds.toFixed(2) + " s"
-    );
-  } catch (err) {
-    setOutput("Errore speed test bro: " + err);
-  }
-}
-
 // ---- INTERPRETAZIONE COMANDI ----
 function eseguiComando() {
   const q = input.value.trim();
@@ -439,12 +396,8 @@ function eseguiComando() {
     return;
   }
 
-  if (lower === "speedtest") {
-    speedTest();
-    return;
-  }
 
-  setOutput("Comando non riconosciuto bro.\nProva: meteo <provincia>, parla <testo>, ascolta, speedtest.");
+  setOutput("Comando non riconosciuto bro.\nProva: meteo <provincia>, parla <testo>, ascolta");
 }
 </script>
 

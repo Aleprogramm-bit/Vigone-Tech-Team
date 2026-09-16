@@ -256,39 +256,37 @@ const coords = {
   "sud sardegna": { lat: 39.30, lon: 8.52 }
 };
 
-// ---- METEO ----
-async function getMeteo(localita) {
+// ---- METEO 2 SETTIMANE ORARIE ----
+async function getMeteo2Settimane(localita) {
   const key = localita.toLowerCase();
   if (!coords[key]) return "Località non trovata bro.";
 
   const { lat, lon } = coords[key];
+
   const url =
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-    `&current_weather=true&hourly=precipitation,rain,snowfall`;
+    `&hourly=temperature_2m,weathercode,rain,snowfall` +
+    `&forecast_days=14`;
 
   try {
     const res = await fetch(url);
     const data = await res.json();
 
-    const meteo = data.current_weather;
-    const index = data.hourly.time.indexOf(meteo.time);
+    const ore = data.hourly.time;
+    const temp = data.hourly.temperature_2m;
+    const codes = data.hourly.weathercode;
+    const rain = data.hourly.rain;
+    const snow = data.hourly.snowfall;
 
-    const rain = data.hourly.rain[index];
-    const snow = data.hourly.snowfall[index];
+    let output = `📅 Meteo ${localita} — Previsioni orarie 14 giorni\n\n`;
 
-    const descrizione = descriviMeteo(meteo.weathercode, rain, snow);
+    for (let i = 0; i < ore.length; i++) {
+      const descr = descriviMeteo(codes[i], rain[i], snow[i]);
+      output += `${ore[i]} — ${descr} — ${temp[i]}°C — Pioggia ${rain[i]}mm — Neve ${snow[i]}mm\n`;
+    }
 
-    const now = new Date();
-    const ora = now.toLocaleTimeString("it-IT");
-    const dataStr = now.toLocaleDateString("it-IT");
+    return output;
 
-    return `Meteo ${localita} (${dataStr} ${ora})\n` +
-           `${descrizione}\n\n` +
-           `Temperatura: ${meteo.temperature}°C\n` +
-           `Vento: ${meteo.windspeed} km/h\n` +
-           `Direzione vento: ${meteo.winddirection}°\n` +
-           `Pioggia: ${rain} mm\n` +
-           `Neve: ${snow} mm`;
   } catch (err) {
     return "Errore nel recupero meteo bro.";
   }

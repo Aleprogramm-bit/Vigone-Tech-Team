@@ -2,12 +2,16 @@
 <html lang="it" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Vigone Tech Team Portal</title>
+    <title>Vigone Tech Team</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta name="theme-color" content="#000000">
 
     <!-- Meta Tag SEO Generali -->
     <meta name="description" content="Il portale ufficiale del VigoneTech Team: scopri software, progetti open-source, giochi e servizi digitali.">
-    <meta name="keywords" content="VigoneTech, LorenzoOS, giochi web, software, servizi tech">
+    <meta name="keywords" content="VigoneTech, LorenzoOS, giochi web, software, servizi tech, Vigone Tech Team, vigonetechteam">
 
     <!-- Open Graph / Facebook / WhatsApp / Telegram -->
     <meta property="og:type" content="website">
@@ -86,16 +90,16 @@
 </div>
 
 <script>
-  // Mostra il primo popup dopo 1.5 secondi
+  // Mostra il primo popup dopo 3 secondi
   setTimeout(() => {
     document.getElementById('popup1').classList.add('show');
-  }, 1500);
+  }, 3000);
 
   function closePopup1() {
     document.getElementById('popup1').classList.remove('show');
     setTimeout(() => {
       document.getElementById('popup2').classList.add('show');
-    }, 600);
+    }, 100);
   }
 
   function closePopup2() {

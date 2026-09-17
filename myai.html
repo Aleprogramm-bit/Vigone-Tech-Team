@@ -255,7 +255,7 @@ const coords = {
   "sud sardegna": { lat: 39.30, lon: 8.52 }
 };
 
-// ---- METEO COMPLETO 14 GIORNI ----
+// ---- METEO COMPLETO 14 GIORNI (HTML ROSSO) ----
 async function getMeteo(localita) {
   const key = localita.toLowerCase();
   if (!coords[key]) return "Località non trovata bro.";
@@ -284,12 +284,12 @@ async function getMeteo(localita) {
     const ora = now.toLocaleTimeString("it-IT");
     const dataStr = now.toLocaleDateString("it-IT");
 
-    output += `Meteo ${localita} (${dataStr} ${ora})\n`;
-    output += `Attuale: ${descriviMeteo(meteo.weathercode, 0, 0)}\n`;
-    output += `Temperatura: ${meteo.temperature}°C\n`;
-    output += `Vento: ${meteo.windspeed} km/h\n`;
-    output += `Direzione vento: ${meteo.winddirection}°\n\n`;
-    output += `📅 Previsioni orarie prossime 2 settimane:\n\n`;
+    output += `<div>Meteo ${localita} (${dataStr} ${ora})</div>`;
+    output += `<div>Attuale: ${descriviMeteo(meteo.weathercode, 0, 0)}</div>`;
+    output += `<div>Temperatura: ${meteo.temperature}°C</div>`;
+    output += `<div>Vento: ${meteo.windspeed} km/h</div>`;
+    output += `<div>Direzione vento: ${meteo.winddirection}°</div>`;
+    output += `<br><div>📅 Previsioni orarie prossime 2 settimane:</div><br>`;
 
     const ore = data.hourly.time;
     const temp = data.hourly.temperature_2m;
@@ -304,15 +304,14 @@ async function getMeteo(localita) {
       const giorno = dt.toLocaleDateString("it-IT");
       const oraStr = dt.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
 
-      // --- CAMBIO GIORNO IN ROSSO ---
+      // --- CAMBIO GIORNO IN ROSSO HTML ---
       if (giorno !== giornoCorrente) {
         giornoCorrente = giorno;
-        output += `\x1b[31m=== ${giorno} ===\x1b[0m\n`;
+        output += `<div style="color:red;font-weight:bold;">=== ${giorno} ===</div>`;
       }
 
       const descr = descriviMeteo(codes[i], rain[i], snow[i]);
-
-      output += `${oraStr} — ${descr} — ${temp[i]}°C — Pioggia ${rain[i]} mm — Neve ${snow[i]} mm\n`;
+      output += `<div>${oraStr} — ${descr} — ${temp[i]}°C — Pioggia ${rain[i]} mm — Neve ${snow[i]} mm</div>`;
     }
 
     return output;
@@ -321,8 +320,6 @@ async function getMeteo(localita) {
     return "Errore nel recupero meteo bro.";
   }
 }
-
-
 
 // ---- PARLA ----
 function parla(text) {

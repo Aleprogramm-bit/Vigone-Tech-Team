@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Vigone Tech Team – Giochi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            --bg-blur: 18px;
+            --card-bg: rgba(10, 10, 20, 0.72);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent: #00ffc8;
+            --accent-soft: rgba(0, 255, 200, 0.25);
+            --text-main: #f5f7ff;
+            --text-muted: #b7bed8;
+            --badge-bg: rgba(0, 0, 0, 0.65);
+            --btn-bg: #00ffc8;
+            --btn-bg-secondary: rgba(255, 255, 255, 0.06);
+            --btn-border-secondary: rgba(255, 255, 255, 0.35);
+            --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.55);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text-main);
+            background: #02030a url("back.png") center/cover fixed no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-wrap {
+            width: 100%;
+            max-width: 1100px;
+            padding: 32px 20px;
+            position: relative;
+        }
+
+        /* Logo in alto a destra */
+        .site-logo {
+            position: fixed;
+            top: 18px;
+            right: 22px;
+            z-index: 20;
+        }
+
+        .site-logo img {
+            width: 80px;
+            height: auto;
+            filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.8));
+        }
+
+        /* Header stile Vigone Tech Team */
+        .page-header {
+            margin-bottom: 26px;
+            text-align: left;
+            text-shadow: 0 0 18px rgba(0, 0, 0, 0.8);
+        }
+
+        .page-header h1 {
+            font-size: 1.9rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .page-header h1 span {
+            color: var(--accent);
+        }
+
+        .page-header p {
+            margin-top: 6px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Griglia card */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            position: relative;
+            border-radius: 18px;
+            padding: 16px 16px 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(var(--bg-blur));
+            -webkit-backdrop-filter: blur(var(--bg-blur));
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background:
+                radial-gradient(circle at 0% 0%, var(--accent-soft), transparent 55%),
+                radial-gradient(circle at 100% 100%, rgba(0, 120, 255, 0.18), transparent 55%);
+            opacity: 0.35;
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        .card-content {
+            position: relative;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 14px;
+            z-index: 1;
+        }
+
+        .card img {
+            width: 90px;
+            height: 90px;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Badge */
+        .badge {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: var(--badge-bg);
+            color: var(--accent);
+            border: 1px solid rgba(0, 255, 200, 0.4);
+            margin-bottom: 10px;
+            z-index: 1;
+        }
+
+        .badge::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        /* Bottoni */
+        .btn-group {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            z-index: 1;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, color 0.12s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn {
+            background: var(--btn-bg);
+            color: #001015;
+            box-shadow: 0 10px 22px rgba(0, 255, 200, 0.35);
+        }
+
+        .btn-secondary {
+            background: var(--btn-bg-secondary);
+            color: var(--text-main);
+            border: 1px solid var(--btn-border-secondary);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.55);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        @media (max-width: 640px) {
+            .page-wrap {
+                padding-top: 70px;
+            }
+
+            .site-logo {
+                top: 10px;
+                right: 12px;
+            }
+
+            .site-logo img {
+                width: 64px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo angolo pagina -->
+    <div class="site-logo">
+        <img src="arc.png" alt="Vigone Tech Team Logo">
+    </div>
+
+    <main class="page-wrap">
+        <header class="page-header">
+            <h1><span>Vigone</span> Tech Team</h1>
+            <p>Selezione di giochi e progetti arcade della crew.</p>
+        </header>
+
+        <section class="card-grid">
+            <!-- Snake Game -->
+            <div class="card" data-category="game" data-id="snake-game">
+                <span class="badge badge-live">Gioco</span>
+                <div class="card-content">
+                    <img src="game.png" alt="Snake Game" loading="lazy"
+                         onerror="this.src='https://via.placeholder.com/90'">
+                    <div>
+                        <h3>Snake Game</h3>
+                        <p>Il grande classico arcade rivisitato in chiave moderna.</p>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <a class="btn" href="game.html">Gioca Ora</a>
+                </div>
+            </div>
+
+            <!-- Retro Highway Racer -->
+            <div class="card" data-category="game" data-id="retro-highway">
+                <span class="badge badge-live">Arcade</span>
+                <div class="card-content">
+                    <img src="https://mariokarttour.com/_nuxt/img/f78440e.png"
+                         alt="Retro Highway Racer" loading="lazy"
+                         onerror="this.src='https://via.placeholder.com/90'">
+                    <div>
+                        <h3>Retro Highway Racer</h3>
+                        <p>Sfreccia sull'autostrada in questo gioco arcade vintage.</p>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <a class="btn" href="https://drive.google.com/file/d/1ioJXolvKUpsxDL9oV8y7iiUVnqZfFdFb/view?usp=sharing" download>
+                        Scarica
+                    </a>
+                    <a class="btn btn-secondary" href="highwayracer.html">Gioca Web</a>
+                </div>
+            </div>
+
+            <!-- Retro Rocket Duel -->
+            <div class="card" data-category="game" data-id="rocket-duel">
+                <span class="badge badge-live">Multiplayer</span>
+                <div class="card-content">
+                    <img src="https://models.spriters-resource.com/media/preview_icons/342/345554.png?updated=1755512855"
+                         alt="Retro Rocket Duel" loading="lazy"
+                         onerror="this.src='https://via.placeholder.com/90'">
+                    <div>
+                        <h3>Retro Rocket Duel</h3>
+                        <p>Un avvincente duello spaziale tra razzi giocabile anche via browser!</p>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <a class="btn" href="https://drive.google.com/file/d/1jX7kI3XBOKGrHIvJUL3d1PfVC9qkXD86/view?usp=sharing"
+                       target="_blank" rel="noopener">
+                        Scarica
+                    </a>
+                    <a class="btn btn-secondary" href="razzi.html">Sfida Web</a>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

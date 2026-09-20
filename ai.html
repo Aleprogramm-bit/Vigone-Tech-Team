@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>AAI – Duck + Wiki</title>
+  <style>
+    body { background:#0d0d0f; color:#fff; font-family:Arial; margin:0; }
+    .box { max-width:700px; margin:40px auto; padding:20px; background:#1a1a1d; border-radius:10px; }
+    #chat { height:150px; overflow-y:auto; padding:10px; background:#111; border-radius:8px; }
+    .msg { margin:8px 0; padding:8px 12px; border-radius:6px; max-width:80%; }
+    .user { background:#2563eb; margin-left:auto; }
+    .ai { background:#333; margin-right:auto; }
+    #input { width:calc(100% - 90px); padding:10px; background:#222; border:none; border-radius:6px; color:#fff; }
+    #send { width:70px; padding:10px; background:#10b981; border:none; border-radius:6px; font-weight:bold; cursor:pointer; }
+    #results {
+      margin-top:15px;
+      padding:10px;
+      background:#111;
+      border-radius:8px;
+      font-size:14px;
+      max-height:300px;
+      overflow-y:auto;
+    }
+    #results a {
+      display:block;
+      color:#10b981;
+      text-decoration:none;
+      margin:6px 0;
+    }
+    #results a span {
+      display:block;
+      color:#9ca3af;
+      font-size:12px;
+    }
+    .section-title {
+      margin-top:10px;
+      font-weight:bold;
+      color:#10b981;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>AAI – DuckDuckGo + Wikipedia</h2>
+    <div id="chat">
+      <div class="msg ai">Scrivi una frase. Cerco su DuckDuckGo e Wikipedia.</div>
+    </div>
+
+    <input id="input" type="text" placeholder="Es: farming simulator 25">
+    <button id="send">Invia</button>
+
+    <div id="results">Nessun risultato ancora.</div>
+  </div>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+    const results = document.getElementById("results");
+
+    function addMsg(text, type) {
+      const div = document.createElement("div");
+      div.className = "msg " + type;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function duckSearch(query) {
+      const url = "https://api.duckduckgo.com/?q=" + encodeURIComponent(query) + "&format=json&no_redirect=1&no_html=1";
+      const res = await fetch(url);
+      return await res.json();
+    }
+
+    async function wikiSearch(query) {
+      const url = "https://it.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts&explaintext&titles=" + encodeURIComponent(query);
+      const res = await fetch(url);
+      const data = await res.json();
+      const pages = data.query.pages;
+      const id = Object.keys(pages)[0];
+      return pages[id].extract || null;
+    }
+
+    async function handle(text) {
+      const q = text.trim();
+      if (!q) return;
+
+      addMsg(q, "user");
+      addMsg("Cerco su DuckDuckGo + Wikipedia...", "ai");
+
+      results.innerHTML = "Sto cercando...";
+
+      try {
+        const duck = await duckSearch(q);
+        const wiki = await wikiSearch(q);
+
+        const topics = duck.RelatedTopics || [];
+        const realLinks = [];
+
+        for (const t of topics) {
+          if (t.FirstURL) realLinks.push(t);
+          if (realLinks.length >= 10) break;
+        }
+
+        results.innerHTML = "";
+
+        // --- WIKIPEDIA ---
+        const wikiTitle = document.createElement("div");
+        wikiTitle.className = "section-title";
+        wikiTitle.textContent = "Wikipedia:";
+        results.appendChild(wikiTitle);
+
+        if (wiki) {
+          const wikiBox = document.createElement("div");
+          wikiBox.textContent = wiki.slice(0, 600) + (wiki.length > 600 ? " [...]" : "");
+          results.appendChild(wikiBox);
+        } else {
+          const wikiBox = document.createElement("div");
+          wikiBox.textContent = "Nessuna voce trovata.";
+          results.appendChild(wikiBox);
+        }
+
+        // --- DUCKDUCKGO ---
+        const duckTitle = document.createElement("div");
+        duckTitle.className = "section-title";
+        duckTitle.textContent = "Primi 10 risultati DuckDuckGo:";
+        results.appendChild(duckTitle);
+
+        if (realLinks.length) {
+          realLinks.forEach(t => {
+            const a = document.createElement("a");
+            a.href = t.FirstURL;
+            a.target = "_blank";
+            a.textContent = t.Text || t.FirstURL;
+
+            const span = document.createElement("span");
+            span.textContent = t.FirstURL;
+
+            a.appendChild(span);
+            results.appendChild(a);
+          });
+        } else {
+          const msg = document.createElement("div");
+          msg.textContent = "Nessun risultato chiaro dall’API.";
+          results.appendChild(msg);
+
+          const link = document.createElement("a");
+          link.href = "https://duckduckgo.com/?q=" + encodeURIComponent(q);
+          link.target = "_blank";
+          link.className = "fallback-btn";
+          link.textContent = "Apri ricerca completa";
+          results.appendChild(link);
+        }
+
+      } catch (e) {
+        results.textContent = "Errore nella ricerca.";
+      }
+    }
+
+    send.addEventListener("click", () => handle(input.value));
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") handle(input.value);
+    });
+  </script>
+</body>
+</html>

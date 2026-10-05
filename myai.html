@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>AAI – Duck + Wiki</title>
+  <title>MyAI – DuckDuckGo + Wikipedia + Meteo</title>
   <style>
     body { background:#0d0d0f; color:#fff; font-family:Arial; margin:0; }
     .box { max-width:700px; margin:40px auto; padding:20px; background:#1a1a1d; border-radius:10px; }
@@ -41,12 +41,12 @@
 </head>
 <body>
   <div class="box">
-    <h2>AAI – DuckDuckGo + Wikipedia</h2>
+    <h2>MyAI – DuckDuckGo + Wikipedia + Meteo</h2>
     <div id="chat">
-      <div class="msg ai">Scrivi una frase. Cerco su DuckDuckGo e Wikipedia.</div>
+      <div class="msg ai">Scrivi una frase. Comandi: ricerca [testo] oppure meteo [provincia]</div>
     </div>
 
-    <input id="input" type="text" placeholder="Es: farming simulator 25">
+    <input id="input" type="text" placeholder="Es: ricerca farming simulator 25 oppure meteo torino">
     <button id="send">Invia</button>
 
     <div id="results">Nessun risultato ancora.</div>
@@ -81,13 +81,169 @@
       return pages[id].extract || null;
     }
 
-    async function handle(text) {
+    // ---- COORDINATE PROVINCE ITALIANE ----
+    const coords = {
+      "torino": { lat: 45.07, lon: 7.69 },
+      "vercelli": { lat: 45.32, lon: 8.42 },
+      "novara": { lat: 45.45, lon: 8.62 },
+      "cuneo": { lat: 44.39, lon: 7.54 },
+      "asti": { lat: 44.90, lon: 8.20 },
+      "alessandria": { lat: 44.91, lon: 8.61 },
+      "biella": { lat: 45.56, lon: 8.05 },
+      "verbano cusio ossola": { lat: 45.92, lon: 8.55 },
+      "aosta": { lat: 45.74, lon: 7.32 },
+      "milano": { lat: 45.46, lon: 9.19 },
+      "bergamo": { lat: 45.70, lon: 9.67 },
+      "brescia": { lat: 45.54, lon: 10.22 },
+      "como": { lat: 45.81, lon: 9.08 },
+      "cremona": { lat: 45.13, lon: 10.02 },
+      "lecco": { lat: 45.85, lon: 9.39 },
+      "lodi": { lat: 45.31, lon: 9.50 },
+      "mantova": { lat: 45.16, lon: 10.79 },
+      "monza e brianza": { lat: 45.58, lon: 9.27 },
+      "pavia": { lat: 45.19, lon: 9.16 },
+      "sondrio": { lat: 46.17, lon: 9.87 },
+      "varese": { lat: 45.82, lon: 8.83 },
+      "trento": { lat: 46.07, lon: 11.12 },
+      "bolzano": { lat: 46.49, lon: 11.34 },
+      "venezia": { lat: 45.44, lon: 12.33 },
+      "verona": { lat: 45.44, lon: 10.99 },
+      "vicenza": { lat: 45.55, lon: 11.54 },
+      "padova": { lat: 45.41, lon: 11.88 },
+      "treviso": { lat: 45.67, lon: 12.24 },
+      "belluno": { lat: 46.14, lon: 12.22 },
+      "rovigo": { lat: 45.07, lon: 11.79 },
+      "trieste": { lat: 45.65, lon: 13.77 },
+      "udine": { lat: 46.06, lon: 13.23 },
+      "pordenone": { lat: 45.95, lon: 12.66 },
+      "gorizia": { lat: 45.94, lon: 13.62 },
+      "genova": { lat: 44.40, lon: 8.93 },
+      "imperia": { lat: 43.89, lon: 8.03 },
+      "la spezia": { lat: 44.10, lon: 9.82 },
+      "savona": { lat: 44.31, lon: 8.48 },
+      "bologna": { lat: 44.49, lon: 11.34 },
+      "modena": { lat: 44.65, lon: 10.92 },
+      "reggio emilia": { lat: 44.70, lon: 10.63 },
+      "parma": { lat: 44.80, lon: 10.33 },
+      "piacenza": { lat: 45.05, lon: 9.70 },
+      "ferrara": { lat: 44.84, lon: 11.62 },
+      "ravenna": { lat: 44.42, lon: 12.20 },
+      "forli cesena": { lat: 44.22, lon: 12.04 },
+      "rimini": { lat: 44.06, lon: 12.56 },
+      "firenze": { lat: 43.77, lon: 11.25 },
+      "pisa": { lat: 43.71, lon: 10.40 },
+      "lucca": { lat: 43.84, lon: 10.50 },
+      "massa carrara": { lat: 44.04, lon: 10.14 },
+      "livorno": { lat: 43.55, lon: 10.31 },
+      "arezzo": { lat: 43.47, lon: 11.88 },
+      "siena": { lat: 43.32, lon: 11.33 },
+      "grosseto": { lat: 42.76, lon: 11.11 },
+      "pistoia": { lat: 43.93, lon: 10.91 },
+      "prato": { lat: 43.88, lon: 11.10 },
+      "perugia": { lat: 43.11, lon: 12.39 },
+      "terni": { lat: 42.56, lon: 12.64 },
+      "ancona": { lat: 43.61, lon: 13.51 },
+      "ascoli piceno": { lat: 42.85, lon: 13.57 },
+      "fermo": { lat: 43.16, lon: 13.72 },
+      "macerata": { lat: 43.30, lon: 13.45 },
+      "pesaro urbino": { lat: 43.91, lon: 12.91 },
+      "roma": { lat: 41.90, lon: 12.49 },
+      "latina": { lat: 41.47, lon: 12.90 },
+      "frosinone": { lat: 41.64, lon: 13.34 },
+      "rieti": { lat: 42.40, lon: 12.86 },
+      "viterbo": { lat: 42.42, lon: 12.11 },
+      "l'aquila": { lat: 42.35, lon: 13.39 },
+      "chieti": { lat: 42.35, lon: 14.17 },
+      "pescara": { lat: 42.46, lon: 14.21 },
+      "teramo": { lat: 42.66, lon: 13.70 },
+      "campobasso": { lat: 41.56, lon: 14.66 },
+      "isernia": { lat: 41.59, lon: 14.23 },
+      "napoli": { lat: 40.84, lon: 14.25 },
+      "salerno": { lat: 40.68, lon: 14.76 },
+      "avellino": { lat: 40.91, lon: 14.79 },
+      "benevento": { lat: 41.13, lon: 14.78 },
+      "caserta": { lat: 41.07, lon: 14.33 },
+      "bari": { lat: 41.12, lon: 16.87 },
+      "brindisi": { lat: 40.64, lon: 17.94 },
+      "foggia": { lat: 41.46, lon: 15.55 },
+      "lecce": { lat: 40.35, lon: 18.17 },
+      "taranto": { lat: 40.47, lon: 17.24 },
+      "barletta andria trani": { lat: 41.23, lon: 16.29 },
+      "potenza": { lat: 40.64, lon: 15.80 },
+      "matera": { lat: 40.67, lon: 16.60 },
+      "catanzaro": { lat: 38.91, lon: 16.59 },
+      "cosenza": { lat: 39.30, lon: 16.25 },
+      "crotone": { lat: 39.08, lon: 17.12 },
+      "reggio calabria": { lat: 38.11, lon: 15.65 },
+      "vibo valentia": { lat: 38.67, lon: 16.10 },
+      "palermo": { lat: 38.11, lon: 13.36 },
+      "messina": { lat: 38.19, lon: 15.55 },
+      "catania": { lat: 37.51, lon: 15.08 },
+      "agrigento": { lat: 37.31, lon: 13.58 },
+      "enna": { lat: 37.56, lon: 14.28 },
+      "ragusa": { lat: 36.93, lon: 14.73 },
+      "siracusa": { lat: 37.07, lon: 15.28 },
+      "trapani": { lat: 38.02, lon: 12.52 },
+      "calatanissetta": { lat: 37.49, lon: 14.06 },
+      "cagliari": { lat: 39.22, lon: 9.11 },
+      "sassari": { lat: 40.73, lon: 8.56 },
+      "nuoro": { lat: 40.32, lon: 9.33 },
+      "oristano": { lat: 39.90, lon: 8.59 },
+      "sud sardegna": { lat: 39.30, lon: 8.52 }
+    };
+
+    function descriviMeteo(code) {
+      if (code === 0) return "Soleggiato ☀️";
+      if (code === 1) return "Prevalentemente soleggiato 🌤️";
+      if (code === 2) return "Parzialmente nuvoloso ⛅";
+      if (code === 3) return "Molto nuvoloso ☁️";
+      if (code === 45 || code === 48) return "Nebbia 🌫️";
+      if ([51,53,55].includes(code)) return "Pioviggine 🌦️";
+      if ([61,63,65].includes(code)) return "Pioggia 🌧️";
+      if ([66,67].includes(code)) return "Pioggia gelata 🧊";
+      if ([71,73,75].includes(code)) return "Neve ❄️";
+      if (code === 77) return "Granelli di neve ❄️";
+      if ([80,81,82].includes(code)) return "Rovesci 🌧️";
+      if (code === 95) return "Temporale ⛈️";
+      if ([96,99].includes(code)) return "Temporale con grandine 🌩️";
+      return "Condizione meteo non riconosciuta";
+    }
+
+    async function getMeteo(localita) {
+      const key = localita.toLowerCase();
+      if (!coords[key]) return "Località non trovata bro.";
+
+      const { lat, lon } = coords[key];
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const meteo = data.current_weather;
+
+        let output = "";
+        const now = new Date();
+        const ora = now.toLocaleTimeString("it-IT");
+        const dataStr = now.toLocaleDateString("it-IT");
+
+        output += `<div><strong>Meteo ${localita} (${dataStr} ${ora})</strong></div>`;
+        output += `<div>Condizione: ${descriviMeteo(meteo.weathercode)}</div>`;
+        output += `<div>Temperatura: ${meteo.temperature}°C</div>`;
+        output += `<div>Vento: ${meteo.windspeed} km/h</div>`;
+        output += `<div>Direzione vento: ${meteo.winddirection}°</div>`;
+
+        return output;
+      } catch (err) {
+        return "Errore nel recupero meteo bro.";
+      }
+    }
+
+    async function handleRicerca(text) {
       const q = text.trim();
       if (!q) return;
 
       addMsg(q, "user");
       addMsg("Cerco su DuckDuckGo + Wikipedia...", "ai");
-
       results.innerHTML = "Sto cercando...";
 
       try {
@@ -139,7 +295,7 @@
           });
         } else {
           const msg = document.createElement("div");
-          msg.textContent = "Nessun risultato chiaro dall’API.";
+          msg.textContent = "Nessun risultato chiaro dall'API.";
           results.appendChild(msg);
 
           const link = document.createElement("a");
@@ -152,6 +308,37 @@
 
       } catch (e) {
         results.textContent = "Errore nella ricerca.";
+      }
+    }
+
+    async function handle(text) {
+      const q = text.trim().toLowerCase();
+      if (!q) return;
+
+      input.value = "";
+
+      if (q.startsWith("meteo ")) {
+        const localita = text.trim().slice(6).trim();
+        if (!localita) {
+          addMsg("meteo torino", "user");
+          addMsg("Scrivi: meteo [provincia]", "ai");
+          return;
+        }
+        addMsg("meteo " + localita, "user");
+        addMsg("Recupero meteo per " + localita + "...", "ai");
+        const meteoResult = await getMeteo(localita);
+        results.innerHTML = meteoResult;
+      } else if (q.startsWith("ricerca ")) {
+        const query = text.trim().slice(8).trim();
+        if (!query) {
+          addMsg("ricerca farming simulator", "user");
+          addMsg("Scrivi: ricerca [termine]", "ai");
+          return;
+        }
+        handleRicerca(query);
+      } else {
+        addMsg(text, "user");
+        addMsg("Comandi disponibili: ricerca [testo] oppure meteo [provincia]", "ai");
       }
     }
 

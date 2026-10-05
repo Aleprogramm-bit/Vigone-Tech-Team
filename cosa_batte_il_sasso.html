@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosa Batte Il Sasso?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+        
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .pop-in {
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .slide-up {
+            animation: slideUp 0.3s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Focus rings and clean inputs */
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Hide scrollbar for horizontal timeline but keep functionality */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Custom scrollbar for modal */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center relative p-4">
+
+    <!-- Header / Scoreboard -->
+    <header class="absolute top-0 left-0 w-full p-4 flex justify-between items-center z-10 max-w-4xl mx-auto right-0">
+        <div class="flex items-center gap-3 bg-white/90 backdrop-blur-md px-5 py-2 rounded-2xl shadow-sm border border-slate-200">
+            <span class="text-3xl drop-shadow-sm">🔥</span>
+            <div class="flex flex-col">
+                <span class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Serie Attuale</span>
+                <span id="currentScore" class="text-2xl font-black leading-none text-slate-800">0</span>
+            </div>
+        </div>
+        <button id="viewRecordBtn" class="flex items-center gap-3 bg-white/90 backdrop-blur-md px-5 py-2 rounded-2xl shadow-sm border border-slate-200 hover:scale-105 hover:shadow-md transition-all cursor-pointer">
+            <div class="flex flex-col text-right">
+                <span class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Miglior Record</span>
+                <span id="bestScore" class="text-2xl font-black leading-none text-slate-800">0</span>
+            </div>
+            <span class="text-3xl drop-shadow-sm">🏆</span>
+        </button>
+    </header>
+
+    <!-- Main Game Area -->
+    <main id="gameContainer" class="w-full max-w-2xl mx-auto flex flex-col items-center justify-center mt-20 transition-all duration-300">
+        
+        <!-- Timeline Current Chain -->
+        <div id="chainTimeline" class="w-full flex overflow-x-auto py-3 px-2 mb-6 scrollbar-hide items-center justify-start sm:justify-center whitespace-nowrap min-h-[50px] mask-image-linear">
+            <!-- Gli elementi della catena verranno inseriti qui -->
+        </div>
+
+        <div id="questionContainer" class="text-center w-full mb-8 pop-in">
+            <h2 class="text-xl sm:text-2xl font-semibold text-gray-500 mb-3 uppercase tracking-wide text-sm">Cosa batte...</h2>
+            
+            <div class="flex flex-col items-center justify-center">
+                <div id="defenderEmoji" class="text-7xl sm:text-8xl mb-4 drop-shadow-lg transition-transform hover:scale-110 select-none">🪨</div>
+                <h1 id="defenderText" class="text-4xl sm:text-6xl font-black text-slate-800 break-words capitalize tracking-tight px-8 py-3 bg-white/90 backdrop-blur-sm rounded-[2rem] inline-block shadow-md border-b-4 border-slate-200">
+                    Sasso
+                </h1>
+            </div>
+            
+            <h2 class="text-2xl sm:text-3xl font-black text-gray-400 mt-6">?</h2>
+        </div>
+
+        <!-- Input Area -->
+        <div id="inputArea" class="w-full relative px-4 sm:px-0">
+            <form id="gameForm" class="flex flex-col sm:flex-row gap-3 w-full">
+                <input 
+                    type="text" 
+                    id="challengerInput" 
+                    placeholder="Scrivi qualcosa (es. Carta)..." 
+                    class="w-full text-center sm:text-left text-2xl sm:text-3xl p-5 sm:p-6 rounded-2xl border-[3px] border-slate-200 shadow-inner bg-white/90 focus:bg-white placeholder-gray-400 font-bold transition-all"
+                    autocomplete="off"
+                    required
+                >
+                <button 
+                    type="submit" 
+                    id="submitBtn"
+                    class="bg-blue-600 hover:bg-blue-700 text-white text-xl font-black uppercase tracking-wide py-5 px-8 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 active:translate-y-0 flex-shrink-0"
+                >
+                    Sfidalo!
+                </button>
+            </form>
+        </div>
+
+        <!-- Result Overlay / Message -->
+        <div id="resultArea" class="hidden w-full flex-col items-center mt-8 p-8 rounded-[2rem] text-center slide-up shadow-lg">
+            <div id="resultEmoji" class="text-6xl mb-4 drop-shadow-md"></div>
+            <h3 id="resultTitle" class="text-3xl sm:text-4xl font-black mb-3"></h3>
+            <p id="resultReason" class="text-lg sm:text-xl font-semibold text-gray-700 mb-8 max-w-lg"></p>
+            
+            <button id="nextBtn" class="hidden bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 px-10 rounded-2xl shadow-md hover:shadow-lg transition-all text-xl uppercase tracking-wide">
+                Continua 👉
+            </button>
+            <button id="restartBtn" class="hidden bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-10 rounded-2xl shadow-md hover:shadow-lg transition-all text-xl uppercase tracking-wide">
+                Riprova 🔄
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="hidden fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
+        <div class="text-6xl animate-bounce mb-4">🤔</div>
+        <div class="w-16 h-16 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
+        <p class="mt-4 font-bold text-slate-600 text-lg">Il Giudice IA sta riflettendo...</p>
+    </div>
+
+    <!-- Record Modal -->
+    <div id="recordModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-6 sm:p-8 transform scale-95 transition-transform duration-300 flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-800 flex items-center gap-2">🏆 Miglior Serie</h2>
+                <button id="closeModalBtn" class="text-slate-400 hover:text-slate-700 text-3xl font-bold bg-slate-100 hover:bg-slate-200 w-10 h-10 rounded-full flex items-center justify-center transition-colors">&times;</button>
+            </div>
+            
+            <!-- Best score highlight inside modal -->
+            <div class="text-center bg-blue-50 text-blue-800 rounded-2xl p-4 mb-6 border border-blue-100">
+                <span class="block text-sm font-bold uppercase tracking-wider mb-1">Punteggio Record</span>
+                <span class="text-4xl font-black" id="modalBestScoreDisplay">0</span>
+            </div>
+
+            <div id="bestChainContainer" class="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar pb-4">
+                <!-- Record items injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let currentDefender = "Sasso";
+        let currentDefenderEmoji = "🪨";
+        let currentChallenger = "";
+        let currentChallengerEmoji = "";
+        let score = 0;
+        
+        // Load persistency
+        let bestScore = parseInt(localStorage.getItem('cosaBatteIlSasso_best')) || 0;
+        let bestChain = JSON.parse(localStorage.getItem('cosaBatteIlSasso_bestChain')) || [];
+        let currentChain = [{ word: "Sasso", emoji: "🪨" }];
+        
+        let isProcessing = false;
+
+        // DOM Elements
+        const currentScoreEl = document.getElementById('currentScore');
+        const bestScoreEl = document.getElementById('bestScore');
+        const defenderTextEl = document.getElementById('defenderText');
+        const defenderEmojiEl = document.getElementById('defenderEmoji');
+        const challengerInput = document.getElementById('challengerInput');
+        const gameForm = document.getElementById('gameForm');
+        const inputArea = document.getElementById('inputArea');
+        const resultArea = document.getElementById('resultArea');
+        const resultEmoji = document.getElementById('resultEmoji');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultReason = document.getElementById('resultReason');
+        const nextBtn = document.getElementById('nextBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const gameContainer = document.getElementById('gameContainer');
+        const chainTimeline = document.getElementById('chainTimeline');
+        
+        // Modal Elements
+        const viewRecordBtn = document.getElementById('viewRecordBtn');
+        const recordModal = document.getElementById('recordModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const bestChainContainer = document.getElementById('bestChainContainer');
+        const modalBestScoreDisplay = document.getElementById('modalBestScoreDisplay');
+
+        // Initialize UI
+        bestScoreEl.textContent = bestScore;
+        renderChain(currentChain, chainTimeline, false);
+
+        // Rendering helper for the word chains
+        function renderChain(chain, containerEl, isVertical = false) {
+            containerEl.innerHTML = '';
+            
+            if(chain.length === 0) {
+                 containerEl.innerHTML = '<p class="text-slate-400 font-semibold text-center mt-6">Nessun record ancora stabilito. Gioca per crearne uno!</p>';
+                 return;
+            }
+            
+            chain.forEach((item, index) => {
+                const wrapper = document.createElement('div');
+                
+                if (isVertical) {
+                    // Stile per la Cronologia nel Modal (Lista verticale)
+                    wrapper.className = 'flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors';
+                    wrapper.innerHTML = `
+                        <div class="text-4xl w-12 text-center drop-shadow-sm">${item.emoji}</div>
+                        <div class="text-xl font-bold text-slate-700 capitalize flex-1 break-words">${item.word}</div>
+                        <div class="text-slate-300 font-black text-2xl">#${index + 1}</div>
+                    `;
+                    containerEl.appendChild(wrapper);
+                    
+                    if (index < chain.length - 1) {
+                        const arrow = document.createElement('div');
+                        arrow.className = 'flex justify-center py-1 text-slate-300 text-xl';
+                        arrow.innerHTML = '⬇️';
+                        containerEl.appendChild(arrow);
+                    }
+                } else {
+                    // Stile per la Timeline in alto (Scorrimento orizzontale)
+                    wrapper.className = 'inline-flex flex-shrink-0 items-center gap-2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-sm text-sm font-bold border border-slate-200 pop-in';
+                    wrapper.innerHTML = `<span class="text-lg">${item.emoji}</span><span class="capitalize text-slate-700">${item.word}</span>`;
+                    containerEl.appendChild(wrapper);
+                    
+                    if (index < chain.length - 1) {
+                        const arrow = document.createElement('span');
+                        arrow.className = 'text-slate-400 text-sm font-black mx-2 flex-shrink-0';
+                        arrow.innerHTML = '>';
+                        containerEl.appendChild(arrow);
+                    }
+                }
+            });
+            
+            if(!isVertical) {
+                // Scorri sempre alla fine della timeline orizzontale
+                containerEl.scrollLeft = containerEl.scrollWidth;
+            }
+        }
+
+        async function fetchWithRetry(url, options, maxRetries = 3) {
+            let delay = 1000;
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) {
+                        return await response.json();
+                    } else if (response.status === 429) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2;
+                    } else {
+                         return await response.json(); 
+                    }
+                } catch (e) {
+                    if (i === maxRetries - 1) throw e;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+            throw new Error("Max retries reached");
+        }
+
+        async function evaluateMatch(challenger, defender) {
+            const c = challenger.trim();
+            const d = defender.trim();
+
+            if (c.toLowerCase() === d.toLowerCase()) return { win: false, reason: "Hai letteralmente inserito la stessa cosa. Sii più creativo!", emoji: "🤦‍♂️" };
+            if (c.length < 2) return { win: false, reason: "Questa parola è troppo corta per avere un impatto sull'universo.", emoji: "🤏" };
+
+            const systemPrompt = `Sei il giudice supremo e sarcastico del gioco 'Cosa batte il Sasso?'. 
+Il giocatore ('Sfidante') inserisce una parola per cercare di battere l'oggetto attuale ('Difensore').
+Devi decidere se lo 'Sfidante' batte oggettivamente, logicamente o per folklore il 'Difensore' (es. l'Acqua batte il Fuoco, la Forbice taglia la Carta, una Fornace fonde le Forbici).
+Rispondi in JSON fornendo l'esito (win), una spiegazione divertente (reason) e UN'EMOJI SINGOLA (emoji) che rappresenta lo Sfidante.`;
+            
+            const userQuery = `Sfidante: "${c}" \nDifensore: "${d}"`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "win": { "type": "BOOLEAN" },
+                            "reason": { "type": "STRING", "description": "Spiegazione breve, logica e molto divertente in italiano (max 15-20 parole)." },
+                            "emoji": { "type": "STRING", "description": "Una singola emoji appropriata che rappresenta la parola dello Sfidante." }
+                        },
+                        required: ["win", "reason", "emoji"]
+                    }
+                }
+            };
+
+            // ATTENZIONE: Per usare questo gioco sul tuo sito, devi inserire la tua API Key di Google qui sotto
+            // Puoi ottenerne una gratuitamente su https://aistudio.google.com/
+            const apiKey = "AQ.Ab8RN6J2poibNgXmeeIKwi2aAGoHobzZU0ZVv6KK-ftTZmlLIg"; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            try {
+                const result = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                // Controllo se l'API ha restituito un errore (es. API Key mancante o non valida)
+                if (result.error) {
+                    console.error("Errore API Gemini:", result.error);
+                    return { win: false, reason: "Manca la chiave API! Se sei sul tuo sito, devi inserire la tua API Key nel codice.", emoji: "🔑" };
+                }
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    return JSON.parse(text);
+                } else {
+                    return { win: false, reason: "L'IA ha restituito un formato strano, forse la parola ha fatto scattare i filtri di sicurezza.", emoji: "🛡️" };
+                }
+            } catch (error) {
+                console.error("Errore di rete:", error);
+                return { win: false, reason: "Errore cosmico nella connessione neurale. Internet funziona?", emoji: "⚡" };
+            }
+        }
+
+        // Form Submission
+        gameForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (isProcessing) return;
+
+            const inputVal = challengerInput.value.trim();
+            if (!inputVal) return;
+
+            isProcessing = true;
+            challengerInput.blur(); // Nascondi tastiera su mobile
+            
+            // Mostra caricamento
+            loadingIndicator.classList.remove('hidden');
+
+            const result = await evaluateMatch(inputVal, currentDefender);
+            handleResult(result, inputVal);
+            
+            loadingIndicator.classList.add('hidden');
+            isProcessing = false;
+        });
+
+        function handleResult(result, challenger) {
+            inputArea.classList.add('hidden');
+            resultArea.classList.remove('hidden');
+            
+            // Re-trigger animazione
+            resultArea.classList.remove('slide-up');
+            void resultArea.offsetWidth; 
+            resultArea.classList.add('slide-up');
+
+            resultReason.textContent = result.reason;
+            currentChallenger = challenger;
+            currentChallengerEmoji = result.emoji || "❓";
+
+            if (result.win) {
+                // Vittoria
+                score++;
+                currentScoreEl.textContent = score;
+                
+                // Aggiorna catena in tempo reale
+                currentChain.push({ word: currentChallenger, emoji: currentChallengerEmoji });
+                renderChain(currentChain, chainTimeline, false);
+                
+                resultArea.className = "flex w-full flex-col items-center mt-8 p-8 rounded-[2rem] text-center slide-up bg-emerald-50 border-4 border-emerald-200 text-emerald-900 shadow-xl";
+                resultEmoji.textContent = "🎉";
+                resultTitle.textContent = "ESATTO!";
+                
+                nextBtn.classList.remove('hidden');
+                restartBtn.classList.add('hidden');
+                
+                currentScoreEl.parentElement.parentElement.classList.add('pop-in');
+                setTimeout(() => currentScoreEl.parentElement.parentElement.classList.remove('pop-in'), 400);
+
+            } else {
+                // Sconfitta
+                gameContainer.classList.add('shake');
+                setTimeout(() => gameContainer.classList.remove('shake'), 500);
+
+                if (score > bestScore) {
+                    // Nuovo record
+                    bestScore = score;
+                    bestScoreEl.textContent = bestScore;
+                    localStorage.setItem('cosaBatteIlSasso_best', bestScore);
+                    
+                    // Salva la miglior catena
+                    bestChain = [...currentChain];
+                    localStorage.setItem('cosaBatteIlSasso_bestChain', JSON.stringify(bestChain));
+                }
+
+                resultArea.className = "flex w-full flex-col items-center mt-8 p-8 rounded-[2rem] text-center slide-up bg-red-50 border-4 border-red-200 text-red-900 shadow-xl";
+                resultEmoji.textContent = "💀";
+                resultTitle.textContent = "GAME OVER";
+                
+                nextBtn.classList.add('hidden');
+                restartBtn.classList.remove('hidden');
+            }
+        }
+
+        // Bottone Continua
+        nextBtn.addEventListener('click', () => {
+            currentDefender = currentChallenger;
+            currentDefenderEmoji = currentChallengerEmoji;
+            
+            defenderTextEl.textContent = currentDefender;
+            defenderEmojiEl.textContent = currentDefenderEmoji;
+            
+            // Re-trigger animazioni
+            defenderTextEl.parentElement.classList.remove('pop-in');
+            void defenderTextEl.parentElement.offsetWidth;
+            defenderTextEl.parentElement.classList.add('pop-in');
+
+            resetUI();
+        });
+
+        // Bottone Riprova
+        restartBtn.addEventListener('click', () => {
+            currentDefender = "Sasso";
+            currentDefenderEmoji = "🪨";
+            
+            defenderTextEl.textContent = currentDefender;
+            defenderEmojiEl.textContent = currentDefenderEmoji;
+            
+            score = 0;
+            currentScoreEl.textContent = score;
+            currentChain = [{ word: "Sasso", emoji: "🪨" }];
+            renderChain(currentChain, chainTimeline, false);
+            
+            defenderTextEl.parentElement.classList.remove('pop-in');
+            void defenderTextEl.parentElement.offsetWidth;
+            defenderTextEl.parentElement.classList.add('pop-in');
+
+            resetUI();
+        });
+
+        function resetUI() {
+            resultArea.classList.add('hidden');
+            inputArea.classList.remove('hidden');
+            challengerInput.value = "";
+            if (window.innerWidth > 768) {
+                challengerInput.focus();
+            }
+        }
+
+        // Gestione Modal Record
+        viewRecordBtn.addEventListener('click', () => {
+            modalBestScoreDisplay.textContent = bestScore;
+            renderChain(bestChain, bestChainContainer, true);
+            
+            recordModal.classList.remove('hidden');
+            // Timeout per far scattare la transizione opacity
+            setTimeout(() => {
+                recordModal.classList.remove('opacity-0');
+                recordModal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        });
+
+        function closeModal() {
+            recordModal.classList.add('opacity-0');
+            recordModal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                recordModal.classList.add('hidden');
+            }, 300);
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        recordModal.addEventListener('click', (e) => {
+            if(e.target === recordModal) closeModal();
+        });
+
+        // Auto-focus al caricamento (solo desktop)
+        window.onload = () => {
+            if (window.innerWidth > 768) {
+                challengerInput.focus();
+            }
+        };
+
+    </script>
+</body>
+</html>

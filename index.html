@@ -12,101 +12,66 @@
     <meta name="description" content="Il portale ufficiale del VigoneTech Team: scopri software, progetti open-source, giochi e servizi digitali.">
     <meta name="keywords" content="VigoneTech, LorenzoOS, giochi web, software, servizi tech, Vigone Tech Team, vigonetechteam">
 
-<!-- Open Graph / Facebook / WhatsApp / Telegram -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="VigoneTech Team – Next-Gen Portal">
-<meta property="og:description" content="Esplora il portale con giochi, sistemi operativi e progetti firmati VigoneTech Team.">
-<meta property="og:image" content="https://aleprogramm-bit.github.io/Vigone-Tech-Team/techteam.jpg">
-<meta property="og:url" content="https://aleprogramm-bit.github.io/Vigone-Tech-Team/">
+    <!-- Open Graph / Facebook / WhatsApp / Telegram -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="VigoneTech Team – Next-Gen Portal">
+    <meta property="og:description" content="Esplora il portale con giochi, sistemi operativi e progetti firmati VigoneTech Team.">
+    <meta property="og:image" content="https://aleprogramm-bit.github.io/Vigone-Tech-Team/techteam.jpg">
+    <meta property="og:url" content="https://aleprogramm-bit.github.io/Vigone-Tech-Team/">
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="VigoneTech Team – Next-Gen Portal">
-<meta name="twitter:description" content="Esplora il portale con giochi, sistemi operativi e progetti firmati VigoneTech Team.">
-<meta name="twitter:image" content="https://aleprogramm-bit.github.io/Vigone-Tech-Team/techteam.jpg">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="VigoneTech Team – Next-Gen Portal">
+    <meta name="twitter:description" content="Esplora il portale con giochi, sistemi operativi e progetti firmati VigoneTech Team.">
+    <meta name="twitter:image" content="https://aleprogramm-bit.github.io/Vigone-Tech-Team/techteam.jpg">
 
     <!-- POPUP FARMING SIMULATOR + POPUP NINTENDO WII -->
-<style>
-  .vtt-popup {
-    position: fixed;
-    right: -320px;
-    top: 20%;
-    width: 300px;
-    background: #111;
-    color: #eee;
-    border-left: 3px solid #0f0;
-    padding: 20px;
-    box-shadow: -4px 4px 15px rgba(0,0,0,0.4);
-    transition: right 0.5s ease;
-    z-index: 9999;
-    font-family: Arial;
-  }
+    <style>
+      .vtt-popup {
+        position: fixed;
+        right: -320px;
+        top: 20%;
+        width: 300px;
+        background: #111;
+        color: #eee;
+        border-left: 3px solid #0f0;
+        padding: 20px;
+        box-shadow: -4px 4px 15px rgba(0,0,0,0.4);
+        transition: right 0.5s ease;
+        z-index: 9999;
+        font-family: Arial;
+      }
 
-  .vtt-popup.show {
-    right: 0;
-  }
+      .vtt-popup.show {
+        right: 0;
+      }
 
-  .vtt-img {
-    width: 100%;
-    border-radius: 6px;
-    margin-bottom: 10px;
-  }
+      .vtt-img {
+        width: 100%;
+        border-radius: 6px;
+        margin-bottom: 10px;
+      }
 
-  .vtt-btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 15px;
-    background: #0f0;
-    color: #000;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 4px;
-  }
+      .vtt-btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 15px;
+        background: #0f0;
+        color: #000;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 4px;
+      }
 
-  .vtt-close {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 22px;
-    color: #eee;
-  }
-</style>
-
-<!-- POPUP 1 - Farming Simulator -->
-<div id="popup1" class="vtt-popup">
-  <span class="vtt-close" onclick="closePopup1()">×</span>
-  <img src="b.png" class="vtt-img">
-  <h3>Vuoi confrontare i vari Farming Simulator?</h3>
-  <a href="https://aleprogramm-bit.github.io/Farming-Simulator-web/" class="vtt-btn">APRI</a>
-</div>
-
-<!-- POPUP 2 - Nintendo Wii -->
-<div id="popup2" class="vtt-popup">
-  <span class="vtt-close" onclick="closePopup2()">×</span>
-  <img src="c.png" class="vtt-img">
-  <h3>Oppure ti va di vedere una sorpresa che arriva dritta dalla Nintendo Wii?</h3>
-  <a href="https://vigonetechteam-bit.github.io/Manuale-Elettronico-Canale-Notizie-Original-WAD-File-Dump-/startup_ita.html" class="vtt-btn">APRI</a>
-</div>
-
-<script>
-  // Mostra il primo popup dopo 3 secondi
-  setTimeout(() => {
-    document.getElementById('popup1').classList.add('show');
-  }, 3000);
-
-  function closePopup1() {
-    document.getElementById('popup1').classList.remove('show');
-    setTimeout(() => {
-      document.getElementById('popup2').classList.add('show');
-    }, 100);
-  }
-
-  function closePopup2() {
-    document.getElementById('popup2').classList.remove('show');
-  }
-</script>
-
+      .vtt-close {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 22px;
+        color: #eee;
+      }
+    </style>
 
     <style>
         /* TEMA SCURO (DEFAULT) */
@@ -390,6 +355,40 @@
 
 <body>
 
+<!-- POPUP 1 - Farming Simulator -->
+<div id="popup1" class="vtt-popup">
+  <span class="vtt-close" onclick="closePopup1()">×</span>
+  <img src="b.png" class="vtt-img" alt="Farming Simulator">
+  <h3>Vuoi confrontare i vari Farming Simulator?</h3>
+  <a href="https://aleprogramm-bit.github.io/Farming-Simulator-web/" class="vtt-btn">APRI</a>
+</div>
+
+<!-- POPUP 2 - Nintendo Wii -->
+<div id="popup2" class="vtt-popup">
+  <span class="vtt-close" onclick="closePopup2()">×</span>
+  <img src="c.png" class="vtt-img" alt="Nintendo Wii">
+  <h3>Oppure ti va di vedere una sorpresa che arriva dritta dalla Nintendo Wii?</h3>
+  <a href="https://vigonetechteam-bit.github.io/Manuale-Elettronico-Canale-Notizie-Original-WAD-File-Dump-/startup_ita.html" class="vtt-btn">APRI</a>
+</div>
+
+<script>
+  // Mostra il primo popup dopo 3 secondi
+  setTimeout(() => {
+    document.getElementById('popup1').classList.add('show');
+  }, 3000);
+
+  function closePopup1() {
+    document.getElementById('popup1').classList.remove('show');
+    setTimeout(() => {
+      document.getElementById('popup2').classList.add('show');
+    }, 100);
+  }
+
+  function closePopup2() {
+    document.getElementById('popup2').classList.remove('show');
+  }
+</script>
+
 <div class="announcement-bar">
     <span class="status-dot" title="Tutti i servizi attivi"></span>
     <span>Novità</span> Prova i nostri nuovi giochi Retro Arcade giocabili direttamente via browser!
@@ -540,6 +539,16 @@
             </div>
             <div class="btn-group">
                 <a class="btn" href="vigonetechteam.pdf">Leggi Ora</a>
+            </div>
+        </div>
+
+        <!-- SCHEDA MYINSTANTS INTEGRATA -->
+        <div class="card" data-id="filippo-stai-zitto">
+            <span class="badge badge-beta">Audio</span>
+            <div class="card-content">
+                <h3>Filippo Stai Zitto</h3>
+                <p style="margin-bottom: 12px;">Pulsante audio istantaneo</p>
+                <iframe width="110" height="200" src="https://www.myinstants.com/instant/filippo-stai-zitto-18949/embed/" frameborder="0" scrolling="no" style="border-radius: 8px; border: none;"></iframe>
             </div>
         </div>
         

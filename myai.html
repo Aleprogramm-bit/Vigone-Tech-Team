@@ -2,51 +2,134 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>MyAI – DuckDuckGo + Wikipedia + Meteo</title>
+  <title>MyAI – Meteo 14 giorni</title>
   <style>
-    body { background:#0d0d0f; color:#fff; font-family:Arial; margin:0; }
-    .box { max-width:700px; margin:40px auto; padding:20px; background:#1a1a1d; border-radius:10px; }
-    #chat { height:150px; overflow-y:auto; padding:10px; background:#111; border-radius:8px; }
-    .msg { margin:8px 0; padding:8px 12px; border-radius:6px; max-width:80%; }
-    .user { background:#2563eb; margin-left:auto; }
-    .ai { background:#333; margin-right:auto; }
-    #input { width:calc(100% - 90px); padding:10px; background:#222; border:none; border-radius:6px; color:#fff; }
-    #send { width:70px; padding:10px; background:#10b981; border:none; border-radius:6px; font-weight:bold; cursor:pointer; }
+    body {
+      background: #0d0d0f;
+      color: #0f0;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .box {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #1a1a1d;
+      border-radius: 12px;
+      border: 1px solid #0f0;
+      box-shadow: 0 0 12px rgba(0,255,0,0.3);
+    }
+
+    #chat {
+      height: 180px;
+      overflow-y: auto;
+      padding: 12px;
+      background: #111;
+      border-radius: 8px;
+      border: 1px solid #0f0;
+      margin-bottom: 12px;
+    }
+
+    .msg {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 6px;
+      max-width: 80%;
+      line-height: 1.4;
+    }
+
+    .user {
+      background: #2563eb;
+      margin-left: auto;
+      color: white;
+    }
+
+    .ai {
+      background: #333;
+      margin-right: auto;
+      color: #0f0;
+    }
+
+    #input {
+      width: calc(100% - 90px);
+      padding: 10px;
+      background: #222;
+      border: 1px solid #0f0;
+      border-radius: 6px;
+      color: #0f0;
+      font-size: 16px;
+      outline: none;
+    }
+
+    #send {
+      width: 80px;
+      padding: 10px;
+      background: #10b981;
+      border: none;
+      border-radius: 6px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
     #results {
-      margin-top:15px;
-      padding:10px;
-      background:#111;
-      border-radius:8px;
-      font-size:14px;
-      max-height:300px;
-      overflow-y:auto;
+      margin-top: 15px;
+      padding: 12px;
+      background: #111;
+      border-radius: 8px;
+      border: 1px solid #0f0;
+      max-height: 500px;
+      overflow-y: auto;
+      color: #0f0;
+      font-size: 14px;
+      line-height: 1.6;
     }
+
     #results a {
-      display:block;
-      color:#10b981;
-      text-decoration:none;
-      margin:6px 0;
+      display: block;
+      color: #10b981;
+      text-decoration: none;
+      margin: 6px 0;
     }
+
     #results a span {
-      display:block;
-      color:#9ca3af;
-      font-size:12px;
+      display: block;
+      font-size: 12px;
+      color: #9ca3af;
     }
+
     .section-title {
-      margin-top:10px;
-      font-weight:bold;
-      color:#10b981;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #10b981;
+    }
+
+    .day-separator {
+      margin-top: 12px;
+      margin-bottom: 6px;
+      color: red;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .meteo-row {
+      color: #0f0;
+      margin: 2px 0;
+      font-size: 13px;
     }
   </style>
 </head>
 <body>
   <div class="box">
-    <h2>MyAI – DuckDuckGo + Wikipedia + Meteo</h2>
+    <h2>MyAI – Meteo 14 giorni</h2>
+
     <div id="chat">
-      <div class="msg ai">Scrivi una frase. Comandi: ricerca [testo] oppure meteo [provincia]</div>
+      <div class="msg ai">Scrivi: meteo [provincia] oppure ricerca [testo]</div>
     </div>
 
-    <input id="input" type="text" placeholder="Es: ricerca farming simulator 25 oppure meteo torino">
+    <input id="input" type="text" placeholder="Es: meteo torino o ricerca gaming">
     <button id="send">Invia</button>
 
     <div id="results">Nessun risultato ancora.</div>
@@ -81,7 +164,6 @@
       return pages[id].extract || null;
     }
 
-    // ---- COORDINATE PROVINCE ITALIANE ----
     const coords = {
       "torino": { lat: 45.07, lon: 7.69 },
       "vercelli": { lat: 45.32, lon: 8.42 },
@@ -184,7 +266,7 @@
       "ragusa": { lat: 36.93, lon: 14.73 },
       "siracusa": { lat: 37.07, lon: 15.28 },
       "trapani": { lat: 38.02, lon: 12.52 },
-      "calatanissetta": { lat: 37.49, lon: 14.06 },
+      "caltanissetta": { lat: 37.49, lon: 14.06 },
       "cagliari": { lat: 39.22, lon: 9.11 },
       "sassari": { lat: 40.73, lon: 8.56 },
       "nuoro": { lat: 40.32, lon: 9.33 },
@@ -192,7 +274,7 @@
       "sud sardegna": { lat: 39.30, lon: 8.52 }
     };
 
-    function descriviMeteo(code) {
+    function descriviMeteo(code, rain, snow) {
       if (code === 0) return "Soleggiato ☀️";
       if (code === 1) return "Prevalentemente soleggiato 🌤️";
       if (code === 2) return "Parzialmente nuvoloso ⛅";
@@ -206,49 +288,78 @@
       if ([80,81,82].includes(code)) return "Rovesci 🌧️";
       if (code === 95) return "Temporale ⛈️";
       if ([96,99].includes(code)) return "Temporale con grandine 🌩️";
-      return "Condizione meteo non riconosciuta";
+      return "Condizione non riconosciuta";
     }
 
     async function getMeteo(localita) {
       const key = localita.toLowerCase();
-      if (!coords[key]) return "Località non trovata bro.";
+      if (!coords[key]) return "Località non trovata.";
 
       const { lat, lon } = coords[key];
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`;
+      const url =
+        "https://api.open-meteo.com/v1/forecast?" +
+        "latitude=" + lat + "&longitude=" + lon +
+        "&current_weather=true" +
+        "&hourly=temperature_2m,weathercode,rain,snowfall" +
+        "&forecast_days=14" +
+        "&timezone=auto";
 
       try {
         const res = await fetch(url);
         const data = await res.json();
-        const meteo = data.current_weather;
+
+        if (!data.hourly || !data.hourly.time) {
+          return "Errore nel recupero meteo: dati mancanti.";
+        }
+
+        const now = new Date();
+        const current = data.current_weather || {};
+        const ore = data.hourly.time;
+        const temp = data.hourly.temperature_2m;
+        const codes = data.hourly.weathercode;
+        const rain = data.hourly.rain;
+        const snow = data.hourly.snowfall;
 
         let output = "";
-        const now = new Date();
-        const ora = now.toLocaleTimeString("it-IT");
-        const dataStr = now.toLocaleDateString("it-IT");
+        output += `<div class="section-title">Meteo di ${localita}</div>`;
+        output += `<div class="meteo-row">Data: ${now.toLocaleDateString("it-IT")} • Ora: ${now.toLocaleTimeString("it-IT")}</div>`;
+        output += `<div class="meteo-row">Attuale: ${descriviMeteo(current.weathercode ?? 0, 0, 0)}</div>`;
+        output += `<div class="meteo-row">Temperatura: ${current.temperature ?? "-"}°C</div>`;
+        output += `<div class="meteo-row">Vento: ${current.windspeed ?? "-"} km/h</div>`;
+        output += `<br>`;
 
-        output += `<div><strong>Meteo ${localita} (${dataStr} ${ora})</strong></div>`;
-        output += `<div>Condizione: ${descriviMeteo(meteo.weathercode)}</div>`;
-        output += `<div>Temperatura: ${meteo.temperature}°C</div>`;
-        output += `<div>Vento: ${meteo.windspeed} km/h</div>`;
-        output += `<div>Direzione vento: ${meteo.winddirection}°</div>`;
+        let currentDay = "";
+        for (let i = 0; i < ore.length; i++) {
+          const dt = new Date(ore[i]);
+          const giorno = dt.toLocaleDateString("it-IT");
+          const oraStr = dt.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+
+          if (giorno !== currentDay) {
+            currentDay = giorno;
+            output += `<div class="day-separator">=== ${giorno} ===</div>`;
+          }
+
+          const descr = descriviMeteo(codes[i], rain[i], snow[i]);
+          const rainText = rain[i] && rain[i] > 0 ? ` • 🌧️ ${Number(rain[i]).toFixed(1)} mm` : "";
+          const snowText = snow[i] && snow[i] > 0 ? ` • ❄️ ${Number(snow[i]).toFixed(1)} mm` : "";
+
+          output += `<div class="meteo-row">${oraStr} — ${descr} — ${temp[i]}°C${rainText}${snowText}</div>`;
+        }
 
         return output;
       } catch (err) {
-        return "Errore nel recupero meteo bro.";
+        return "Errore nel recupero meteo da OpenMeteo.";
       }
     }
 
-    async function handleRicerca(text) {
-      const q = text.trim();
-      if (!q) return;
-
-      addMsg(q, "user");
+    async function handleRicerca(query) {
+      addMsg("ricerca " + query, "user");
       addMsg("Cerco su DuckDuckGo + Wikipedia...", "ai");
       results.innerHTML = "Sto cercando...";
 
       try {
-        const duck = await duckSearch(q);
-        const wiki = await wikiSearch(q);
+        const duck = await duckSearch(query);
+        const wiki = await wikiSearch(query);
 
         const topics = duck.RelatedTopics || [];
         const realLinks = [];
@@ -289,7 +400,6 @@
 
             const span = document.createElement("span");
             span.textContent = t.FirstURL;
-
             a.appendChild(span);
             results.appendChild(a);
           });
@@ -299,52 +409,63 @@
           results.appendChild(msg);
 
           const link = document.createElement("a");
-          link.href = "https://duckduckgo.com/?q=" + encodeURIComponent(q);
+          link.href = "https://duckduckgo.com/?q=" + encodeURIComponent(query);
           link.target = "_blank";
-          link.className = "fallback-btn";
           link.textContent = "Apri ricerca completa";
           results.appendChild(link);
         }
-
       } catch (e) {
         results.textContent = "Errore nella ricerca.";
       }
     }
 
-    async function handle(text) {
-      const q = text.trim().toLowerCase();
-      if (!q) return;
+    async function handle(inputText) {
+      const text = inputText.trim();
+      if (!text) return;
 
-      input.value = "";
+      const lower = text.toLowerCase();
 
-      if (q.startsWith("meteo ")) {
-        const localita = text.trim().slice(6).trim();
-        if (!localita) {
-          addMsg("meteo torino", "user");
+      if (lower.startsWith("meteo ")) {
+        const city = text.slice(6).trim();
+        if (!city) {
+          addMsg(text, "user");
           addMsg("Scrivi: meteo [provincia]", "ai");
           return;
         }
-        addMsg("meteo " + localita, "user");
-        addMsg("Recupero meteo per " + localita + "...", "ai");
-        const meteoResult = await getMeteo(localita);
-        results.innerHTML = meteoResult;
-      } else if (q.startsWith("ricerca ")) {
-        const query = text.trim().slice(8).trim();
+
+        addMsg("meteo " + city, "user");
+        addMsg("Recupero meteo per " + city + "...", "ai");
+        results.innerHTML = "Sto caricando il meteo...";
+        const out = await getMeteo(city);
+        results.innerHTML = out;
+        return;
+      }
+
+      if (lower.startsWith("ricerca ")) {
+        const query = text.slice(8).trim();
         if (!query) {
-          addMsg("ricerca farming simulator", "user");
-          addMsg("Scrivi: ricerca [termine]", "ai");
+          addMsg(text, "user");
+          addMsg("Scrivi: ricerca [testo]", "ai");
           return;
         }
-        handleRicerca(query);
-      } else {
-        addMsg(text, "user");
-        addMsg("Comandi disponibili: ricerca [testo] oppure meteo [provincia]", "ai");
+        await handleRicerca(query);
+        return;
       }
+
+      addMsg(text, "user");
+      addMsg("Comandi disponibili: meteo [provincia] oppure ricerca [testo]", "ai");
     }
 
-    send.addEventListener("click", () => handle(input.value));
+    send.addEventListener("click", () => {
+      handle(input.value);
+      input.value = "";
+    });
+
     input.addEventListener("keydown", e => {
-      if (e.key === "Enter") handle(input.value);
+      if (e.key === "Enter") {
+        handle(input.value);
+        input.value = "";
+      }
     });
   </script>
 </body>
